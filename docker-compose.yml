@@ -1,0 +1,43 @@
+version: '3'
+
+networks:
+    webkey-network:
+        driver: bridge
+
+services:
+    # webkey database
+    webkey-database:
+        container_name: webkey-database
+        image: mariadb:${mariadb.version:-latest}
+        hostname: webkey-database
+        restart: ${docker.restart_policy:-unless-stopped}
+        environment:
+            - MARIADB_ROOT_PASSWORD=${mariadb.root_password:-rootP@ssw0rd}
+            - MARIADB_DATABASE=${mariadb.database:-webkey}
+            - MARIADB_USER=${mariadb.user:-webkey}
+            - MARIADB_PASSWORD=${mariadb.password:-webkeyP@ssw0rd}
+            - TZ=${docker.timezone:-Asia/Ho_Chi_Minh}
+        volumes:
+            - ${docker.volumes:-./var/data}/database:/var/lib/mysql
+        networks:
+            - webkey-network
+
+    # webkey app
+    webkey-app:
+        container_name: webkey-app
+        image: php:alpine
+        hostname: webkey-app
+        restart: ${docker.restart_policy:-unless-stopped}
+        working_dir: /var/www
+        command: php -S 0.0.0.0:8080 -t public
+        depends_on:
+            - webkey-database
+        environment:
+            - TZ=${docker.timezone:-Asia/Ho_Chi_Minh}
+        ports:
+            - "${docker.http_port:-8080}:8080"
+        volumes:
+            - .:/var/www
+            - ./var/log:/var/www/logs
+        networks:
+            - webkey-network

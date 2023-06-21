@@ -1,0 +1,60 @@
+#--------------------------------------------------------------------
+# main configuration
+#--------------------------------------------------------------------
+app.mode = development
+app.base_dir = ./
+
+#--------------------------------------------------------------------
+# database configuration
+#--------------------------------------------------------------------
+database.dsn = mysqli://user:secret@localhost/webkey-db
+
+#--------------------------------------------------------------------
+# error configuration
+#--------------------------------------------------------------------
+error.display = true
+error.log = true
+error.details = true
+
+#--------------------------------------------------------------------
+# logger configuration
+#--------------------------------------------------------------------
+logger.name = webkey-privacy
+logger.level = 200
+
+#--------------------------------------------------------------------
+# encryption configuration
+#--------------------------------------------------------------------
+encryption.key = oimgLPz9mrZyYV7IpVI+wBh9jFB2mVovdDwC5BLo2VU=
+encryption.key_size = 256
+encryption.cipher = AES
+encryption.cipher_mode = cfb
+encryption.iv = i33p1SjLLzg=
+
+#--------------------------------------------------------------------
+# jwt configuration
+#--------------------------------------------------------------------
+jwt.key = a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y=
+jwt.sign_algorithm = Hmac
+jwt.sign_hash = Sha256
+jwt.expires = 86400
+jwt.issued_by = https://www.example.com
+jwt.identified_by = example.com
+
+#--------------------------------------------------------------------
+# docker configuration
+#--------------------------------------------------------------------
+docker.timezone = Asia/Ho_Chi_Minh
+docker.restart_policy = unless-stopped
+docker.volumes = ./var/data
+docker.http_port = 8080
+docker.https_port = 8443
+
+#--------------------------------------------------------------------
+# mariadb configuration
+#--------------------------------------------------------------------
+mariadb.version = latest
+mariadb.root_password = rootP@ssw0rd
+mariadb.database = webkey
+mariadb.user = webkey
+mariadb.password = webkeyP@ssw0rd

@@ -1,0 +1,6 @@
+vendor/
+*.log
+*.pid
+composer.lock
+phpunit.xml
+.phpunit.*
