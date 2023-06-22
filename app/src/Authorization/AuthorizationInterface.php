@@ -2,7 +2,7 @@
 
 namespace App\Authorization;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Authorization interface
@@ -16,7 +16,9 @@ interface AuthorizationInterface
     /**
      * Check if a role is granted for the request
      * 
+     * @param string $role
+     * @param ServerRequestInterface $request
      * @return bool
      */
-    function isGranted(string $role, RequestInterface $request): bool;
+    function isGranted(string $role, ServerRequestInterface $request): bool;
 }

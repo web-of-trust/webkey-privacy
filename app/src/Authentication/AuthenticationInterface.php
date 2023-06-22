@@ -19,6 +19,7 @@ interface AuthenticationInterface
     /**
      * Authenticate the http request and return a valid user or null if not authenticated
      * 
+     * @param ServerRequestInterface $request
      * @return UserInterface
      */
     function authenticate(ServerRequestInterface $request): ?UserInterface;
@@ -26,6 +27,7 @@ interface AuthenticationInterface
     /**
      * Generate the unauthorized response
      * 
+     * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
     function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface;

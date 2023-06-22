@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Authentication\{
+    AuthenticationInterface,
+    TokenRepositoryInterface,
+};
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
@@ -16,6 +20,21 @@ use Psr\Http\Message\{
  */
 class LoginController extends BaseController
 {
+    /**
+     * Constructor
+     *
+     * @param LoggerInterface $logger
+     * @return self
+     */
+    public function __construct(
+        private readonly AuthenticationInterface $authentication,
+        private readonly TokenRepositoryInterface $tokenRepository,
+        LoggerInterface $logger
+    )
+    {
+        parent::__construct($logger);
+    }
+
     /**
      * {@inheritdoc}
      */
