@@ -1,6 +1,7 @@
 vendor/
+node_modules/
 *.log
 *.pid
-composer.lock
+*.lock
 phpunit.xml
 .phpunit.*
