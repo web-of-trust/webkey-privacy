@@ -24,6 +24,8 @@ class LoginController extends BaseController
     /**
      * Constructor
      *
+     * @param AuthenticationInterface $authentication
+     * @param TokenRepositoryInterface $tokenRepository
      * @param LoggerInterface $logger
      * @return self
      */
@@ -45,6 +47,19 @@ class LoginController extends BaseController
         array $args
     ): ResponseInterface
     {
-        return $response;
+        $user = $authentication->authenticate($request);
+        if (!empty($user)) {
+            $token = $tokenRepository->create($user);
+            $response->getBody()->write(json_encode([
+                'token' => $token->getToken(),
+                'user' => $user->getIdentity(),
+            ]));
+            return $response->withHeader(
+                'Content-Type', 'application/json'
+            )->withStatus(201);
+        }
+        else {
+            return $authentication->unauthorizedResponse($request);
+        }
     }
 }

@@ -22,8 +22,8 @@ return [
     'logger.file'  => \DI\string('{app.base_dir}/var/log/app.log'),
 
     // encryption configuration
-    'encryption.passphase'   => \DI\env('encryption.key', 'yourPassphase'),
-    'encryption.key_size'    => \DI\env('encryption.key_size', 32),
+    'encryption.passphase'   => \DI\env('encryption.passphase', 'passphase'),
+    'encryption.key_size'    => \DI\env('encryption.key_size', 16),
     'encryption.cipher'      => \DI\env('encryption.cipher', 'AES'),
     'encryption.cipher_mode' => \DI\env('encryption.cipher_mode', 'cfb'),
 

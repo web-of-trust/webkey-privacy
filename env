@@ -25,8 +25,8 @@ logger.level = 200
 #--------------------------------------------------------------------
 # encryption configuration
 #--------------------------------------------------------------------
-encryption.passphase = yourPassphase
-encryption.key_size = 32
+encryption.passphase = passphase
+encryption.key_size = 16
 encryption.cipher = AES
 encryption.cipher_mode = cfb
 
