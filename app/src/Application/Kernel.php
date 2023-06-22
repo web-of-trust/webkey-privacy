@@ -26,7 +26,7 @@ use Doctrine\ORM\{
 };
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Configuration as JwtConfiguration;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Validation\Constraint\{
     IdentifiedBy,
@@ -169,16 +169,32 @@ final class Kernel implements KernelInterface
                 ]);
             },
             JwtConfiguration::class => static function (Container $container) {
-                $configuration = JwtConfiguration::forSymmetricSigner(
-                    new Sha256(),
-                    InMemory::base64Encoded($container->get('jwt.key'))
-                );
-                $configuration->setValidationConstraints(
-                    new SignedWith($configuration->signer(), $configuration->signingKey()),
+                $signer = self::selectSigner($container);
+                $constraints = [
                     new IssuedBy($container->get('jwt.issued_by')),
                     new IdentifiedBy($container->get('jwt.identified_by')),
                     new StrictValidAt(SystemClock::fromSystemTimezone()),
-                );
+                ];
+                if (self::isSymmetricSigner($signer)) {
+                    $configuration = JwtConfiguration::forSymmetricSigner(
+                        $signer,
+                        InMemory::base64Encoded($container->get('jwt.sign_key'))
+                    );
+                    $constraints[] = new SignedWith(
+                        $configuration->signer(), $configuration->signingKey()
+                    );
+                }
+                else {
+                    $configuration = JwtConfiguration::forAsymmetricSigner(
+                        $signer,
+                        InMemory::base64Encoded($container->get('jwt.sign_key'))
+                        InMemory::base64Encoded($container->get('jwt.verify_key'))
+                    );
+                    $constraints[] = new SignedWith(
+                        $configuration->signer(), $configuration->verificationKey()
+                    );
+                }
+                $configuration->setValidationConstraints($constraints);
                 return $configuration;
             },
             EntityManagerInterface::class => static function (Container $container) {
@@ -251,5 +267,44 @@ final class Kernel implements KernelInterface
 
         $app->group('/certs', static function (RouteCollectorProxy $group) {
         });
+    }
+
+    private static function selectSigner(Container $container): Signer
+    {
+        $algorithm = $container->get('jwt.sign_algorithm');
+        $hash = $container->get('jwt.sign_hash');
+        switch ($algorithm) {
+            case 'Rsa':
+                return match ($hash) {
+                    'Sha512' => new \Lcobucci\JWT\Signer\Rsa\Sha512(),
+                    'Sha384' => new \Lcobucci\JWT\Signer\Rsa\Sha512(),
+                    default => new \Lcobucci\JWT\Signer\Rsa\Sha256(),
+                }
+            case 'Ecdsa':
+                return match ($hash) {
+                    'Sha512' => new \Lcobucci\JWT\Signer\Ecdsa\Sha512(),
+                    'Sha384' => new \Lcobucci\JWT\Signer\Ecdsa\Sha512(),
+                    default => new \Lcobucci\JWT\Signer\Ecdsa\Sha256(),
+                }
+            case 'Eddsa':
+                return new \Lcobucci\JWT\Signer\Eddsa();
+            case 'Blake2b':
+                return new \Lcobucci\JWT\Signer\Blake2b();
+            default:
+                return match ($hash) {
+                    'Sha512' => new \Lcobucci\JWT\Signer\Hmac\Sha512(),
+                    'Sha384' => new \Lcobucci\JWT\Signer\Hmac\Sha512(),
+                    default => new \Lcobucci\JWT\Signer\Hmac\Sha256(),
+                }
+        }
+    }
+
+    private static function isSymmetricSigner(Signer $signer): bool
+    {
+        if ($signer instanceof \Lcobucci\JWT\Signer\Hmac ||
+            $signer instanceof \Lcobucci\JWT\Signer\Blake2b) {
+            return true;
+        }
+        return false;
     }
 }

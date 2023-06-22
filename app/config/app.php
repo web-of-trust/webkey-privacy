@@ -22,14 +22,14 @@ return [
     'logger.file'  => \DI\string('{app.base_dir}/var/log/app.log'),
 
     // encryption configuration
-    'encryption.key'         => \DI\env('encryption.key', 'oimgLPz9mrZyYV7IpVI+wBh9jFB2mVovdDwC5BLo2VU='),
-    'encryption.key_size'    => \DI\env('encryption.key_size', 256),
+    'encryption.passphase'   => \DI\env('encryption.key', 'yourPassphase'),
+    'encryption.key_size'    => \DI\env('encryption.key_size', 32),
     'encryption.cipher'      => \DI\env('encryption.cipher', 'AES'),
     'encryption.cipher_mode' => \DI\env('encryption.cipher_mode', 'cfb'),
-    'encryption.iv'          => \DI\env('encryption.iv', 'i33p1SjLLzg='),
 
     // jwt configuration
-    'jwt.key'            => \DI\env('jwt.key', 'a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y='),
+    'jwt.sign_key'       => \DI\env('jwt.sign_key', 'a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y='),
+    'jwt.verify_key'     => \DI\env('jwt.verify_key', 'a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y='),
     'jwt.sign_algorithm' => \DI\env('jwt.sign_algorithm', 'Hmac'),
     'jwt.sign_hash'      => \DI\env('jwt.sign_hash', 'Sha256'),
     'jwt.expires'        => \DI\env('jwt.expires', 86400),

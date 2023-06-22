@@ -25,16 +25,16 @@ logger.level = 200
 #--------------------------------------------------------------------
 # encryption configuration
 #--------------------------------------------------------------------
-encryption.key = oimgLPz9mrZyYV7IpVI+wBh9jFB2mVovdDwC5BLo2VU=
-encryption.key_size = 256
+encryption.passphase = yourPassphase
+encryption.key_size = 32
 encryption.cipher = AES
 encryption.cipher_mode = cfb
-encryption.iv = i33p1SjLLzg=
 
 #--------------------------------------------------------------------
 # jwt configuration
 #--------------------------------------------------------------------
-jwt.key = a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y=
+jwt.sign_key = a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y=
+jwt.verify_key = a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y=
 jwt.sign_algorithm = Hmac
 jwt.sign_hash = Sha256
 jwt.expires = 86400
