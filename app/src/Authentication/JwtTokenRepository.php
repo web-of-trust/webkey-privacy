@@ -25,8 +25,8 @@ class JwtTokenRepository implements TokenRepositoryInterface
      * @return self
      */
     public function __construct(
-        private readonly LoggerInterface $logger
-        private readonly Configuration $configuration
+        private readonly LoggerInterface $logger,
+        private readonly Configuration $configuration,
         private readonly array $options = []
     )
     {
@@ -40,7 +40,8 @@ class JwtTokenRepository implements TokenRepositoryInterface
         try {
             $token = $this->configuration->parser()->parse($id);
             $this->configuration->validator()->assert(
-                $token, ...$this->configuration->validationConstraints()
+                $token,
+                ...$this->configuration->validationConstraints(),
             );
 
             return new JwtToken(
@@ -48,7 +49,7 @@ class JwtTokenRepository implements TokenRepositoryInterface
                 $token->claims()->get('exp'),
                 array_merge(
                     $token->headers()->all(),
-                    $token->claims()->all()
+                    $token->claims()->all(),
                 )
             );
         }
@@ -78,7 +79,7 @@ class JwtTokenRepository implements TokenRepositoryInterface
             ->withClaim('email', $user->getDetail('email'))
             ->getToken(
                 $this->configuration->signer(),
-                $this->configuration->signingKey()
+                $this->configuration->signingKey(),
             );
 
         return new JwtToken(
@@ -86,7 +87,7 @@ class JwtTokenRepository implements TokenRepositoryInterface
             $expiresAt,
             array_merge(
                 $token->headers()->all(),
-                $token->claims()->all()
+                $token->claims()->all(),
             )
         );
     }

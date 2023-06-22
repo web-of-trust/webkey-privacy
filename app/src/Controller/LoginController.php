@@ -10,6 +10,7 @@ use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
+use Psr\Log\LoggerInterface;
 
 /**
  * Login controller class

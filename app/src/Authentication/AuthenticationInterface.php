@@ -30,5 +30,7 @@ interface AuthenticationInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface;
+    function unauthorizedResponse(
+        ServerRequestInterface $request
+    ): ResponseInterface;
 }

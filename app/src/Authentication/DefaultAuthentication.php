@@ -34,18 +34,22 @@ class DefaultAuthentication implements AuthenticationInterface
     /**
      * {@inheritdoc}
      */
-    public function authenticate(ServerRequestInterface $request): ?UserInterface
+    public function authenticate(
+        ServerRequestInterface $request
+    ): ?UserInterface
     {
         $parsedBody = $request->getParsedBody();
         if (is_array($parsedBody)) {
             $username = filter_var(
-                $parsedBody['username'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                $parsedBody['username'] ?? '',
+                FILTER_SANITIZE_FULL_SPECIAL_CHARS,
             );
             $password = $parsedBody['password'] ?? '';
             $entity = $entityManager->getRepository(
                 UserEntity::class
             )->findOneBy(['username' => $username]);
-            if (!empty($entity) && password_verify($password, $entity->getPassword())) {
+            if (!empty($entity) &&
+                password_verify($password, $entity->getPassword())) {
                 return new DefaultUser(
                     $entity->getUsername(),
                     [],
@@ -55,7 +59,7 @@ class DefaultAuthentication implements AuthenticationInterface
                         'displayName' => $entity->displayName(),
                         'email' => $entity->getEmail(),
                         'status' => $entity->getStatus(),
-                    ]
+                    ],
                 );
             }
         }

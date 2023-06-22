@@ -129,7 +129,7 @@ final class Kernel implements KernelInterface
         return match (true) {
             array_key_exists($key, $_ENV) => $_ENV[$key],
             array_key_exists($key, $_SERVER) => $_SERVER[$key],
-            default => getenv($key) ?: null
+            default => getenv($key) ?: null,
         };
     }
 
@@ -160,11 +160,11 @@ final class Kernel implements KernelInterface
                     $container->get('logger.name')
                 ))->setHandlers([
                     new ErrorLogHandler(
-                        level: (int) $container->get('logger.level')
+                        level: (int) $container->get('logger.level'),
                     ),
                     new RotatingFileHandler(
                         $container->get('logger.file'),
-                        level: (int) $container->get('logger.level')
+                        level: (int) $container->get('logger.level'),
                     ),
                 ]);
             },
@@ -178,20 +178,28 @@ final class Kernel implements KernelInterface
                 if (self::isSymmetricSigner($signer)) {
                     $configuration = JwtConfiguration::forSymmetricSigner(
                         $signer,
-                        InMemory::base64Encoded($container->get('jwt.sign_key'))
+                        InMemory::base64Encoded(
+                            $container->get('jwt.sign_key')
+                        ),
                     );
                     $constraints[] = new SignedWith(
-                        $configuration->signer(), $configuration->signingKey()
+                        $configuration->signer(),
+                        $configuration->signingKey(),
                     );
                 }
                 else {
                     $configuration = JwtConfiguration::forAsymmetricSigner(
                         $signer,
-                        InMemory::base64Encoded($container->get('jwt.sign_key'))
-                        InMemory::base64Encoded($container->get('jwt.verify_key'))
+                        InMemory::base64Encoded(
+                            $container->get('jwt.sign_key')
+                        ),
+                        InMemory::base64Encoded(
+                            $container->get('jwt.verify_key')
+                        ),
                     );
                     $constraints[] = new SignedWith(
-                        $configuration->signer(), $configuration->verificationKey()
+                        $configuration->signer(),
+                        $configuration->verificationKey(),
                     );
                 }
                 $configuration->setValidationConstraints(...$constraints);
@@ -200,17 +208,17 @@ final class Kernel implements KernelInterface
             EntityManagerInterface::class => static function (Container $container) {
                 $config = ORMSetup::createAttributeMetadataConfiguration(
                     paths: [$container->get('database.metadata_dir')],
-                    isDevMode: $container->get('app.mode') !== self::PRODUCTION_MODE
+                    isDevMode: $container->get('app.mode') !== self::PRODUCTION_MODE,
                 );
                 $connection = DriverManager::getConnection(
                     (new DsnParser())->parse($container->get('database.dsn')),
-                    $config
+                    $config,
                 );
                 return new EntityManager($connection, $config);
             },
             AuthenticationInterface::class => static function (Container $container) {
                 return new DefaultAuthentication(
-                    $container->get(EntityManagerInterface::class)
+                    $container->get(EntityManagerInterface::class),
                 );
             },
             TokenRepositoryInterface::class => static function (Container $container) {
@@ -241,7 +249,7 @@ final class Kernel implements KernelInterface
             (bool) $container->get('error.display'),
             (bool) $container->get('error.log'),
             (bool) $container->get('error.details'),
-            $container->get(LoggerInterface::class)
+            $container->get(LoggerInterface::class),
         );
     }
 
@@ -279,13 +287,13 @@ final class Kernel implements KernelInterface
                     'Sha512' => new \Lcobucci\JWT\Signer\Rsa\Sha512(),
                     'Sha384' => new \Lcobucci\JWT\Signer\Rsa\Sha512(),
                     default => new \Lcobucci\JWT\Signer\Rsa\Sha256(),
-                }
+                };
             case 'Ecdsa':
                 return match ($hash) {
                     'Sha512' => new \Lcobucci\JWT\Signer\Ecdsa\Sha512(),
                     'Sha384' => new \Lcobucci\JWT\Signer\Ecdsa\Sha512(),
                     default => new \Lcobucci\JWT\Signer\Ecdsa\Sha256(),
-                }
+                };
             case 'Eddsa':
                 return new \Lcobucci\JWT\Signer\Eddsa();
             case 'Blake2b':
@@ -295,7 +303,7 @@ final class Kernel implements KernelInterface
                     'Sha512' => new \Lcobucci\JWT\Signer\Hmac\Sha512(),
                     'Sha384' => new \Lcobucci\JWT\Signer\Hmac\Sha512(),
                     default => new \Lcobucci\JWT\Signer\Hmac\Sha256(),
-                }
+                };
         }
     }
 
