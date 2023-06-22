@@ -39,11 +39,9 @@ class JwtTokenRepository implements TokenRepositoryInterface
     {
         try {
             $token = $this->configuration->parser()->parse($id);
-            $validator = $this->configuration->validator();
-            $constraints = $this->configuration->validationConstraints();
-            foreach ($constraints as $constraint) {
-                $validator->assert($token, $constraint);
-            }
+            $this->configuration->validator()->assert(
+                $token, ...$this->configuration->validationConstraints()
+            );
 
             return new JwtToken(
                 $token->toString(),

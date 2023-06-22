@@ -194,7 +194,7 @@ final class Kernel implements KernelInterface
                         $configuration->signer(), $configuration->verificationKey()
                     );
                 }
-                $configuration->setValidationConstraints($constraints);
+                $configuration->setValidationConstraints(...$constraints);
                 return $configuration;
             },
             EntityManagerInterface::class => static function (Container $container) {
