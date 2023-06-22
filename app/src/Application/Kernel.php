@@ -261,11 +261,8 @@ final class Kernel implements KernelInterface
      */
     private static function registerRoutes(App $app): void
     {
-        $app->group('', static function (RouteCollectorProxy $group) {
-            $group->get('/', \App\Controller\HomeController::class);
-            $group->post('/login', \App\Controller\LoginController::class);
-            $group->get('/logout', \App\Controller\LogoutController::class);
-        });
+        $app->get('/', \App\Controller\HomeController::class);
+        $app->post('/login', \App\Controller\LoginController::class);
 
         $app->group('/profile', static function (RouteCollectorProxy $group) {
         });

@@ -14,13 +14,13 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpUnauthorizedException;
 
 /**
- * Abstract base authentication middleware class
+ * Abstract authentication filter middleware class
  * 
  * @package  App
  * @category Middleware
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-abstract class BaseAuthentication implements MiddlewareInterface
+abstract class AuthenticationFilter implements MiddlewareInterface
 {
     /**
      * Constructor
