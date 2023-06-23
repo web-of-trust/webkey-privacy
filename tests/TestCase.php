@@ -2,7 +2,8 @@
 
 namespace App\Tests;
 
-use DI\ContainerBuilder;
+use App\Application\Kernel;
+use DI\Bridge\Slim\Bridge;
 use Exception;
 use PHPUnit\Framework\TestCase as PHPUnit_TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -18,12 +19,18 @@ class TestCase extends PHPUnit_TestCase
 {
     use ProphecyTrait;
 
+    protected function setUp(): void
+    {
+        Kernel::initialize();
+    }
+
     /**
      * @return App
      * @throws Exception
      */
     protected function getAppInstance(): App
     {
+        return Bridge::create(Kernel::$getContainer());
     }
 
     /**

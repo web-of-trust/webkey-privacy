@@ -169,21 +169,12 @@ final class Kernel implements KernelInterface
             },
             JwtConfiguration::class => static function (Container $container) {
                 $signer = self::selectJwtSigner($container);
-                $constraints = [
-                    new IssuedBy($container->get('jwt.issued_by')),
-                    new IdentifiedBy($container->get('jwt.identified_by')),
-                    new StrictValidAt(SystemClock::fromSystemTimezone()),
-                ];
                 if (self::isSymmetricSigner($signer)) {
                     $configuration = JwtConfiguration::forSymmetricSigner(
                         $signer,
                         InMemory::base64Encoded(
                             $container->get('jwt.sign_key')
                         ),
-                    );
-                    $constraints[] = new SignedWith(
-                        $configuration->signer(),
-                        $configuration->signingKey(),
                     );
                 }
                 else {
@@ -196,12 +187,16 @@ final class Kernel implements KernelInterface
                             $container->get('jwt.verify_key')
                         ),
                     );
-                    $constraints[] = new SignedWith(
+                }
+                $configuration->setValidationConstraints(
+                    new SignedWith(
                         $configuration->signer(),
                         $configuration->verificationKey(),
-                    );
-                }
-                $configuration->setValidationConstraints(...$constraints);
+                    ),
+                    new StrictValidAt(SystemClock::fromSystemTimezone()),
+                    new IssuedBy($container->get('jwt.issued_by')),
+                    new IdentifiedBy($container->get('jwt.identified_by')),
+                );
                 return $configuration;
             },
             EntityManagerInterface::class => static function (Container $container) {

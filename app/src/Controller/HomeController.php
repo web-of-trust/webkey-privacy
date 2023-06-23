@@ -25,7 +25,6 @@ class HomeController extends BaseController
         array $args
     ): ResponseInterface
     {
-        $this->logger->info('Home controller');
         $response->getBody()->write('Home controller');
         return $response;
     }
