@@ -5,6 +5,7 @@ namespace App\Middleware;
 use App\Authentication\TokenRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Slim\Exception\HttpUnauthorizedException;
 
 /**
  * Jwt authentication filter middleware class
@@ -33,12 +34,17 @@ class JwtAuthenticationFilter extends AuthenticationFilter
     /**
      * {@inheritdoc}
      */
-    protected function validate(ServerRequestInterface $request): bool
+    protected function validate(
+        ServerRequestInterface $request
+    ): ServerRequestInterface
     {
         $token = $this->tokenRepository->load(
             self::getAuthToken($request)
         );
-        return false;
+        if (empty($token)) {
+            throw new HttpUnauthorizedException($request);
+        }
+        return $request;
     }
 
     private static function getAuthToken(ServerRequestInterface $request): ?string

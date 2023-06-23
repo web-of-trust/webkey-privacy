@@ -11,7 +11,6 @@ use Psr\Http\Server\{
     RequestHandlerInterface,
 };
 use Psr\Log\LoggerInterface;
-use Slim\Exception\HttpUnauthorizedException;
 
 /**
  * Abstract authentication filter middleware class
@@ -56,17 +55,18 @@ abstract class AuthenticationFilter implements MiddlewareInterface
         ServerRequestInterface $request, RequestHandlerInterface $handler
     ): ResponseInterface
     {
-        if (!$this->validate($request)) {
-            throw new HttpUnauthorizedException($request);
-        }
-        return $handler->handle($request);
+        return $handler->handle(
+            $this->validate($request)
+        );
     }
 
     /**
      * Validate the http request.
      * 
      * @param ServerRequestInterface  $request
-     * @return bool
+     * @return ServerRequestInterface
      */
-    abstract protected function validate(ServerRequestInterface $request): bool;
+    abstract protected function validate(
+        ServerRequestInterface $request
+    ): ServerRequestInterface;
 }

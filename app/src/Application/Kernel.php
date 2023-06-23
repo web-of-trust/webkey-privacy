@@ -7,14 +7,13 @@
  */
 
 namespace App\Application;
-
-
 use App\Authentication\{
     AuthenticationInterface,
     DefaultAuthentication,
     JwtTokenRepository,
     TokenRepositoryInterface,
 };
+use App\Middleware\JwtAuthenticationFilter;
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\DriverManager;
@@ -169,7 +168,7 @@ final class Kernel implements KernelInterface
                 ]);
             },
             JwtConfiguration::class => static function (Container $container) {
-                $signer = self::selectSigner($container);
+                $signer = self::selectJwtSigner($container);
                 $constraints = [
                     new IssuedBy($container->get('jwt.issued_by')),
                     new IdentifiedBy($container->get('jwt.identified_by')),
@@ -264,17 +263,18 @@ final class Kernel implements KernelInterface
         $app->get('/', \App\Controller\HomeController::class);
         $app->post('/login', \App\Controller\LoginController::class);
 
-        $app->group('/profile', static function (RouteCollectorProxy $group) {
-        });
-
-        $app->group('/users', static function (RouteCollectorProxy $group) {
-        });
-
-        $app->group('/certs', static function (RouteCollectorProxy $group) {
-        });
+        $app->group('/api', static function (RouteCollectorProxy $group) {
+            $group->get('/profile', \App\Controller\HomeController::class);
+        })->add(new JwtAuthenticationFilter());
     }
 
-    private static function selectSigner(Container $container): Signer
+    /**
+     * Select jwt signer
+     * 
+     * @param Container $container
+     * @return Signer
+     */
+    private static function selectJwtSigner(Container $container): Signer
     {
         $algorithm = $container->get('jwt.sign_algorithm');
         $hash = $container->get('jwt.sign_hash');
@@ -304,6 +304,12 @@ final class Kernel implements KernelInterface
         }
     }
 
+    /**
+     * Is jwt symmetric signer
+     * 
+     * @param Signer $signer
+     * @return bool
+     */
     private static function isSymmetricSigner(Signer $signer): bool
     {
         if ($signer instanceof \Lcobucci\JWT\Signer\Hmac ||
