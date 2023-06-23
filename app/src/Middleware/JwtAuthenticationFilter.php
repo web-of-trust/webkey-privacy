@@ -44,9 +44,18 @@ class JwtAuthenticationFilter extends AuthenticationFilter
         if (empty($token)) {
             throw new HttpUnauthorizedException($request);
         }
-        return $request;
+        $payload = $token->getPayload();
+        return $request->withAttribute(
+            'uid', $payload['uid'] ?? ''
+        );
     }
 
+    /**
+     * Get auth token from request
+     * 
+     * @param ServerRequestInterface $request
+     * @return string
+     */
     private static function getAuthToken(ServerRequestInterface $request): ?string
     {
         $token = $request->getHeaderLine('Authorization');

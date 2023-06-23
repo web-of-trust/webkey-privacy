@@ -75,6 +75,7 @@ class JwtTokenRepository implements TokenRepositoryInterface
             ->permittedFor($user->getIdentity())
             ->issuedAt($now)
             ->expiresAt($expiresAt)
+            ->withClaim('uid', $user->getIdentity())
             ->withClaim('displayName', $user->getDetail('displayName'))
             ->withClaim('email', $user->getDetail('email'))
             ->getToken(
