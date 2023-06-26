@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase as PHPUnit_TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
-use Slim\Factory\AppFactory;
 use Slim\Psr7\Factory\StreamFactory;
 use Slim\Psr7\Headers;
 use Slim\Psr7\Request as SlimRequest;
@@ -21,6 +20,7 @@ class TestCase extends PHPUnit_TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         Kernel::initialize();
     }
 
@@ -30,7 +30,9 @@ class TestCase extends PHPUnit_TestCase
      */
     protected function getAppInstance(): App
     {
-        return Bridge::create(Kernel::$getContainer());
+        $app = Bridge::create(Kernel::getContainer());
+        $app->addRoutingMiddleware();
+        return $app;
     }
 
     /**

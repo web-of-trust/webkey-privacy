@@ -258,7 +258,7 @@ final class Kernel implements KernelInterface
         $app->get('/', \App\Controller\HomeController::class);
         $app->post('/login', \App\Controller\LoginController::class);
 
-        $app->group('/api', static function (RouteCollectorProxy $group) {
+        $app->group('/rest/v1', static function (RouteCollectorProxy $group) {
             $group->get('/profile', \App\Controller\HomeController::class);
         })->add(new JwtAuthenticationFilter());
     }
