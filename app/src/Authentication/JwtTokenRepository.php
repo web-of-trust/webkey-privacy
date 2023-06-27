@@ -54,8 +54,9 @@ class JwtTokenRepository implements TokenRepositoryInterface
             );
         }
         catch (\Throwable $e) {
-            $this->logger()->error($e);
+            $this->logger->error($e);
         }
+        return null;
     }
 
     /**
@@ -74,6 +75,7 @@ class JwtTokenRepository implements TokenRepositoryInterface
             ->identifiedBy($this->options['identified_by'] ?? '')
             ->permittedFor($user->getIdentity())
             ->issuedAt($now)
+            ->canOnlyBeUsedAfter($now)
             ->expiresAt($expiresAt)
             ->withClaim('uid', $user->getIdentity())
             ->withClaim('displayName', $user->getDetail('displayName'))
