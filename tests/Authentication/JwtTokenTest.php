@@ -10,12 +10,16 @@ class JwtTokenTest extends TestCase
 {
     public function testCreateLoadJwtToken()
     {
+        $username = $this->faker->username;
+        $displayName = $this->faker->name;
+        $email = $this->faker->email;
+
         $app = $this->getAppInstance();
         $container = $app->getContainer();
 
         $repository = $container->get(TokenRepositoryInterface::class);
         $token = $repository->create(
-            new DefaultUser('username', [], ['displayName' => 'displayName', 'email' => 'email'])
+            new DefaultUser($username, [], ['displayName' => $displayName, 'email' => $email])
         );
 
         $now = new \DateTimeImmutable();
@@ -25,15 +29,15 @@ class JwtTokenTest extends TestCase
         );
 
         $payload = $token->getPayload();
-        $this->assertEquals('username', $payload['uid']);
-        $this->assertEquals('displayName', $payload['displayName']);
-        $this->assertEquals('email', $payload['email']);
+        $this->assertEquals($username, $payload['uid']);
+        $this->assertEquals($displayName, $payload['displayName']);
+        $this->assertEquals($email, $payload['email']);
 
         $loadedToken = $repository->load($token->getToken());
         $payload = $loadedToken->getPayload();
-        $this->assertEquals('username', $payload['uid']);
-        $this->assertEquals('displayName', $payload['displayName']);
-        $this->assertEquals('email', $payload['email']);
+        $this->assertEquals($username, $payload['uid']);
+        $this->assertEquals($displayName, $payload['displayName']);
+        $this->assertEquals($email, $payload['email']);
     }
 
     public function testLoadInvalidToken()

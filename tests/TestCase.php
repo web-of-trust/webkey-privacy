@@ -2,9 +2,9 @@
 
 namespace App\Tests;
 
+use Exception;
 use App\Application\Kernel;
 use DI\Bridge\Slim\Bridge;
-use Exception;
 use PHPUnit\Framework\TestCase as PHPUnit_TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -18,10 +18,13 @@ class TestCase extends PHPUnit_TestCase
 {
     use ProphecyTrait;
 
+    protected $faker;
+
     protected function setUp(): void
     {
         parent::setUp();
         Kernel::initialize();
+        $this->faker = \Faker\Factory::create();
     }
 
     /**

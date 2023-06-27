@@ -13,12 +13,17 @@ class DefaultAuthenticationTest extends TestCase
 {
     public function testDefaultAuthentication()
     {
+        $username = $this->faker->username;
+        $password = $this->faker->password;
+        $displayName = $this->faker->name;
+        $email = $this->faker->email;
+        $status = $this->faker->word;
         $userEntity = new UserEntity(
-            1, 'username', password_hash('password', PASSWORD_DEFAULT), 'displayName', 'email', 'status'
+            1, $username, password_hash($password, PASSWORD_DEFAULT), $displayName, $email, $status
         );
 
         $repositoryProphecy = $this->prophesize(ObjectRepository::class);
-        $repositoryProphecy->findOneBy(['username' => 'username'])
+        $repositoryProphecy->findOneBy(['username' => $username])
             ->willReturn($userEntity)
             ->shouldBeCalledOnce();
 
@@ -30,16 +35,16 @@ class DefaultAuthenticationTest extends TestCase
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getParsedBody()
             ->willReturn([
-                'username' => 'username',
-                'password' => 'password',
+                'username' => $username,
+                'password' => $password,
             ])
             ->shouldBeCalledOnce();
 
         $auth = new DefaultAuthentication($managerProphecy->reveal());
         $user = $auth->authenticate($requestProphecy->reveal());
 
-        $this->assertEquals('username', $user->getIdentity());
-        $this->assertEquals('displayName', $user->getDetail('displayName'));
-        $this->assertEquals('email', $user->getDetail('email'));
+        $this->assertEquals($username, $user->getIdentity());
+        $this->assertEquals($displayName, $user->getDetail('displayName'));
+        $this->assertEquals($email, $user->getDetail('email'));
     }
 }
