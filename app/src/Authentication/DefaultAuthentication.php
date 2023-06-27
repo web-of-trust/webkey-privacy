@@ -45,20 +45,23 @@ class DefaultAuthentication implements AuthenticationInterface
                 FILTER_SANITIZE_FULL_SPECIAL_CHARS,
             );
             $password = $parsedBody['password'] ?? '';
-            $entity = $this->entityManager->getRepository(
+            $user = $this->entityManager->getRepository(
                 UserEntity::class
             )->findOneBy(['username' => $username]);
-            if (!empty($entity) &&
-                password_verify($password, $entity->getPassword())) {
+            if (!empty($user) && password_verify($password, $user->getPassword())) {
+                $roles = [];
+                foreach ($user->getRoles() as $role) {
+                    $roles[$role->getId()] = $role->getName();
+                }
                 return new DefaultUser(
-                    $entity->getUsername(),
-                    [],
+                    $user->getUsername(),
+                    $roles,
                     [
-                        'id' => $entity->getId(),
-                        'username' => $entity->getUsername(),
-                        'displayName' => $entity->getDisplayName(),
-                        'email' => $entity->getEmail(),
-                        'status' => $entity->getStatus(),
+                        'id' => $user->getId(),
+                        'username' => $user->getUsername(),
+                        'displayName' => $user->getDisplayName(),
+                        'email' => $user->getEmail(),
+                        'status' => $user->getStatus(),
                     ],
                 );
             }
