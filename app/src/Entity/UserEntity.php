@@ -3,9 +3,17 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\Common\Collections\{
+    ArrayCollection,
+    Collection,
+};
 use Doctrine\ORM\Mapping\{
     Column,
     Entity,
+    JoinColumn,
+    JoinTable,
+    InverseJoinColumn,
+    ManyToMany,
     Table,
 };
 
@@ -36,6 +44,12 @@ class UserEntity extends BaseEntity {
 
     #[Column(name: 'status', type: 'string', columnDefinition: 'ENUM("active", "locked", "close")', nullable: false)]
     private readonly string $status;
+
+    #[JoinTable(name: 'users_roles')]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[InverseJoinColumn(name: 'role_id', referencedColumnName: 'id', unique: true)]
+    #[ManyToMany(targetEntity: RoleEntity::class)]
+    private readonly Collection $roles;
 
     #[Column(name: 'login_at', type: 'datetimetz_immutable', nullable: true)]
     private readonly ?DateTimeInterface $loginAt;
@@ -84,6 +98,7 @@ class UserEntity extends BaseEntity {
         $this->displayName = $displayName;
         $this->email = $email;
         $this->status = $status;
+        $this->roles = new ArrayCollection();
 
         $this->loginAt = $loginAt;
         $this->accessAt = $accessAt;
@@ -137,6 +152,16 @@ class UserEntity extends BaseEntity {
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    /**
+     * Get roles
+     *
+     * @return Collection
+     */
+    public function getRoles(): Collection
+    {
+        return $this->roles;
     }
 
     /**
