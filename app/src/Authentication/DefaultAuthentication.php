@@ -45,7 +45,7 @@ class DefaultAuthentication implements AuthenticationInterface
                 FILTER_SANITIZE_FULL_SPECIAL_CHARS,
             );
             $password = $parsedBody['password'] ?? '';
-            $entity = $entityManager->getRepository(
+            $entity = $this->entityManager->getRepository(
                 UserEntity::class
             )->findOneBy(['username' => $username]);
             if (!empty($entity) &&
@@ -56,7 +56,7 @@ class DefaultAuthentication implements AuthenticationInterface
                     [
                         'id' => $entity->getId(),
                         'username' => $entity->getUsername(),
-                        'displayName' => $entity->displayName(),
+                        'displayName' => $entity->getDisplayName(),
                         'email' => $entity->getEmail(),
                         'status' => $entity->getStatus(),
                     ],

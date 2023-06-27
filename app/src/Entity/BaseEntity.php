@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping\{
 abstract class BaseEntity
 {
     #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
-    private readonly int $id,
+    private readonly int $id;
 
     #[Column(name: 'created_by', type: 'integer', nullable: false)]
     private readonly int $createdBy;

@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
 
 class ControllerTest extends TestCase
 {
-
     public function testBaseController()
     {
         $app = $this->getAppInstance();
@@ -43,5 +42,5 @@ class ControllerTest extends TestCase
         $payload = (string) $response->getBody();
         $this->assertEquals('test controller', $payload);
         $this->assertEquals(200, $response->getStatusCode());
-   }
+    }
 }
