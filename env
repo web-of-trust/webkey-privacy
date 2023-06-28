@@ -1,60 +1,60 @@
 #--------------------------------------------------------------------
 # main configuration
 #--------------------------------------------------------------------
-app.mode = development
-app.base_dir = ./
+APP_MODE = development
+APP_BASE_DIR = ./
 
 #--------------------------------------------------------------------
 # database configuration
 #--------------------------------------------------------------------
-database.dsn = mysqli://user:secret@localhost/webkey-db
+DATABASE_DSN = mysqli://user:secret@localhost/webkey-db
 
 #--------------------------------------------------------------------
 # error configuration
 #--------------------------------------------------------------------
-error.display = true
-error.log = true
-error.details = true
+ERROR_DISPLAY = true
+ERROR_LOG = true
+ERROR_DETAILS = true
 
 #--------------------------------------------------------------------
 # logger configuration
 #--------------------------------------------------------------------
-logger.name = webkey-privacy
-logger.level = 200
+LOGGER_NAME = webkey-privacy
+LOGGER_LEVEL = 200
 
 #--------------------------------------------------------------------
 # encryption configuration
 #--------------------------------------------------------------------
-encryption.passphase = passphase
-encryption.key_size = 16
-encryption.cipher = AES
-encryption.cipher_mode = cfb
+ENCRYPTION_PASSPHASE = passphase
+ENCRYPTION_KEY_SIZE = 16
+ENCRYPTION_CIPHER = AES
+ENCRYPTION_CIPHER_MODE = cfb
 
 #--------------------------------------------------------------------
 # jwt configuration
 #--------------------------------------------------------------------
-jwt.sign_key = a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y=
-jwt.verify_key = a2EN6gWqHDmbzDCLVkNyLvTaqbEHbrbj8VD3a1KYj6Y=
-jwt.sign_algorithm = Hmac
-jwt.sign_hash = Sha256
-jwt.expires = 86400
-jwt.issued_by = https://www.example.com
-jwt.identified_by = example.com
+JWT_SIGN_KEY = MDEyMzQ1Njc4OWFiY2RlZg==
+JWT_VERIFY_KEY = MDEyMzQ1Njc4OWFiY2RlZg==
+JWT_SIGN_ALGORITHM = Hmac
+JWT_SIGN_HASH = Sha256
+JWT_EXPIRES = 86400
+JWT_ISSUED_BY = https://www.example.com
+JWT_IDENTIFIED_BY = example.com
 
 #--------------------------------------------------------------------
 # docker configuration
 #--------------------------------------------------------------------
-docker.timezone = Asia/Ho_Chi_Minh
-docker.restart_policy = unless-stopped
-docker.volumes = ./var/data
-docker.http_port = 8080
-docker.https_port = 8443
+DOCKER_TIMEZONE = Asia/Ho_Chi_Minh
+DOCKER_RESTART_POLICY = unless-stopped
+DOCKER_VOLUMES = ./var/data
+DOCKER_HTTP_PORT = 8080
+DOCKER_HTTPS_PORT = 8443
 
 #--------------------------------------------------------------------
 # mariadb configuration
 #--------------------------------------------------------------------
-mariadb.version = latest
-mariadb.root_password = rootP@ssw0rd
-mariadb.database = webkey
-mariadb.user = webkey
-mariadb.password = webkeyP@ssw0rd
+MARIADB_VERSION = latest
+MARIADB_ROOT_PASSWORD = rootP@ssw0rd
+MARIADB_DATABASE = webkey
+MARIADB_USER = webkey
+MARIADB_PASSWORD = webkeyP@ssw0rd

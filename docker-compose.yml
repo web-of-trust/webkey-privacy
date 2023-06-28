@@ -8,17 +8,17 @@ services:
     # webkey database
     webkey-database:
         container_name: webkey-database
-        image: mariadb:${mariadb.version:-latest}
+        image: mariadb:${MARIADB_VERSION:-latest}
         hostname: webkey-database
-        restart: ${docker.restart_policy:-unless-stopped}
+        restart: ${DOCKER_RESTART_POLICY:-unless-stopped}
         environment:
-            - MARIADB_ROOT_PASSWORD=${mariadb.root_password:-rootP@ssw0rd}
-            - MARIADB_DATABASE=${mariadb.database:-webkey}
-            - MARIADB_USER=${mariadb.user:-webkey}
-            - MARIADB_PASSWORD=${mariadb.password:-webkeyP@ssw0rd}
-            - TZ=${docker.timezone:-Asia/Ho_Chi_Minh}
+            - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-rootP@ssw0rd}
+            - MARIADB_DATABASE=${MARIADB_DATABASE:-webkey}
+            - MARIADB_USER=${MARIADB_USER:-webkey}
+            - MARIADB_PASSWORD=${MARIADB_PASSWORD:-webkeyP@ssw0rd}
+            - TZ=${DOCKER_TIMEZONE:-Asia/Ho_Chi_Minh}
         volumes:
-            - ${docker.volumes:-./var/data}/database:/var/lib/mysql
+            - ${DOCKER_VOLUMES:-./var/data}/database:/var/lib/mysql
         networks:
             - webkey-network
 
@@ -27,15 +27,15 @@ services:
         container_name: webkey-app
         image: php:alpine
         hostname: webkey-app
-        restart: ${docker.restart_policy:-unless-stopped}
+        restart: ${DOCKER_RESTART_POLICY:-unless-stopped}
         working_dir: /var/www
         command: php -S 0.0.0.0:8080 -t public
         depends_on:
             - webkey-database
         environment:
-            - TZ=${docker.timezone:-Asia/Ho_Chi_Minh}
+            - TZ=${DOCKER_TIMEZONE:-Asia/Ho_Chi_Minh}
         ports:
-            - "${docker.http_port:-8080}:8080"
+            - "${DOCKER_HTTP_PORT:-8080}:8080"
         volumes:
             - .:/var/www
             - ./var/log:/var/www/logs
