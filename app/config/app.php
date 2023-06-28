@@ -25,11 +25,11 @@ return [
     'encryption.passphase'   => \DI\env('ENCRYPTION_PASSPHASE', 'passphase'),
     'encryption.key_size'    => \DI\env('ENCRYPTION_KEY_SIZE', 16),
     'encryption.cipher'      => \DI\env('ENCRYPTION_CIPHER', 'AES'),
-    'encryption.cipher_mode' => \DI\env('ENCRYPTION_CIPHER_MODE', 'cfb'),
+    'encryption.cipher_mode' => \DI\env('ENCRYPTION_CIPHER_MODE', 'gcm'),
 
     // jwt configuration
-    'jwt.sign_key'       => \DI\env('JWT_SIGN_KEY', base64_encode('0123456789abcdef0123456789abcdef')),
-    'jwt.verify_key'     => \DI\env('JWT_VERIFY_KEY', base64_encode('0123456789abcdef0123456789abcdef')),
+    'jwt.sign_key'       => \DI\env('JWT_SIGN_KEY', 'MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY='),
+    'jwt.verify_key'     => \DI\env('JWT_VERIFY_KEY', 'MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY='),
     'jwt.sign_algorithm' => \DI\env('JWT_SIGN_ALGORITHM', 'Hmac'),
     'jwt.sign_hash'      => \DI\env('JWT_SIGN_HASH', 'Sha256'),
     'jwt.expires'        => \DI\env('JWT_EXPIRES', 86400),

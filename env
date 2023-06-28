@@ -28,7 +28,7 @@ LOGGER_LEVEL = 200
 ENCRYPTION_PASSPHASE = passphase
 ENCRYPTION_KEY_SIZE = 16
 ENCRYPTION_CIPHER = AES
-ENCRYPTION_CIPHER_MODE = cfb
+ENCRYPTION_CIPHER_MODE = gcm
 
 #--------------------------------------------------------------------
 # jwt configuration
