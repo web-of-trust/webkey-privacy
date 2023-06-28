@@ -55,7 +55,11 @@ class LoginController extends BaseController
             $token = $tokenRepository->create($user);
             $response->getBody()->write(json_encode([
                 'token' => $token->getToken(),
-                'user' => $user->getIdentity(),
+                'user' => [
+                    'uid' => $user->getIdentity(),
+                    'displayName' => $user->getDetail('displayName'),
+                    'email' => $user->getDetail('email'),
+                ],
             ]));
             $this->cookies->set(
                 TokenRepositoryInterface::TOKEN_COOKIE, $token->getToken()
