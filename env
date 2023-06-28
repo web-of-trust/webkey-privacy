@@ -35,8 +35,7 @@ ENCRYPTION_CIPHER_MODE = gcm
 #--------------------------------------------------------------------
 JWT_SIGN_KEY = MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
 JWT_VERIFY_KEY = MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
-JWT_SIGN_ALGORITHM = Hmac
-JWT_SIGN_HASH = Sha256
+JWT_ALGORITHM = HS256
 JWT_EXPIRES = 86400
 JWT_ISSUED_BY = https://www.example.com
 JWT_IDENTIFIED_BY = example.com

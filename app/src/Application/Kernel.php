@@ -291,32 +291,19 @@ final class Kernel implements KernelInterface
      */
     private static function selectJwtSigner(Container $container): Signer
     {
-        $algorithm = $container->get('jwt.sign_algorithm');
-        $hash = $container->get('jwt.sign_hash');
-        switch ($algorithm) {
-            case 'Rsa':
-                return match ($hash) {
-                    'Sha512' => new \Lcobucci\JWT\Signer\Rsa\Sha512(),
-                    'Sha384' => new \Lcobucci\JWT\Signer\Rsa\Sha512(),
-                    default => new \Lcobucci\JWT\Signer\Rsa\Sha256(),
-                };
-            case 'Ecdsa':
-                return match ($hash) {
-                    'Sha512' => new \Lcobucci\JWT\Signer\Ecdsa\Sha512(),
-                    'Sha384' => new \Lcobucci\JWT\Signer\Ecdsa\Sha512(),
-                    default => new \Lcobucci\JWT\Signer\Ecdsa\Sha256(),
-                };
-            case 'Eddsa':
-                return new \Lcobucci\JWT\Signer\Eddsa();
-            case 'Blake2b':
-                return new \Lcobucci\JWT\Signer\Blake2b();
-            default:
-                return match ($hash) {
-                    'Sha512' => new \Lcobucci\JWT\Signer\Hmac\Sha512(),
-                    'Sha384' => new \Lcobucci\JWT\Signer\Hmac\Sha512(),
-                    default => new \Lcobucci\JWT\Signer\Hmac\Sha256(),
-                };
-        }
+        return match ($container->get('jwt.algorithm')) {
+            'BLAKE2B' => new \Lcobucci\JWT\Signer\Blake2b(),
+            'EdDSA' => new \Lcobucci\JWT\Signer\Eddsa(),
+            'RS512' => new \Lcobucci\JWT\Signer\Rsa\Sha512(),
+            'RS384' => new \Lcobucci\JWT\Signer\Rsa\Sha384(),
+            'RS256' => new \Lcobucci\JWT\Signer\Rsa\Sha256(),
+            'ES512' => new \Lcobucci\JWT\Signer\Ecdsa\Sha512(),
+            'ES384' => new \Lcobucci\JWT\Signer\Ecdsa\Sha384(),
+            'ES256' => new \Lcobucci\JWT\Signer\Ecdsa\Sha256(),
+            'HS512' => new \Lcobucci\JWT\Signer\Hmac\Sha512(),
+            'HS384' => new \Lcobucci\JWT\Signer\Hmac\Sha384(),
+            default => new \Lcobucci\JWT\Signer\Hmac\Sha256(),
+        };
     }
 
     /**
