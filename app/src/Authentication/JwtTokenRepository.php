@@ -5,6 +5,7 @@ namespace App\Authentication;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Token\RegisteredClaims;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -46,7 +47,9 @@ class JwtTokenRepository implements TokenRepositoryInterface
 
             return new JwtToken(
                 $token->toString(),
-                $token->claims()->get('exp'),
+                $token->claims()->get(
+                    RegisteredClaims::EXPIRATION_TIME
+                ),
                 array_merge(
                     $token->headers()->all(),
                     $token->claims()->all(),

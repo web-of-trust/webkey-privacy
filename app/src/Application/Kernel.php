@@ -156,17 +156,20 @@ final class Kernel implements KernelInterface
     {
         $builder->addDefinitions([
             LoggerInterface::class => static function (Container $container) {
-                return (new Logger(
-                    $container->get('logger.name')
-                ))->setHandlers([
-                    new ErrorLogHandler(
-                        level: (int) $container->get('logger.level'),
-                    ),
+                $handlers = [
                     new RotatingFileHandler(
                         $container->get('logger.file'),
                         level: (int) $container->get('logger.level'),
                     ),
-                ]);
+                ];
+                if ($container->get('app.mode') !== self::PRODUCTION_MODE) {
+                    $handlers[] = new ErrorLogHandler(
+                        level: (int) $container->get('logger.level'),
+                    );
+                }
+                return (new Logger(
+                    $container->get('logger.name')
+                ))->setHandlers($handlers);
             },
             JwtConfiguration::class => static function (Container $container) {
                 $signer = self::selectJwtSigner($container);
