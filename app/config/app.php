@@ -28,8 +28,8 @@ return [
     'encryption.cipher_mode' => \DI\env('ENCRYPTION_CIPHER_MODE', 'cfb'),
 
     // jwt configuration
-    'jwt.sign_key'       => \DI\env('JWT_SIGN_KEY', base64_encode('0123456789abcdef')),
-    'jwt.verify_key'     => \DI\env('JWT_VERIFY_KEY', base64_encode('0123456789abcdef')),
+    'jwt.sign_key'       => \DI\env('JWT_SIGN_KEY', base64_encode('0123456789abcdef0123456789abcdef')),
+    'jwt.verify_key'     => \DI\env('JWT_VERIFY_KEY', base64_encode('0123456789abcdef0123456789abcdef')),
     'jwt.sign_algorithm' => \DI\env('JWT_SIGN_ALGORITHM', 'Hmac'),
     'jwt.sign_hash'      => \DI\env('JWT_SIGN_HASH', 'Sha256'),
     'jwt.expires'        => \DI\env('JWT_EXPIRES', 86400),

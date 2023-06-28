@@ -33,8 +33,8 @@ ENCRYPTION_CIPHER_MODE = cfb
 #--------------------------------------------------------------------
 # jwt configuration
 #--------------------------------------------------------------------
-JWT_SIGN_KEY = MDEyMzQ1Njc4OWFiY2RlZg==
-JWT_VERIFY_KEY = MDEyMzQ1Njc4OWFiY2RlZg==
+JWT_SIGN_KEY = MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+JWT_VERIFY_KEY = MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
 JWT_SIGN_ALGORITHM = Hmac
 JWT_SIGN_HASH = Sha256
 JWT_EXPIRES = 86400
