@@ -13,6 +13,9 @@ use DateTimeInterface;
  */
 interface TokenRepositoryInterface
 {
+    const TOKEN_HEADER = 'Authorization';
+    const TOKEN_COOKIE = 'AUTH_TOKEN';
+
     /**
      * Load token by id, must return null if token not found.
      *

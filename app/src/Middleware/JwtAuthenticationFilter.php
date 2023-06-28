@@ -58,12 +58,15 @@ class JwtAuthenticationFilter extends AuthenticationFilter
      */
     private static function getAuthToken(ServerRequestInterface $request): ?string
     {
-        $token = $request->getHeaderLine('Authorization');
-        if (!empty($token) && preg_match('/Bearer\s(\S+)/', $token, $matches)) {
+        $header = $request->getHeaderLine(
+            TokenRepositoryInterface::TOKEN_HEADER
+        );
+        if (!empty($header) && preg_match('/Bearer\s(\S+)/', $header, $matches)) {
             return $matches[1];
         }
         else {
-            return $request->getCookieParams()['JWT_AUTH_TOKEN'] ?? null;
+            $params = $request->getCookieParams();
+            return $params[TokenRepositoryInterface::TOKEN_COOKIE] ?? null;
         }
     }
 }

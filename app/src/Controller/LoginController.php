@@ -11,6 +11,7 @@ use Psr\Http\Message\{
     ServerRequestInterface,
 };
 use Psr\Log\LoggerInterface;
+use Slim\Psr7\Cookies;
 
 /**
  * Login controller class
@@ -26,12 +27,14 @@ class LoginController extends BaseController
      *
      * @param AuthenticationInterface $authentication
      * @param TokenRepositoryInterface $tokenRepository
+     * @param Cookies $cookies
      * @param LoggerInterface $logger
      * @return self
      */
     public function __construct(
         private readonly AuthenticationInterface $authentication,
         private readonly TokenRepositoryInterface $tokenRepository,
+        private readonly Cookies $cookies,
         LoggerInterface $logger
     )
     {
@@ -54,7 +57,12 @@ class LoginController extends BaseController
                 'token' => $token->getToken(),
                 'user' => $user->getIdentity(),
             ]));
+            $this->cookies->set(
+                TokenRepositoryInterface::TOKEN_COOKIE, $token->getToken()
+            );
             return $response->withHeader(
+                'Set-Cookie', $this->cookies->toHeaders()
+            )->withHeader(
                 'Content-Type', 'application/json'
             )->withStatus(201);
         }

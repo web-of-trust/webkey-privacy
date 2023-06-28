@@ -35,4 +35,13 @@ return [
     'jwt.expires'        => \DI\env('JWT_EXPIRES', 86400),
     'jwt.issued_by'      => \DI\env('JWT_ISSUED_BY', 'https://www.example.com'),
     'jwt.identified_by'  => \DI\env('JWT_IDENTIFIED_BY', 'example.com'),
+
+    // cookie configuration
+    'cookie.domain' => \DI\env('COOKIE_DOMAIN'),
+    'cookie.hostonly' => \DI\env('COOKIE_HOSTONLY'),
+    'cookie.path' => \DI\env('COOKIE_PATH'),
+    'cookie.expires' => \DI\env('COOKIE_EXPIRES'),
+    'cookie.secure' => \DI\env('COOKIE_SECURE', false),
+    'cookie.httponly' => \DI\env('COOKIE_HTTPONLY', true),
+    'cookie.samesite' => \DI\env('COOKIE_SAMESITE', 'LAX'),
 ];

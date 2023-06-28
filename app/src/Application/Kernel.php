@@ -42,6 +42,7 @@ use Monolog\Handler\{
 use Psr\Container\ContainerInterface as Container;
 use Psr\Log\LoggerInterface;
 use Slim\App;
+use Slim\Psr7\Cookies;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -226,6 +227,17 @@ final class Kernel implements KernelInterface
                     ],
                 );
             },
+            Cookies::class => static function (Container $container) {
+                return (new Cookies())->setDefaults([
+                    'domain' => $container->get('cookie.domain'),
+                    'hostonly' => $container->get('cookie.hostonly'),
+                    'path' => $container->get('cookie.path'),
+                    'expires' => $container->get('cookie.expires'),
+                    'secure' => $container->get('cookie.secure'),
+                    'httponly' => $container->get('cookie.httponly'),
+                    'samesite' => $container->get('cookie.samesite'),
+                ]);
+            },
         ]);
     }
 
@@ -255,12 +267,17 @@ final class Kernel implements KernelInterface
      */
     private static function registerRoutes(App $app): void
     {
+        $container = $app->getContainer();
+
         $app->get('/', \App\Controller\HomeController::class);
         $app->post('/login', \App\Controller\LoginController::class);
 
         $app->group('/rest/v1', static function (RouteCollectorProxy $group) {
             $group->get('/profile', \App\Controller\HomeController::class);
-        })->add(new JwtAuthenticationFilter());
+        })->add(new JwtAuthenticationFilter(
+            $container->get(TokenRepositoryInterface::class),
+            $container->get(LoggerInterface::class),
+        ));
     }
 
     /**

@@ -40,6 +40,18 @@ JWT_SIGN_HASH = Sha256
 JWT_EXPIRES = 86400
 JWT_ISSUED_BY = https://www.example.com
 JWT_IDENTIFIED_BY = example.com
+JWT_COOKIE_NAME = JWT_AUTH_TOKEN
+
+#--------------------------------------------------------------------
+# cookie configuration
+#--------------------------------------------------------------------
+COOKIE_DOMAIN = example.com
+COOKIE_HOSTONLY = false
+COOKIE_PATH = /
+COOKIE_EXPIRES = 86400
+COOKIE_SECURE = true
+COOKIE_HTTPONLY = true
+COOKIE_SAMESITE = LAX
 
 #--------------------------------------------------------------------
 # docker configuration
