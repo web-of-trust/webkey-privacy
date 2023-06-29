@@ -13,13 +13,13 @@ use Psr\Http\Server\{
 use Psr\Log\LoggerInterface;
 
 /**
- * Login request filter middleware class
+ * Authorization filter middleware class
  * 
  * @package  App
  * @category Middleware
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class LoginRequestFilter implements MiddlewareInterface
+class AuthorizationFilter implements MiddlewareInterface
 {
     /**
      * Process the request by calling `process` method.
