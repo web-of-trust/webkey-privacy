@@ -11,7 +11,16 @@ namespace App\Authorization;
  */
 enum Role: string
 {
-    case AnonymousUser = 'Anonymous User';
-    case AuthenticatedUser = 'Authenticated User';
-    case Administrator = 'Administrator';
+    case AnonymousUser     = 'anonymous_user';
+    case AuthenticatedUser = 'authenticated_user';
+    case Administrator     = 'administrator';
+
+    public function label(): string
+    {
+        return match($this) {
+            static::AnonymousUser     => 'Anonymous User',
+            static::AuthenticatedUser => 'Authenticated User',
+            static::Administrator     => 'Administrator',
+        };
+    }
 }
