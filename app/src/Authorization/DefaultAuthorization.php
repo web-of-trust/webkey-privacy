@@ -16,11 +16,11 @@ class DefaultAuthorization implements AuthorizationInterface
     /**
      * Constructor
      *
-     * @param array $rules
+     * @param array $roles
      * @return self
      */
     public function __construct(
-        private readonly array $rules
+        private readonly array $roles
     )
     {
     }
@@ -37,7 +37,7 @@ class DefaultAuthorization implements AuthorizationInterface
             $uri = preg_replace(
                 '#/+#', '/', '/' . $request->getUri()->getPath()
             );
-            $paths = $this->rules[$role->name] ?? [];
+            $paths = $this->roles[$role->name] ?? [];
             if (is_array($paths)) {
                 foreach ($paths as $path) {
                     $path = rtrim($path, '/');

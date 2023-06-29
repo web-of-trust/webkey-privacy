@@ -2,6 +2,7 @@
 
 namespace App\Middleware;
 
+use App\Authorization\AuthorizationInterface;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
@@ -19,8 +20,20 @@ use Psr\Log\LoggerInterface;
  * @category Middleware
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class AuthorizationFilter implements MiddlewareInterface
+final class AuthorizationFilter implements MiddlewareInterface
 {
+    /**
+     * Constructor
+     *
+     * @param AuthorizationInterface $tokenRepository
+     * @return self
+     */
+    public function __construct(
+        private readonly AuthorizationInterface $authorization
+    )
+    {
+    }
+
     /**
      * Process the request by calling `process` method.
      * 

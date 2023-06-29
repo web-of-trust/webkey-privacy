@@ -13,7 +13,14 @@ use App\Authentication\{
     JwtTokenRepository,
     TokenRepositoryInterface,
 };
-use App\Middleware\JwtAuthenticationFilter;
+use App\Authorization\{
+    AuthorizationInterface,
+    DefaultAuthorization,
+};
+use App\Middleware\{
+    AuthorizationFilter,
+    JwtAuthenticationFilter,
+};
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\DriverManager;
@@ -143,7 +150,8 @@ final class Kernel implements KernelInterface
     private static function registerConfig(ContainerBuilder $builder): void
     {
         $baseDir = self::getEnvValue('app.base_dir') ?? BASE_DIR;
-        $builder->addDefinitions($baseDir . '/app/config/app.php');
+        $builder->addDefinitions($baseDir . '/app/config/app.php')
+                ->addDefinitions($baseDir . '/app/config/authorization.php');
     }
 
     /**
@@ -230,6 +238,11 @@ final class Kernel implements KernelInterface
                     ],
                 );
             },
+            AuthorizationInterface::class => static function (Container $container) {
+                return new DefaultAuthorization(
+                    $container->get('authorization.roles'),
+                );
+            },
             Cookies::class => static function (Container $container) {
                 return (new Cookies())->setDefaults([
                     'domain' => $container->get('cookie.domain'),
@@ -280,6 +293,8 @@ final class Kernel implements KernelInterface
         })->add(new JwtAuthenticationFilter(
             $container->get(TokenRepositoryInterface::class),
             $container->get(LoggerInterface::class),
+        ))->add(new AuthorizationFilter(
+            $container->get(AuthorizationInterface::class),
         ));
     }
 

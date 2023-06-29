@@ -11,7 +11,7 @@ namespace App\Authorization;
  */
 enum Role: string
 {
-    case AnonymousUser = 'Anonymous user';
-    case AuthenticatedUser = 'Authenticated user';
+    case AnonymousUser = 'Anonymous User';
+    case AuthenticatedUser = 'Authenticated User';
     case Administrator = 'Administrator';
 }

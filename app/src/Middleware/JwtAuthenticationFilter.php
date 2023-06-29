@@ -14,7 +14,7 @@ use Slim\Exception\HttpUnauthorizedException;
  * @category Middleware
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class JwtAuthenticationFilter extends AuthenticationFilter
+final class JwtAuthenticationFilter extends AuthenticationFilter
 {
     /**
      * Constructor
