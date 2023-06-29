@@ -39,7 +39,6 @@ abstract class AuthenticationFilter implements MiddlewareInterface
      * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
-     * @throws HttpForbiddenException
      */
     public function __invoke(
         ServerRequestInterface $request, RequestHandlerInterface $handler
@@ -63,7 +62,7 @@ abstract class AuthenticationFilter implements MiddlewareInterface
     /**
      * Validate the http request.
      * 
-     * @param ServerRequestInterface  $request
+     * @param ServerRequestInterface $request
      * @return ServerRequestInterface
      */
     abstract protected function validate(

@@ -295,6 +295,7 @@ final class Kernel implements KernelInterface
             $container->get(LoggerInterface::class),
         ))->add(new AuthorizationFilter(
             $container->get(AuthorizationInterface::class),
+            $container->get(EntityManagerInterface::class),
         ));
     }
 
