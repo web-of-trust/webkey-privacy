@@ -7,13 +7,10 @@ use Doctrine\Common\Collections\{
     ArrayCollection,
     Collection,
 };
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\{
     Column,
     Entity,
-    JoinColumn,
-    JoinTable,
-    InverseJoinColumn,
-    ManyToMany,
     Table,
 };
 
@@ -29,32 +26,30 @@ class UserEntity extends BaseEntity {
     const ACTIVE_STATUS = 'active';
     const LOCKED_STATUS = 'locked';
     const CLOSE_STATUS  = 'close';
+    const STATUS_ENUM = 'ENUM("active", "locked", "close")';
 
-    #[Column(name: 'username', type: 'string', unique: true, nullable: false)]
+    #[Column(name: 'username', type: Types::STRING, unique: true, nullable: false)]
     private readonly string $username;
 
-    #[Column(name: 'password', type: 'string', nullable: false)]
+    #[Column(name: 'password', type: Types::STRING, nullable: false)]
     private readonly string $password;
 
-    #[Column(name: 'display_name', type: 'string', nullable: false)]
+    #[Column(name: 'display_name', type: Types::STRING, nullable: false)]
     private readonly string $displayName;
 
-    #[Column(name: 'email', type: 'string', unique: true, nullable: false)]
+    #[Column(name: 'email', type: Types::STRING, unique: true, nullable: false)]
     private readonly string $email;
 
-    #[Column(name: 'status', type: 'string', columnDefinition: 'ENUM("active", "locked", "close")', nullable: false)]
+    #[Column(name: 'status', type: Types::STRING, columnDefinition: UserEntity::STATUS_ENUM, nullable: false)]
     private readonly string $status;
 
-    #[JoinTable(name: 'users_roles')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[InverseJoinColumn(name: 'role_id', referencedColumnName: 'id', unique: true)]
-    #[ManyToMany(targetEntity: RoleEntity::class)]
-    private readonly Collection $roles;
+    #[Column(name: 'roles', type: Types::SIMPLE_ARRAY, nullable: false)]
+    private readonly array $roles;
 
-    #[Column(name: 'login_at', type: 'datetimetz_immutable', nullable: true)]
+    #[Column(name: 'login_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     private readonly ?DateTimeInterface $loginAt;
 
-    #[Column(name: 'access_at', type: 'datetimetz_immutable', nullable: true)]
+    #[Column(name: 'access_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     private readonly ?DateTimeInterface $accessAt;
 
     /**
@@ -81,6 +76,7 @@ class UserEntity extends BaseEntity {
         string $displayName,
         string $email,
         string $status,
+        array $roles = [],
         ?DateTimeInterface $loginAt = null,
         ?DateTimeInterface $accessAt = null,
         int $createdBy = 0,
@@ -98,7 +94,7 @@ class UserEntity extends BaseEntity {
         $this->displayName = $displayName;
         $this->email = $email;
         $this->status = $status;
-        $this->roles = new ArrayCollection();
+        $this->roles = $roles;
 
         $this->loginAt = $loginAt;
         $this->accessAt = $accessAt;
@@ -157,9 +153,9 @@ class UserEntity extends BaseEntity {
     /**
      * Get roles
      *
-     * @return Collection
+     * @return array
      */
-    public function getRoles(): Collection
+    public function getRoles(): array
     {
         return $this->roles;
     }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\{
     Column,
     Entity,
@@ -18,11 +19,11 @@ use Doctrine\ORM\Mapping\{
  */
 #[Entity, Table(name: 'domains')]
 class DomainEntity extends BaseEntity {
-    #[Column(name: 'name', type: 'string', unique: true, nullable: false)]
-    private string $name;
+    #[Column(name: 'name', type: Types::STRING, unique: true, nullable: false)]
+    private readonly string $name;
 
-    #[Column(name: 'description', type: 'string', nullable: false)]
-    private string $description;
+    #[Column(name: 'description', type: Types::TEXT, nullable: false)]
+    private readonly string $description;
 
     /**
      * Constructor

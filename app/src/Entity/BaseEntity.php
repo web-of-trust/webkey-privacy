@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\{
     Column,
     GeneratedValue,
@@ -18,19 +19,19 @@ use Doctrine\ORM\Mapping\{
  */
 abstract class BaseEntity
 {
-    #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
+    #[Id, Column(type: Types::INTEGER), GeneratedValue(strategy: 'AUTO')]
     private readonly int $id;
 
-    #[Column(name: 'created_by', type: 'integer', nullable: false)]
+    #[Column(name: 'created_by', type: Types::INTEGER, nullable: false)]
     private readonly int $createdBy;
 
-    #[Column(name: 'updated_by', type: 'integer', nullable: false)]
+    #[Column(name: 'updated_by', type: Types::INTEGER, nullable: false)]
     private readonly int $updatedBy;
 
-    #[Column(name: 'created_at', type: 'datetimetz_immutable', nullable: false)]
+    #[Column(name: 'created_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     private readonly DateTimeInterface $createdAt;
 
-    #[Column(name: 'updated_at', type: 'datetimetz_immutable', nullable: false)]
+    #[Column(name: 'updated_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     private readonly DateTimeInterface $updatedAt;
 
     /**

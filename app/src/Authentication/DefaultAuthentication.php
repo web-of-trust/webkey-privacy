@@ -49,13 +49,9 @@ class DefaultAuthentication implements AuthenticationInterface
                 UserEntity::class
             )->findOneBy(['username' => $username]);
             if (!empty($user) && password_verify($password, $user->getPassword())) {
-                $roles = [];
-                foreach ($user->getRoles() as $role) {
-                    $roles[$role->getId()] = $role->getName();
-                }
                 return new DefaultUser(
                     $user->getUsername(),
-                    $roles,
+                    $user->getRoles(),
                     [
                         'id' => $user->getId(),
                         'username' => $user->getUsername(),

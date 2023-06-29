@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\{
     Column,
     Entity,
@@ -19,25 +20,25 @@ use Doctrine\ORM\Mapping\{
 #[Entity, Table(name: 'certificates')]
 class CertificateEntity extends BaseEntity
 {
-    #[Column(name: 'fingerprint', type: 'string', unique: true, nullable: false)]
+    #[Column(name: 'fingerprint', type: Types::STRING, unique: true, nullable: false)]
     private readonly string $fingerprint;
 
-    #[Column(name: 'primary_user', type: 'string', nullable: false)]
+    #[Column(name: 'primary_user', type: Types::STRING, nullable: false)]
     private readonly string $primaryUser;
 
-    #[Column(name: 'key_algorithm', type: 'string', nullable: false)]
+    #[Column(name: 'key_algorithm', type: Types::STRING, nullable: false)]
     private readonly string $keyAlgorithm;
 
-    #[Column(name: 'key_strength', type: 'integer', nullable: false)]
+    #[Column(name: 'key_strength', type: Types::INTEGER, nullable: false)]
     private readonly int $keyStrength;
 
-    #[Column(name: 'certificate_data', type: 'text', nullable: false)]
+    #[Column(name: 'certificate_data', type: Types::TEXT, nullable: false)]
     private readonly string $certificateData;
 
-    #[Column(name: 'creation_time', type: 'datetimetz_immutable', nullable: false)]
+    #[Column(name: 'creation_time', type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     private readonly DateTimeInterface $creationTime;
 
-    #[Column(name: 'expiration_time', type: 'datetimetz_immutable', nullable: true)]
+    #[Column(name: 'expiration_time', type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     private readonly ?DateTimeInterface $expirationTime;
 
     /**

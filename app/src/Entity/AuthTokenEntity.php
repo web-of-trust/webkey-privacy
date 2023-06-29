@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\{
     Column,
     Entity,
@@ -18,16 +19,16 @@ use Doctrine\ORM\Mapping\{
  */
 #[Entity, Table(name: 'auth_tokens')]
 class AuthTokenEntity extends BaseEntity {
-    #[Column(name: 'token', type: 'string', unique: true, nullable: false)]
+    #[Column(name: 'token', type: Types::STRING, unique: true, nullable: false)]
     private readonly string $token;
 
-    #[Column(name: 'data', type: 'text', nullable: false)]
+    #[Column(name: 'data', type: Types::TEXT, nullable: false)]
     private readonly string $data;
 
-    #[Column(name: 'issued_at', type: 'datetimetz_immutable', nullable: false)]
+    #[Column(name: 'issued_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     private readonly DateTimeInterface $issuedAt;
 
-    #[Column(name: 'expires_at', type: 'datetimetz_immutable', nullable: false)]
+    #[Column(name: 'expires_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     private readonly DateTimeInterface $expiresAt;
 
     /**

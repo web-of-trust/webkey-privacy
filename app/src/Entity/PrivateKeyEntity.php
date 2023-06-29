@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\{
     Column,
     Entity,
@@ -30,13 +31,13 @@ class PrivateKeyEntity extends BaseEntity
     #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private readonly UserEntity $user;
 
-    #[Column(name: 'encryption_iv', type: 'string', nullable: false)]
+    #[Column(name: 'encryption_iv', type: Types::STRING, nullable: false)]
     private readonly string $encryptionIv;
 
-    #[Column(name: 's2k_salt', type: 'string', nullable: false)]
+    #[Column(name: 's2k_salt', type: Types::STRING, nullable: false)]
     private readonly string $s2kSalt;
 
-    #[Column(name: 'encrypted_key_data', type: 'text', nullable: false)]
+    #[Column(name: 'encrypted_key_data', type: Types::TEXT, nullable: false)]
     private readonly string $encryptedKeyData;
 
     /**
