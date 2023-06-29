@@ -61,10 +61,13 @@ class JwtAuthenticationFilter extends AuthenticationFilter
         $header = $request->getHeaderLine(
             TokenRepositoryInterface::TOKEN_HEADER
         );
-        if (!empty($header) && preg_match('/Bearer\s(\S+)/', $header, $matches)) {
+        if (!empty($header) &&
+            preg_match(TokenRepositoryInterface::TOKEN_PATTERN, $header, $matches)) {
+            $this->logger->debug('Getting auth token from request header');
             return $matches[1];
         }
         else {
+            $this->logger->debug('Getting auth token from cookie');
             $params = $request->getCookieParams();
             return $params[TokenRepositoryInterface::TOKEN_COOKIE] ?? null;
         }
