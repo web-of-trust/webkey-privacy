@@ -9,9 +9,9 @@ namespace App\Authorization;
  * @category Authorization
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-enum Role: int
+enum Role: string
 {
-    case AnonymousUser = 0;
-    case Administrator = 1;
-    case AuthenticatedUser = 2;
+    case AnonymousUser = 'Anonymous user';
+    case AuthenticatedUser = 'Authenticated user';
+    case Administrator = 'Administrator';
 }
