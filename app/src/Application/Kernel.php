@@ -78,15 +78,15 @@ final class Kernel implements KernelInterface
     /**
      * Initialize application.
      *
-     * @param string $mode
+     * @param string $env
      * @return void
      */
-    public static function initialize(?string $mode = null): void
+    public static function initialize(?string $env = null): void
     {
         if (empty(self::$container)) {
-            $mode = $mode ?? self::getEnvValue('app.mode') ?? self::DEVELOPMENT_MODE;
+            $env = $env ?? self::getEnvValue('app.env') ?? self::DEVELOPMENT_MODE;
             $builder = new ContainerBuilder();
-            if ($mode === self::PRODUCTION_MODE) {
+            if ($env === self::PRODUCTION_MODE) {
                 $baseDir = self::getEnvValue('app.base_dir') ?? BASE_DIR;
                 $builder->enableCompilation($baseDir . '/var/cache/app');
             }
@@ -170,7 +170,7 @@ final class Kernel implements KernelInterface
                         level: (int) $container->get('logger.level'),
                     ),
                 ];
-                if ($container->get('app.mode') !== self::PRODUCTION_MODE) {
+                if ($container->get('app.env') !== self::PRODUCTION_MODE) {
                     $handlers[] = new ErrorLogHandler(
                         level: (int) $container->get('logger.level'),
                     );
@@ -214,7 +214,7 @@ final class Kernel implements KernelInterface
             EntityManagerInterface::class => static function (Container $container) {
                 $config = ORMSetup::createAttributeMetadataConfiguration(
                     paths: [$container->get('database.metadata_dir')],
-                    isDevMode: $container->get('app.mode') !== self::PRODUCTION_MODE,
+                    isDevMode: $container->get('app.env') !== self::PRODUCTION_MODE,
                 );
                 $connection = DriverManager::getConnection(
                     (new DsnParser())->parse($container->get('database.dsn')),

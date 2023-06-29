@@ -2,7 +2,7 @@
 
 return [
     // main configuration
-    'app.mode'      => \DI\env('APP_MODE', 'development'),
+    'app.env'      => \DI\env('APP_ENV', 'development'),
     'app.base_dir'  => \DI\env('APP_BASE_DIR', BASE_DIR),
     'app.cache_dir' => \DI\string('{app.base_dir}/var/cache/app'),
 
