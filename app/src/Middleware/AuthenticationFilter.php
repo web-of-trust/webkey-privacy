@@ -22,7 +22,7 @@ use Psr\Http\Server\{
  * @category Middleware
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class AuthenticationFilter implements MiddlewareInterface
+final class AuthenticationFilter implements MiddlewareInterface
 {
     /**
      * Constructor
