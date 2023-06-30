@@ -21,13 +21,13 @@ class TokenAuthentication extends BaseAuthentication
     /**
      * Constructor
      *
-     * @param EntityManagerInterface $entityManager
      * @param TokenRepositoryInterface $tokenRepository
+     * @param EntityManagerInterface $entityManager
      * @return self
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
-        private readonly TokenRepositoryInterface $tokenRepository
+        private readonly TokenRepositoryInterface $tokenRepository,
+        EntityManagerInterface $entityManager
     )
     {
         parent::__construct($entityManager);
@@ -45,7 +45,10 @@ class TokenAuthentication extends BaseAuthentication
         );
         if ($token instanceof TokenInterface) {
             $payload = $token->getPayload();
-            $uid = $payload['uid'] ?? '';
+            $uid = filter_var(
+                $payload['uid'] ?? '',
+                FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+            );
             $user = $this->getUserEntity($uid);
             if ($user instanceof UserEntity) {
                 return $this->dtoUserEntity($user);

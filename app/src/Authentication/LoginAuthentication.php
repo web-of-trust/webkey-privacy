@@ -9,13 +9,13 @@ use Psr\Http\Message\{
 };
 
 /**
- * Default authentication class
+ * Login authentication class
  * 
  * @package  App
  * @category Authentication
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class DefaultAuthentication extends BaseAuthentication
+class LoginAuthentication extends BaseAuthentication
 {
     /**
      * {@inheritdoc}

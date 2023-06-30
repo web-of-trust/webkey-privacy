@@ -3,13 +3,13 @@
 namespace App\Authentication;
 
 /**
- * Default user class
+ * Authenticated user class
  * 
  * @package  App
  * @category Authentication
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class DefaultUser implements UserInterface
+class AuthenticatedUser implements UserInterface
 {
     /**
      * Constructor

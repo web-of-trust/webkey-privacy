@@ -55,12 +55,12 @@ abstract class BaseAuthentication implements AuthenticationInterface
     /**
      * Transfer user entity to authenticated user
      * 
-     * @param UserEntity $entity
+     * @param  UserEntity $entity
      * @return UserInterface
      */
     protected function dtoUserEntity(UserEntity $entity): UserInterface
     {
-        return new DefaultUser(
+        return new AuthenticatedUser(
             $entity->getUsername(),
             $entity->getRoles(),
             [

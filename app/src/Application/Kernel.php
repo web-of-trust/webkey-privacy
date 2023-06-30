@@ -8,8 +8,8 @@
 
 namespace App\Application;
 use App\Authentication\{
-    AuthenticationInterface,
-    DefaultAuthentication,
+    LoginAuthentication,
+    TokenAuthentication,
     JwtTokenRepository,
     TokenRepositoryInterface,
 };
@@ -18,8 +18,8 @@ use App\Authorization\{
     DefaultAuthorization,
 };
 use App\Middleware\{
+    AuthenticationFilter,
     AuthorizationFilter,
-    JwtAuthenticationFilter,
 };
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
@@ -222,11 +222,6 @@ final class Kernel implements KernelInterface
                 );
                 return new EntityManager($connection, $config);
             },
-            AuthenticationInterface::class => static function (Container $container) {
-                return new DefaultAuthentication(
-                    $container->get(EntityManagerInterface::class),
-                );
-            },
             TokenRepositoryInterface::class => static function (Container $container) {
                 return new JwtTokenRepository(
                     $container->get(LoggerInterface::class),
@@ -236,6 +231,17 @@ final class Kernel implements KernelInterface
                         'issued_by'     => $container->get('jwt.issued_by'),
                         'identified_by' => $container->get('jwt.identified_by'),
                     ],
+                );
+            },
+            LoginAuthentication::class => static function (Container $container) {
+                return new LoginAuthentication(
+                    $container->get(EntityManagerInterface::class),
+                );
+            },
+            TokenAuthentication::class => static function (Container $container) {
+                return new TokenAuthentication(
+                    $container->get(TokenRepositoryInterface::class),
+                    $container->get(EntityManagerInterface::class),
                 );
             },
             AuthorizationInterface::class => static function (Container $container) {
@@ -286,16 +292,18 @@ final class Kernel implements KernelInterface
         $container = $app->getContainer();
 
         $app->get('/', \App\Controller\HomeController::class);
-        $app->post('/login', \App\Controller\LoginController::class);
+        $app->post(
+            '/login', \App\Controller\LoginController::class
+        )->addMiddleware(new AuthenticationFilter(
+            $container->get(LoginAuthentication::class)
+        ));
 
         $app->group('/rest/v1', static function (RouteCollectorProxy $group) {
             $group->get('/profile', \App\Controller\HomeController::class);
-        })->add(new JwtAuthenticationFilter(
-            $container->get(TokenRepositoryInterface::class),
-            $container->get(LoggerInterface::class),
-        ))->add(new AuthorizationFilter(
-            $container->get(AuthorizationInterface::class),
-            $container->get(EntityManagerInterface::class),
+        })->addMiddleware(new AuthenticationFilter(
+            $container->get(TokenAuthentication::class)
+        ))->addMiddleware(new AuthorizationFilter(
+            $container->get(AuthorizationInterface::class)
         ));
     }
 

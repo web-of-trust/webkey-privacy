@@ -2,16 +2,16 @@
 
 namespace App\Tests\Controller;
 
-use App\Authentication\DefaultAuthentication;
+use App\Authentication\LoginAuthentication;
 use App\Entity\UserEntity;
 use App\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DefaultAuthenticationTest extends TestCase
+class AuthenticationTest extends TestCase
 {
-    public function testDefaultAuthentication()
+    public function testLoginAuthentication()
     {
         $username = $this->faker->username;
         $password = $this->faker->password;
@@ -40,7 +40,7 @@ class DefaultAuthenticationTest extends TestCase
             ])
             ->shouldBeCalledOnce();
 
-        $auth = new DefaultAuthentication($managerProphecy->reveal());
+        $auth = new LoginAuthentication($managerProphecy->reveal());
         $user = $auth->authenticate($requestProphecy->reveal());
 
         $this->assertEquals($username, $user->getIdentity());

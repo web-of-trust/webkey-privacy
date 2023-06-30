@@ -2,6 +2,10 @@
 
 namespace App\Middleware;
 
+use App\Authentication\{
+    AuthenticationInterface,
+    UserInterface,
+};
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
@@ -10,25 +14,24 @@ use Psr\Http\Server\{
     MiddlewareInterface,
     RequestHandlerInterface,
 };
-use Psr\Log\LoggerInterface;
 
 /**
- * Abstract authentication filter middleware class
+ * Authentication filter middleware class
  * 
  * @package  App
  * @category Middleware
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-abstract class AuthenticationFilter implements MiddlewareInterface
+class AuthenticationFilter implements MiddlewareInterface
 {
     /**
      * Constructor
      *
-     * @param LoggerInterface $logger
+     * @param AuthenticationInterface $authentication
      * @return self
      */
     public function __construct(
-        protected readonly LoggerInterface $logger
+        protected readonly AuthenticationInterface $authentication
     )
     {
     }
@@ -54,18 +57,12 @@ abstract class AuthenticationFilter implements MiddlewareInterface
         ServerRequestInterface $request, RequestHandlerInterface $handler
     ): ResponseInterface
     {
-        return $handler->handle(
-            $this->validate($request)
-        );
+        $user = $this->authentication->authenticate($request);
+        if ($user instanceof UserInterface) {
+            return $handler->handle(
+                $request->withAttribute(UserInterface::class, $user)
+            );
+        }
+        return $this->authentication->unauthorizedResponse($request);
     }
-
-    /**
-     * Validate the http request.
-     * 
-     * @param ServerRequestInterface $request
-     * @return ServerRequestInterface
-     */
-    abstract protected function validate(
-        ServerRequestInterface $request
-    ): ServerRequestInterface;
 }
