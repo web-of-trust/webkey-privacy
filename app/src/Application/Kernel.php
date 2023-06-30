@@ -273,6 +273,7 @@ final class Kernel implements KernelInterface
     {
         $container = $app->getContainer();
         $app->addRoutingMiddleware();
+        $app->addBodyParsingMiddleware();
         $app->addErrorMiddleware(
             (bool) $container->get('error.display'),
             (bool) $container->get('error.log'),
