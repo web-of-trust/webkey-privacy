@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 return [
-    'authorization.roles' => [
+    'authorization.allow' => [
         'AuthenticatedUser' => [
             '/rest/v1/profile/*',
         ],

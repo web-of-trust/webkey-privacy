@@ -240,7 +240,7 @@ final class Kernel implements KernelInterface
             },
             AuthorizationInterface::class => static function (Container $container) {
                 return new DefaultAuthorization(
-                    $container->get('authorization.roles'),
+                    $container->get('authorization.allow'),
                 );
             },
             Cookies::class => static function (Container $container) {
