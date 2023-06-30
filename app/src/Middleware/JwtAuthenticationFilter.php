@@ -56,7 +56,7 @@ final class JwtAuthenticationFilter extends AuthenticationFilter
      * @param ServerRequestInterface $request
      * @return string
      */
-    private static function getAuthToken(ServerRequestInterface $request): ?string
+    private static function getAuthToken(ServerRequestInterface $request): string
     {
         $header = $request->getHeaderLine(
             TokenRepositoryInterface::TOKEN_HEADER
@@ -69,7 +69,7 @@ final class JwtAuthenticationFilter extends AuthenticationFilter
         else {
             $this->logger->debug('Getting auth token from cookie');
             $params = $request->getCookieParams();
-            return $params[TokenRepositoryInterface::TOKEN_COOKIE] ?? null;
+            return $params[TokenRepositoryInterface::TOKEN_COOKIE] ?? '';
         }
     }
 }

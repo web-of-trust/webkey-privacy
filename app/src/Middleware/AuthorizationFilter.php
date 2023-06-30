@@ -78,15 +78,10 @@ final class AuthorizationFilter implements MiddlewareInterface
             $roles = [Role::AuthenticatedUser];
         }
 
-        $isGranted = false;
         foreach ($roles as $role) {
             if ($authorization->isGranted($role, $request)) {
-                $isGranted = true;
-                break;
+                return $handler->handle($request);
             }
-        }
-        if ($isGranted) {
-            return $handler->handle($request);
         }
         throw new HttpForbiddenException($request);
     }
