@@ -224,7 +224,6 @@ final class Kernel implements KernelInterface
             },
             TokenRepositoryInterface::class => static function (Container $container) {
                 return new JwtTokenRepository(
-                    $container->get(LoggerInterface::class),
                     $container->get(JwtConfiguration::class),
                     [
                         'expires'       => $container->get('jwt.expires'),

@@ -6,7 +6,6 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token\RegisteredClaims;
-use Psr\Log\LoggerInterface;
 
 /**
  * Jwt token repository class
@@ -20,13 +19,11 @@ class JwtTokenRepository implements TokenRepositoryInterface
     /**
      * Constructor
      *
-     * @param LoggerInterface $logger
      * @param Configuration $configuration
      * @param array $options
      * @return self
      */
     public function __construct(
-        private readonly LoggerInterface $logger,
         private readonly Configuration $configuration,
         private readonly array $options = []
     )
@@ -38,13 +35,11 @@ class JwtTokenRepository implements TokenRepositoryInterface
      */
     public function load(string $id): ?TokenInterface
     {
-        try {
-            $token = $this->configuration->parser()->parse($id);
-            $this->configuration->validator()->assert(
-                $token,
-                ...$this->configuration->validationConstraints(),
-            );
-
+        $token = $this->configuration->parser()->parse($id);
+        if ($this->configuration->validator()->validate(
+            $token,
+            ...$this->configuration->validationConstraints(),
+        )) {
             return new JwtToken(
                 $token->toString(),
                 $token->claims()->get(
@@ -55,9 +50,6 @@ class JwtTokenRepository implements TokenRepositoryInterface
                     $token->claims()->all(),
                 )
             );
-        }
-        catch (\Throwable $e) {
-            $this->logger->error($e);
         }
         return null;
     }
