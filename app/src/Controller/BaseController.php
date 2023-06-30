@@ -6,7 +6,6 @@ use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
-use Psr\Log\LoggerInterface;
 
 /**
  * Abstract base controller class
@@ -15,20 +14,8 @@ use Psr\Log\LoggerInterface;
  * @category Controller
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-abstract class BaseController implements ControllerInterface
+abstract class BaseController
 {
-    /**
-     * Constructor
-     *
-     * @param LoggerInterface $logger
-     * @return self
-     */
-    public function __construct(
-        protected readonly LoggerInterface $logger
-    )
-    {
-    }
-
     /**
      * Perform action on controller by calling `self::action`.
      * 

@@ -8,22 +8,13 @@ use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
-use Psr\Log\LoggerInterface;
 
 class ControllerTest extends TestCase
 {
     public function testBaseController()
     {
         $app = $this->getAppInstance();
-        $container = $app->getContainer();
-        $logger = $container->get(LoggerInterface::class);
         $testController = new class($logger) extends BaseController {
-            public function __construct(
-                LoggerInterface $logger
-            ) {
-                parent::__construct($logger);
-            }
-
             protected function action(
                 ServerRequestInterface $request,
                 ResponseInterface $response,

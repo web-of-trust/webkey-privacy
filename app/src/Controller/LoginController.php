@@ -10,7 +10,6 @@ use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
-use Psr\Log\LoggerInterface;
 use Slim\Psr7\Cookies;
 
 /**
@@ -27,16 +26,13 @@ class LoginController extends BaseController
      *
      * @param TokenRepositoryInterface $tokenRepository
      * @param Cookies $cookies
-     * @param LoggerInterface $logger
      * @return self
      */
     public function __construct(
         private readonly TokenRepositoryInterface $tokenRepository,
-        private readonly Cookies $cookies,
-        LoggerInterface $logger
+        private readonly Cookies $cookies
     )
     {
-        parent::__construct($logger);
     }
 
     /**
