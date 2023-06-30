@@ -29,7 +29,7 @@ final class AuthorizationFilter implements MiddlewareInterface
     /**
      * Constructor
      *
-     * @param AuthorizationInterface $tokenRepository
+     * @param AuthorizationInterface $authorization
      * @return self
      */
     public function __construct(
