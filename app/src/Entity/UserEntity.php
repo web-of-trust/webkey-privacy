@@ -49,9 +49,6 @@ class UserEntity extends BaseEntity {
     #[Column(name: 'login_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     private readonly ?DateTimeInterface $loginAt;
 
-    #[Column(name: 'access_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
-    private readonly ?DateTimeInterface $accessAt;
-
     /**
      * Constructor
      *
@@ -61,8 +58,8 @@ class UserEntity extends BaseEntity {
      * @param string $displayName
      * @param string $email
      * @param string $status
+     * @param array $roles
      * @param DateTimeInterface $loginAt
-     * @param DateTimeInterface $accessAt
      * @param int $createdBy
      * @param int $updatedBy
      * @param DateTimeInterface $createdAt
@@ -78,7 +75,6 @@ class UserEntity extends BaseEntity {
         string $status,
         array $roles = [],
         ?DateTimeInterface $loginAt = null,
-        ?DateTimeInterface $accessAt = null,
         int $createdBy = 0,
         int $updatedBy = 0,
         ?DateTimeInterface $createdAt = null,
@@ -168,16 +164,6 @@ class UserEntity extends BaseEntity {
     public function getLoginAt(): ?DateTimeInterface
     {
         return $this->loginAt;
-    }
-
-    /**
-     * Get access at
-     *
-     * @return DateTimeInterface
-     */
-    public function getAccessAt(): ?DateTimeInterface
-    {
-        return $this->accessAt;
     }
 
     /**
