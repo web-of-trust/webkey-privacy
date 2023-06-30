@@ -3,12 +3,10 @@
 namespace App\Authentication;
 
 use App\Entity\UserEntity;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
-use Slim\Exception\HttpUnauthorizedException;
 
 /**
  * Default authentication class
@@ -17,20 +15,8 @@ use Slim\Exception\HttpUnauthorizedException;
  * @category Authentication
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class DefaultAuthentication implements AuthenticationInterface
+class DefaultAuthentication extends BaseAuthentication
 {
-    /**
-     * Constructor
-     *
-     * @param EntityManagerInterface $entityManager
-     * @return self
-     */
-    public function __construct(
-        private readonly EntityManagerInterface $entityManager
-    )
-    {
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -45,31 +31,12 @@ class DefaultAuthentication implements AuthenticationInterface
                 FILTER_SANITIZE_FULL_SPECIAL_CHARS,
             );
             $password = $parsedBody['password'] ?? '';
-            $user = $this->entityManager->getRepository(
-                UserEntity::class
-            )->findOneBy(['username' => $username]);
-            if (!empty($user) && password_verify($password, $user->getPassword())) {
-                return new DefaultUser(
-                    $user->getUsername(),
-                    $user->getRoles(),
-                    [
-                        'id' => $user->getId(),
-                        'username' => $user->getUsername(),
-                        'displayName' => $user->getDisplayName(),
-                        'email' => $user->getEmail(),
-                        'status' => $user->getStatus(),
-                    ],
-                );
+            $user = $this->getUserEntity($username);
+            if ($user instanceof UserEntity &&
+                password_verify($password, $user->getPassword())) {
+                return $this->dtoUserEntity($user);
             }
         }
         return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface
-    {
-        throw new HttpUnauthorizedException($request);
     }
 }
