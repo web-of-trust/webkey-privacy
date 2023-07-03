@@ -17,6 +17,9 @@ use Psr\Http\Message\{
  */
 class LoginAuthentication extends BaseAuthentication
 {
+    public const USERNAME = 'username';
+    public const PASSWORD = 'password';
+
     /**
      * {@inheritdoc}
      */
@@ -27,10 +30,10 @@ class LoginAuthentication extends BaseAuthentication
         $parsedBody = $request->getParsedBody();
         if (is_array($parsedBody)) {
             $username = filter_var(
-                $parsedBody['username'] ?? '',
+                $parsedBody[self::USERNAME] ?? '',
                 FILTER_SANITIZE_FULL_SPECIAL_CHARS,
             );
-            $password = $parsedBody['password'] ?? '';
+            $password = $parsedBody[self::PASSWORD] ?? '';
             $user = $this->getUserEntity($username);
             if ($user instanceof UserEntity &&
                 password_verify($password, $user->getPassword())) {
