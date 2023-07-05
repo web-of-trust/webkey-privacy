@@ -57,10 +57,10 @@ final class Kernel implements KernelInterface
     public static function initialize(?string $env = null): void
     {
         if (empty(self::$container)) {
-            $env = $env ?? self::getEnvValue('app.env') ?? self::DEVELOPMENT_MODE;
+            $env = $env ?? self::getEnvValue('APP_ENV') ?? self::DEVELOPMENT_MODE;
             $builder = new ContainerBuilder();
             if ($env === self::PRODUCTION_MODE) {
-                $baseDir = self::getEnvValue('app.base_dir') ?? BASE_DIR;
+                $baseDir = self::getEnvValue('APP_BASE_DIR') ?? BASE_DIR;
                 $builder->enableCompilation($baseDir . '/var/cache/app');
             }
             self::registerConfig($builder);
@@ -119,7 +119,7 @@ final class Kernel implements KernelInterface
      */
     private static function registerConfig(ContainerBuilder $builder): void
     {
-        $baseDir = self::getEnvValue('app.base_dir') ?? BASE_DIR;
+        $baseDir = self::getEnvValue('APP_BASE_DIR') ?? BASE_DIR;
         $builder->addDefinitions($baseDir . '/app/config/app.php')
                 ->addDefinitions($baseDir . '/app/config/authorization.php');
     }
