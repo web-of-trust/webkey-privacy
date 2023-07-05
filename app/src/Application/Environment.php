@@ -8,21 +8,15 @@
 
 namespace App\Application;
 
-use Psr\Http\Message\ServerRequestInterface;
-
 /**
- * Kernel interface
- *
+ * Environment enum
+ * 
  * @package  App
  * @category Application
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-interface KernelInterface
+enum Environment: string
 {
-    /**
-     * Start application and serve user requests.
-     *
-     * @return void
-     */
-	static function serve(?ServerRequestInterface $request = null): void;
+    case Development = 'development';
+    case Production  = 'production';
 }

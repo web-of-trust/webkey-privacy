@@ -20,7 +20,8 @@ use App\Middleware\{
 };
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
-use Psr\Container\ContainerInterface as Container;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
@@ -37,9 +38,9 @@ final class Kernel implements KernelInterface
     /**
      * Psr container
      *
-     * @var Container
+     * @var ContainerInterface
      */
-    private static ?Container $container = null;
+    private static ?ContainerInterface $container = null;
 
     /**
      * Slim application
@@ -54,12 +55,12 @@ final class Kernel implements KernelInterface
      * @param string $env
      * @return void
      */
-    public static function initialize(?string $env = null): void
+    public static function initialize(?Environment $env = null): void
     {
         if (empty(self::$container)) {
-            $env = $env ?? self::getEnvValue('APP_ENV') ?? self::DEVELOPMENT_MODE;
+            $env = $env ?? Environment::tryFrom(self::getEnvValue('APP_ENV')) ?? Environment::Development;
             $builder = new ContainerBuilder();
-            if ($env === self::PRODUCTION_MODE) {
+            if ($env === Environment::Production) {
                 $baseDir = self::getEnvValue('APP_BASE_DIR') ?? BASE_DIR;
                 $builder->enableCompilation($baseDir . '/var/cache/app');
             }
@@ -70,11 +71,9 @@ final class Kernel implements KernelInterface
     }
 
     /**
-     * Start application and serve user requests.
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    public static function serve(): void
+    public static function serve(?ServerRequestInterface $request = null): void
     {
         self::initialize();
 
@@ -84,15 +83,15 @@ final class Kernel implements KernelInterface
             self::registerRoutes(self::$app);
         }
 
-        self::$app->run();
+        self::$app->run($request);
     }
 
     /**
      * Get Psr container
      *
-     * @return Container
+     * @return ContainerInterface
      */
-    public static function getContainer(): Container
+    public static function getContainer(): ContainerInterface
     {
         self::initialize();
         return self::$container;

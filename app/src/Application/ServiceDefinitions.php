@@ -71,7 +71,7 @@ final class ServiceDefinitions
                         level: (int) $container->get('logger.level'),
                     ),
                 ];
-                if ($container->get('app.env') !== Kernel::PRODUCTION_MODE) {
+                if ($container->get('app.env') !== Environment::Production->value) {
                     $handlers[] = new ErrorLogHandler(
                         level: (int) $container->get('logger.level'),
                     );
@@ -115,7 +115,7 @@ final class ServiceDefinitions
             EntityManagerInterface::class => static function (Container $container) {
                 $config = ORMSetup::createAttributeMetadataConfiguration(
                     paths: [$container->get('database.metadata_dir')],
-                    isDevMode: $container->get('app.env') !== Kernel::PRODUCTION_MODE,
+                    isDevMode: $container->get('app.env') !== Environment::Production->value,
                 );
                 $connection = DriverManager::getConnection(
                     (new DsnParser())->parse($container->get('database.dsn')),
