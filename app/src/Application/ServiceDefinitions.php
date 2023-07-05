@@ -56,9 +56,9 @@ use Slim\Psr7\Cookies;
 final class ServiceDefinitions
 {
     /**
-     * Adds service definitions.
+     * Add service definitions.
      *
-     * @param ContainerBuilder $containerBuilder Container builder.
+     * @param ContainerBuilder $builder.
      * @see https://php-di.org/doc/php-definitions.html
      */
     public function __invoke(ContainerBuilder $builder): void
