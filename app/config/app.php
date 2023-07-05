@@ -28,12 +28,12 @@ return [
     'encryption.cipher_mode' => \DI\env('ENCRYPTION_CIPHER_MODE', 'gcm'),
 
     // jwt configuration
-    'jwt.sign_key'      => \DI\env('JWT_SIGN_KEY', 'MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY='),
-    'jwt.verify_key'    => \DI\env('JWT_VERIFY_KEY', 'MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY='),
-    'jwt.algorithm'     => \DI\env('JWT_ALGORITHM', 'HS256'),
-    'jwt.expires'       => \DI\env('JWT_EXPIRES', 86400),
-    'jwt.issued_by'     => \DI\env('JWT_ISSUED_BY', 'https://www.example.com'),
-    'jwt.identified_by' => \DI\env('JWT_IDENTIFIED_BY', 'example.com'),
+    'jwt.sign_key_file'   => \DI\env('JWT_SIGN_KEY_FILE', BASE_DIR . '/var/key/jwt.sign.key'),
+    'jwt.verify_key_file' => \DI\env('JWT_VERIFY_KEY_FILE', BASE_DIR . '/var/key/jwt.verify.key'),
+    'jwt.algorithm'       => \DI\env('JWT_ALGORITHM', 'HS256'),
+    'jwt.expires'         => \DI\env('JWT_EXPIRES', 86400),
+    'jwt.issued_by'       => \DI\env('JWT_ISSUED_BY', 'https://www.example.com'),
+    'jwt.identified_by'   => \DI\env('JWT_IDENTIFIED_BY', 'example.com'),
 
     // cookie configuration
     'cookie.domain'   => \DI\env('COOKIE_DOMAIN'),

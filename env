@@ -33,8 +33,8 @@ ENCRYPTION_CIPHER_MODE = gcm
 #--------------------------------------------------------------------
 # jwt configuration
 #--------------------------------------------------------------------
-JWT_SIGN_KEY = MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
-JWT_VERIFY_KEY = MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+JWT_SIGN_KEY_FILE = ./var/key/jwt.sign.key
+JWT_VERIFY_KEY_FILE = ./var/key/jwt.verify.key
 JWT_ALGORITHM = HS256
 JWT_EXPIRES = 86400
 JWT_ISSUED_BY = https://www.example.com

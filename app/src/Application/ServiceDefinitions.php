@@ -71,7 +71,7 @@ final class ServiceDefinitions
                         level: (int) $container->get('logger.level'),
                     ),
                 ];
-                if ($container->get('app.env') !== self::PRODUCTION_MODE) {
+                if ($container->get('app.env') !== Kernel::PRODUCTION_MODE) {
                     $handlers[] = new ErrorLogHandler(
                         level: (int) $container->get('logger.level'),
                     );
@@ -85,19 +85,19 @@ final class ServiceDefinitions
                 if (self::isSymmetricSigner($signer)) {
                     $configuration = JwtConfiguration::forSymmetricSigner(
                         $signer,
-                        InMemory::base64Encoded(
-                            $container->get('jwt.sign_key')
+                        InMemory::file(
+                            $container->get('jwt.sign_key_file')
                         ),
                     );
                 }
                 else {
                     $configuration = JwtConfiguration::forAsymmetricSigner(
                         $signer,
-                        InMemory::base64Encoded(
-                            $container->get('jwt.sign_key')
+                        InMemory::file(
+                            $container->get('jwt.sign_key_file')
                         ),
-                        InMemory::base64Encoded(
-                            $container->get('jwt.verify_key')
+                        InMemory::file(
+                            $container->get('jwt.verify_key_file')
                         ),
                     );
                 }
@@ -115,7 +115,7 @@ final class ServiceDefinitions
             EntityManagerInterface::class => static function (Container $container) {
                 $config = ORMSetup::createAttributeMetadataConfiguration(
                     paths: [$container->get('database.metadata_dir')],
-                    isDevMode: $container->get('app.env') !== self::PRODUCTION_MODE,
+                    isDevMode: $container->get('app.env') !== Kernel::PRODUCTION_MODE,
                 );
                 $connection = DriverManager::getConnection(
                     (new DsnParser())->parse($container->get('database.dsn')),
