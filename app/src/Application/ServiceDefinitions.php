@@ -114,7 +114,9 @@ final class ServiceDefinitions
             },
             EntityManagerInterface::class => static function (Container $container) {
                 $config = ORMSetup::createAttributeMetadataConfiguration(
-                    paths: [$container->get('database.metadata_dir')],
+                    paths: [
+                        dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Entity',
+                    ],
                     isDevMode: $container->get('app.env') !== Environment::Production->value,
                 );
                 $connection = DriverManager::getConnection(

@@ -7,9 +7,8 @@ return [
     'app.cache_dir' => \DI\string('{app.base_dir}/var/cache/app'),
 
     // database configuration
-    'database.dsn'          => \DI\env('DATABASE_DSN', 'mysqli://user:secret@localhost/webkey-db'),
-    'database.cache_dir'    => \DI\string('{app.base_dir}/var/cache/doctrine'),
-    'database.metadata_dir' => \DI\string('{app.base_dir}/app/src/Entity'),
+    'database.dsn'       => \DI\env('DATABASE_DSN', 'mysqli://user:secret@localhost/webkey-db'),
+    'database.cache_dir' => \DI\string('{app.base_dir}/var/cache/doctrine'),
 
     // error configuration
     'error.display' => \DI\env('ERROR_DISPLAY', true),
