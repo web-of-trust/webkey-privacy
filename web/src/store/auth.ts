@@ -3,13 +3,15 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    token: localStorage.getItem('AUTH_TOKEN'),
-    user: {
-      displayName: localStorage.getItem('USER_DISPLAY_NAME'),
-      email: localStorage.getItem('USER_EMAIL'),
-    },
-  }),
+  state: (): AuthState => {
+    return {
+      token: localStorage.getItem('AUTH_TOKEN'),
+      user: {
+        displayName: localStorage.getItem('USER_DISPLAY_NAME'),
+        email: localStorage.getItem('USER_EMAIL'),
+      },
+    }
+  },
 
   getters: {
     token: (state) => state.token,
@@ -17,13 +19,25 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async login(username: string, password: string) {
-      await axios.post('/login', {
+    login(username: string, password: string) {
+      const store = this;
+      axios.post('/login', {
         username: username,
         password: password,
+      }, {
+        headers: {
+          'Authorization': 'Basic ' + window.btoa(username + ':' + password)
+        }
       })
       .then(function (response) {
-        console.log(response)
+        store.token = response.data.token
+        store.user = {
+          displayName: response.data.displayName,
+          email: response.data.email,
+        }
+        localStorage.setItem('AUTH_TOKEN', response.data.token)
+        localStorage.setItem('USER_DISPLAY_NAME', response.data.displayName)
+        localStorage.setItem('USER_EMAIL', response.data.email)
       })
       .catch(function (error) {
          console.log(error)
@@ -33,8 +47,8 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.token = null
       this.user = {
-        displayName: '',
-        email: '',
+        displayName: null,
+        email: null,
       }
       localStorage.removeItem('AUTH_TOKEN')
       localStorage.removeItem('USER_DISPLAY_NAME')
@@ -42,3 +56,13 @@ export const useAuthStore = defineStore('auth', {
     },
   },
 })
+
+interface AuthState {
+  token: string | null
+  user: UserInfo
+}
+
+interface UserInfo {
+  displayName: string | null
+  email: string | null
+}
