@@ -20,18 +20,19 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     login(username: string, password: string) {
-      const store = this;
+      const self = this;
       axios.post('/login', {
         username: username,
         password: password,
       }, {
         headers: {
-          'Authorization': 'Basic ' + window.btoa(username + ':' + password)
+          'Authorization': 'Basic ' + window.btoa(username + ':' + password),
+          'Content-Type': 'application/x-www-form-urlencoded',
         }
       })
       .then(function (response) {
-        store.token = response.data.token
-        store.user = {
+        self.token = response.data.token
+        self.user = {
           displayName: response.data.displayName,
           email: response.data.email,
         }
