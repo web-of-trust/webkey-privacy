@@ -9,17 +9,17 @@ use Minicli\Logging\LogLevel;
 use Minicli\Logging\LogType;
 
 $app = AppFactory::make([
-    'app_name' => 'Webkey command line interface',
+    'app_name' => 'Webkey Privacy CLI',
     'app_path' => [
         BASE_DIR . '/app/src/Command',
     ],
     'logs_path' => BASE_DIR . '/var/log',
     'logging' => [
-        'type' => LogType::SINGLE->value,
+        'type' => LogType::DAILY->value,
         'level' => LogLevel::INFO->value,
         'timestamp_format' => 'Y-m-d H:i:s',
     ],
-    'debug' => true,
+    'debug' => false,
 ], './bin/webkey help');
 
 $app->runCommand($argv);
