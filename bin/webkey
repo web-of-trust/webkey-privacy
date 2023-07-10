@@ -18,12 +18,6 @@ $app = AppFactory::make([
         BASE_DIR . '/app/src/Command',
         '@minicli/command-help'
     ],
-    'logs_path' => BASE_DIR . '/var/log',
-    'logging' => [
-        'type' => LogType::DAILY->value,
-        'level' => LogLevel::INFO->value,
-        'timestamp_format' => 'Y-m-d H:i:s',
-    ],
     'debug' => false,
 ], './bin/webkey help');
 
