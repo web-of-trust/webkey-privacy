@@ -12,6 +12,7 @@ $app = AppFactory::make([
     'app_name' => 'Webkey Privacy CLI',
     'app_path' => [
         BASE_DIR . '/app/src/Command',
+        '@minicli/command-help'
     ],
     'logs_path' => BASE_DIR . '/var/log',
     'logging' => [
