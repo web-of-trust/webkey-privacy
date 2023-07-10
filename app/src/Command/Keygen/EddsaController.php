@@ -17,6 +17,9 @@ class EddsaController extends CommandController
 {
     private const CURVE_NAME = 'Ed25519';
 
+    /**
+     * {@inheritdoc}
+     */
     public function handle(): void
     {
         if (!$this->hasParam('sign-key-file') || !$this->hasParam('verify-key-file')) {

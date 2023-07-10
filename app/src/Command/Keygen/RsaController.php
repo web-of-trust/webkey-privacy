@@ -17,6 +17,9 @@ class RsaController extends CommandController
 {
     private const MINIMUM_KEY_SIZE = 2048;
 
+    /**
+     * {@inheritdoc}
+     */
     public function handle(): void
     {
         $keySize = $this->hasParam('key-size') ? (int) $this->getParam('key-size') : self::MINIMUM_KEY_SIZE;
@@ -26,8 +29,6 @@ class RsaController extends CommandController
             );
         }
 
-        $signKeyFile = $this->getParam('sign-key-file');
-        $verifyKeyFile = $this->getParam('verify-key-file');
         if (!$this->hasParam('sign-key-file') || !$this->hasParam('verify-key-file')) {
             throw new MissingParametersException([
                 'sign-key-file',

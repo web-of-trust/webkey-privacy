@@ -17,9 +17,14 @@ class EcdsaController extends CommandController
 {
     private const DEFAULT_CURVE = 'P-256';
     private const CURVES = [
-        'P-256', 'P-384', 'P-521'
+        'P-256',
+        'P-384',
+        'P-521',
     ];
 
+    /**
+     * {@inheritdoc}
+     */
     public function handle(): void
     {
         $curve = $this->hasParam('curve') ? $this->getParam('curve') : self::DEFAULT_CURVE;
