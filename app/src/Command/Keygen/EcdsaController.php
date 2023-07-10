@@ -29,8 +29,6 @@ class EcdsaController extends CommandController
             );
         }
 
-        $signKeyFile = $this->getParam('sign-key-file');
-        $verifyKeyFile = $this->getParam('verify-key-file');
         if (!$this->hasParam('sign-key-file') || !$this->hasParam('verify-key-file')) {
             throw new MissingParametersException([
                 'sign-key-file',
