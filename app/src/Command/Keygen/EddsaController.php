@@ -21,6 +21,8 @@ class EddsaController extends KeygenController
      */
     public function handle(): void
     {
+        $this->display('Eddsa key generate');
+
         $edKey = EC::createKey(self::CURVE_NAME);
         file_put_contents(
             $this->getParam('sign-key-file'),

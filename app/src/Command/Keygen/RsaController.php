@@ -21,11 +21,13 @@ class RsaController extends KeygenController
      */
     public function handle(): void
     {
+        $this->display('Rsa key generate');
+
         $keySize = $this->hasParam('key-size') ? (int) $this->getParam('key-size') : self::MINIMUM_KEY_SIZE;
         if ($keySize < self::MINIMUM_KEY_SIZE) {
-            throw new \UnexpectedValueException(
-                'Rsa key size must be at least ' . self::MINIMUM_KEY_SIZE . ' bits.'
-            );
+            $message = 'Rsa key size must be at least ' . self::MINIMUM_KEY_SIZE . ' bits.';
+            $this->logger->error($message);
+            throw new \UnexpectedValueException($message);
         }
 
         $rsaKey = RSA::createKey($keySize);

@@ -21,11 +21,13 @@ class HmacController extends CommandController
      */
     public function handle(): void
     {
+        $this->display('Hmac key generate');
+
         $keySize = $this->hasParam('key-size') ? (int) $this->getParam('key-size') : self::MINIMUM_KEY_SIZE;
         if ($keySize < self::MINIMUM_KEY_SIZE) {
-            throw new \UnexpectedValueException(
-                'Hmac key size must be at least ' . self::MINIMUM_KEY_SIZE . ' bits.'
-            );
+            $message = 'Hmac key size must be at least ' . self::MINIMUM_KEY_SIZE . ' bits.';
+            $this->logger->error($message);
+            throw new \UnexpectedValueException($message);
         }
         file_put_contents(
             $this->getParam('key-file'),

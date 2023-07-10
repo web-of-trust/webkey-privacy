@@ -26,11 +26,13 @@ class EcdsaController extends KeygenController
      */
     public function handle(): void
     {
+        $this->display('Ecdsa key generate');
+
         $curve = $this->hasParam('curve') ? $this->getParam('curve') : self::DEFAULT_CURVE;
         if (!in_array($curve, self::CURVES)) {
-            throw new \UnexpectedValueException(
-                'Ecdsa curve must be P-256, P-384 or P-521'
-            );
+            $message = 'Ecdsa curve must be P-256, P-384 or P-521';
+            $this->logger->error($message);
+            throw new \UnexpectedValueException($message);
         }
 
         $curveName = match ($curve) {
