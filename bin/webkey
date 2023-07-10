@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+define('BASE_DIR', dirname(__DIR__));
+require_once BASE_DIR . '/vendor/autoload.php';
+
+use Minicli\Factories\AppFactory;
+
+$app = AppFactory::make([
+    'app_path' => [
+        BASE_DIR . '/app/src/Command',
+    ],
+    'debug' => true,
+], './bin/webkey help');
+$app->runCommand($argv);

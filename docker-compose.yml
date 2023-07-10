@@ -21,6 +21,10 @@ services:
             - ${DOCKER_VOLUMES:-./var/data}/database:/var/lib/mysql
         networks:
             - webkey-network
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-p${MARIADB_PASSWORD}"]
+            retries: 3
+            timeout: 5s
 
     # webkey app
     webkey-app:
