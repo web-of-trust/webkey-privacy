@@ -2,8 +2,7 @@
 
 namespace App\Command\Keygen;
 
-use Minicli\Command\CommandController;
-use Minicli\Exception\MissingParametersException;
+use App\Command\KeygenController;
 use phpseclib3\Crypt\EC;
 
 /**
@@ -13,7 +12,7 @@ use phpseclib3\Crypt\EC;
  * @category Command
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class EddsaController extends CommandController
+class EddsaController extends KeygenController
 {
     private const CURVE_NAME = 'Ed25519';
 
@@ -22,22 +21,14 @@ class EddsaController extends CommandController
      */
     public function handle(): void
     {
-        if (!$this->hasParam('sign-key-file') || !$this->hasParam('verify-key-file')) {
-            throw new MissingParametersException([
-                'sign-key-file',
-                'verify-key-file',
-            ]);
-        }
-        else {
-            $edKey = EC::createKey(self::CURVE_NAME);
-            file_put_contents(
-                $this->getParam('sign-key-file'),
-                $edKey->toString('libsodium')
-            );
-            file_put_contents(
-                $this->getParam('verify-key-file'),
-                $edKey->getPublicKey()->toString('libsodium')
-            );
-        }
+        $edKey = EC::createKey(self::CURVE_NAME);
+        file_put_contents(
+            $this->getParam('sign-key-file'),
+            $edKey->toString('libsodium')
+        );
+        file_put_contents(
+            $this->getParam('verify-key-file'),
+            $edKey->getPublicKey()->toString('libsodium')
+        );
     }
 }

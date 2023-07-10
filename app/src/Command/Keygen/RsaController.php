@@ -2,8 +2,7 @@
 
 namespace App\Command\Keygen;
 
-use Minicli\Command\CommandController;
-use Minicli\Exception\MissingParametersException;
+use App\Command\KeygenController;
 use phpseclib3\Crypt\RSA;
 
 /**
@@ -13,7 +12,7 @@ use phpseclib3\Crypt\RSA;
  * @category Command
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class RsaController extends CommandController
+class RsaController extends KeygenController
 {
     private const MINIMUM_KEY_SIZE = 2048;
 
@@ -29,22 +28,14 @@ class RsaController extends CommandController
             );
         }
 
-        if (!$this->hasParam('sign-key-file') || !$this->hasParam('verify-key-file')) {
-            throw new MissingParametersException([
-                'sign-key-file',
-                'verify-key-file',
-            ]);
-        }
-        else {
-            $rsaKey = RSA::createKey($keySize);
-            file_put_contents(
-                $this->getParam('sign-key-file'),
-                $rsaKey->toString('PKCS8')
-            );
-            file_put_contents(
-                $this->getParam('verify-key-file'),
-                $rsaKey->getPublicKey()->toString('PKCS8')
-            );
-        }
+        $rsaKey = RSA::createKey($keySize);
+        file_put_contents(
+            $this->getParam('sign-key-file'),
+            $rsaKey->toString('PKCS8')
+        );
+        file_put_contents(
+            $this->getParam('verify-key-file'),
+            $rsaKey->getPublicKey()->toString('PKCS8')
+        );
     }
 }

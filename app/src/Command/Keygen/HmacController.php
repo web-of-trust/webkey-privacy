@@ -3,7 +3,6 @@
 namespace App\Command\Keygen;
 
 use Minicli\Command\CommandController;
-use Minicli\Exception\MissingParametersException;
 use phpseclib3\Crypt\Random;
 
 /**
@@ -28,15 +27,19 @@ class HmacController extends CommandController
                 'Hmac key size must be at least ' . self::MINIMUM_KEY_SIZE . ' bits.'
             );
         }
+        file_put_contents(
+            $this->getParam('key-file'),
+            Random::string(($keySize + 7) >> 3)
+        );
+    }
 
-        if ($this->hasParam('key-file')) {
-            file_put_contents(
-                $this->getParam('key-file'),
-                Random::string(($keySize + 7) >> 3)
-            );
-        }
-        else {
-            throw new MissingParametersException(['key-file']);
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function required(): array
+    {
+        return [
+            'key-file',
+        ];
     }
 }

@@ -2,8 +2,7 @@
 
 namespace App\Command\Keygen;
 
-use Minicli\Command\CommandController;
-use Minicli\Exception\MissingParametersException;
+use App\Command\KeygenController;
 use phpseclib3\Crypt\EC;
 
 /**
@@ -13,7 +12,7 @@ use phpseclib3\Crypt\EC;
  * @category Command
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class EcdsaController extends CommandController
+class EcdsaController extends KeygenController
 {
     private const DEFAULT_CURVE = 'P-256';
     private const CURVES = [
@@ -34,27 +33,19 @@ class EcdsaController extends CommandController
             );
         }
 
-        if (!$this->hasParam('sign-key-file') || !$this->hasParam('verify-key-file')) {
-            throw new MissingParametersException([
-                'sign-key-file',
-                'verify-key-file',
-            ]);
-        }
-        else {
-            $curveName = match ($curve) {
-                'P-384' => 'secp384r1',
-                'P-521' => 'secp521r1',
-                default => 'secp256r1',
-            };
-            $ecKey = EC::createKey($curveName);
-            file_put_contents(
-                $this->getParam('sign-key-file'),
-                $ecKey->toString('PKCS8')
-            );
-            file_put_contents(
-                $this->getParam('verify-key-file'),
-                $ecKey->getPublicKey()->toString('PKCS8')
-            );
-        }
+        $curveName = match ($curve) {
+            'P-384' => 'secp384r1',
+            'P-521' => 'secp521r1',
+            default => 'secp256r1',
+        };
+        $ecKey = EC::createKey($curveName);
+        file_put_contents(
+            $this->getParam('sign-key-file'),
+            $ecKey->toString('PKCS8')
+        );
+        file_put_contents(
+            $this->getParam('verify-key-file'),
+            $ecKey->getPublicKey()->toString('PKCS8')
+        );
     }
 }
