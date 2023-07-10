@@ -5,11 +5,21 @@ define('BASE_DIR', dirname(__DIR__));
 require_once BASE_DIR . '/vendor/autoload.php';
 
 use Minicli\Factories\AppFactory;
+use Minicli\Logging\LogLevel;
+use Minicli\Logging\LogType;
 
 $app = AppFactory::make([
+    'app_name' => 'Webkey command line interface',
     'app_path' => [
         BASE_DIR . '/app/src/Command',
     ],
+    'logs_path' => BASE_DIR . '/var/log',
+    'logging' => [
+        'type' => LogType::SINGLE->value,
+        'level' => LogLevel::INFO->value,
+        'timestamp_format' => 'Y-m-d H:i:s',
+    ],
     'debug' => true,
 ], './bin/webkey help');
+
 $app->runCommand($argv);
