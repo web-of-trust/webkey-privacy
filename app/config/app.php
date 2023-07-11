@@ -10,7 +10,7 @@ return [
 
     'cli.name'      => \DI\env('CLI_NAME', 'Webkey Privacy CLI'),
     'cli.signature' => \DI\env('CLI_SIGNATURE', './bin/webkey help'),
-    'cli.log_dir'   => \DI\string('{app.base_dir}/var/log'),
+    'cli.logs_path' => \DI\string('{app.base_dir}/var/log'),
     'cli.logging'   => [
         'type' => 'daily',
         'level' => 'INFO',

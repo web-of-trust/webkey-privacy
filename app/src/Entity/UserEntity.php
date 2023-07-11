@@ -93,7 +93,6 @@ class UserEntity extends BaseEntity {
         $this->roles = $roles;
 
         $this->loginAt = $loginAt;
-        $this->accessAt = $accessAt;
     }
 
     /**

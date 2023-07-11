@@ -14,7 +14,7 @@ class ControllerTest extends TestCase
     public function testBaseController()
     {
         $app = $this->getAppInstance();
-        $testController = new class($logger) extends BaseController {
+        $testController = new class() extends BaseController {
             protected function action(
                 ServerRequestInterface $request,
                 ResponseInterface $response,

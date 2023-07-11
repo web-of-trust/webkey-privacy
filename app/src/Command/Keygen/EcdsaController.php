@@ -34,7 +34,7 @@ class EcdsaController extends KeygenController
         $curve = $this->hasParam('curve') ? $this->getParam('curve') : self::P_256_CURVE;
         if (!in_array($curve, self::CURVES)) {
             throw new \UnexpectedValueException(
-                'Ecdsa curve must be one of ' implode(', ', self::CURVES) . ' curves'
+                'Ecdsa curve must be one of ' . implode(', ', self::CURVES) . ' curves'
             );
         }
 
