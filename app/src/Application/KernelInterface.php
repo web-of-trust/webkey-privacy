@@ -25,4 +25,11 @@ interface KernelInterface
      * @return void
      */
 	static function serve(?ServerRequestInterface $request = null): void;
+
+    /**
+     * Run a command from CLI.
+     *
+     * @return void
+     */
+    static function runCommand(array $argv = []): void;
 }

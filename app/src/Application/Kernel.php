@@ -20,10 +20,13 @@ use App\Middleware\{
 };
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
+use Minicli\Factories\AppFactory as CliFactory;
+use Minicli\Logging\Logger as CliLogger;
+use Minicli\App as CliApp;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Slim\App;
+use Slim\App as SlimApp;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -45,9 +48,23 @@ final class Kernel implements KernelInterface
     /**
      * Slim application
      *
-     * @var App
+     * @var SlimApp
      */
-    private static ?App $app = null;
+    private static ?SlimApp $app = null;
+
+    /**
+     * Mini cli application
+     *
+     * @var CliApp
+     */
+    private static ?CliApp $cli = null;
+
+    /**
+     * Application environment
+     *
+     * @var Environment
+     */
+    private static ?Environment $env = null;
 
     /**
      * Initialize application.
@@ -57,10 +74,13 @@ final class Kernel implements KernelInterface
      */
     public static function initialize(?Environment $env = null): void
     {
+        self::$env = $env ?? Environment::tryFrom(
+            self::getEnvValue('APP_ENV') ?? ''
+        ) ?? Environment::Development;
+
         if (empty(self::$container)) {
-            $env = $env ?? Environment::tryFrom(self::getEnvValue('APP_ENV')) ?? Environment::Development;
             $builder = new ContainerBuilder();
-            if ($env === Environment::Production) {
+            if (self::$env === Environment::Production) {
                 $baseDir = self::getEnvValue('APP_BASE_DIR') ?? BASE_DIR;
                 $builder->enableCompilation($baseDir . '/var/cache/app');
             }
@@ -84,6 +104,32 @@ final class Kernel implements KernelInterface
         }
 
         self::$app->run($request);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function runCommand(array $argv = []): void
+    {
+        self::initialize();
+        if (empty(self::$cli)) {
+            self::$cli = CliFactory::make([
+                'app_name' => self::$container->get('cli.name'),
+                'app_path' => [
+                    dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Command',
+                    '@minicli/command-help'
+                ],
+                'logging' => self::$container->get('cli.logging'),
+                'debug' => self::$env === Environment::Development,
+            ], self::$container->get('cli.signature'));
+            self::$cli->addService(
+                'logs_path', fn () => self::$container->get('cli.logs_path')
+            );
+            self::$cli->addService(
+                'logger', new CliLogger()
+            );
+        }
+        self::$cli->runCommand($argv);
     }
 
     /**
@@ -137,10 +183,10 @@ final class Kernel implements KernelInterface
     /**
      * Register middlewares
      * 
-     * @param App $app
+     * @param SlimApp $app
      * @return void
      */
-    private static function registerMiddlewares(App $app): void
+    private static function registerMiddlewares(SlimApp $app): void
     {
         $container = $app->getContainer();
         $app->addRoutingMiddleware();
@@ -156,10 +202,10 @@ final class Kernel implements KernelInterface
     /**
      * Register routes
      * 
-     * @param App $app
+     * @param SlimApp $app
      * @return void
      */
-    private static function registerRoutes(App $app): void
+    private static function registerRoutes(SlimApp $app): void
     {
         $container = $app->getContainer();
 

@@ -8,17 +8,7 @@ if (php_sapi_name() !== 'cli') {
 define('BASE_DIR', dirname(__DIR__));
 require_once BASE_DIR . '/vendor/autoload.php';
 
-use Minicli\Factories\AppFactory;
-use Minicli\Logging\LogLevel;
-use Minicli\Logging\LogType;
+use App\Application\Kernel;
 
-$app = AppFactory::make([
-    'app_name' => 'Webkey Privacy CLI',
-    'app_path' => [
-        BASE_DIR . '/app/src/Command',
-        '@minicli/command-help'
-    ],
-    'debug' => false,
-], './bin/webkey help');
-
-$app->runCommand($argv);
+\Dotenv\Dotenv::createImmutable(BASE_DIR)->safeLoad();
+Kernel::runCommand($argv);

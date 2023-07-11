@@ -71,7 +71,7 @@ final class ServiceDefinitions
                         level: (int) $container->get('logger.level'),
                     ),
                 ];
-                if ($container->get('app.env') !== Environment::Production->value) {
+                if ($container->get('app.env') === Environment::Development->value) {
                     $handlers[] = new ErrorLogHandler(
                         level: (int) $container->get('logger.level'),
                     );
@@ -117,7 +117,7 @@ final class ServiceDefinitions
                     paths: [
                         dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Entity',
                     ],
-                    isDevMode: $container->get('app.env') !== Environment::Production->value,
+                    isDevMode: $container->get('app.env') === Environment::Development->value,
                 );
                 $connection = DriverManager::getConnection(
                     (new DsnParser())->parse($container->get('database.dsn')),
