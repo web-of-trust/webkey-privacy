@@ -8,6 +8,7 @@ return [
     'app.cache_dir' => \DI\string('{app.base_dir}/var/cache/app'),
     'app.log_dir'   => \DI\string('{app.base_dir}/var/log'),
 
+    // cli configuration
     'cli.name'      => \DI\env('CLI_NAME', 'Webkey Privacy CLI'),
     'cli.signature' => \DI\env('CLI_SIGNATURE', './bin/webkey help'),
     'cli.logs_path' => \DI\string('{app.base_dir}/var/log'),
