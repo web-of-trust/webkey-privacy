@@ -14,11 +14,14 @@ use phpseclib3\Crypt\EC;
  */
 class EcdsaController extends KeygenController
 {
-    private const DEFAULT_CURVE = 'P-256';
+    private const P_256_CURVE = 'P-256';
+    private const P_384_CURVE = 'P-384';
+    private const P_521_CURVE = 'P-521';
+
     private const CURVES = [
-        'P-256',
-        'P-384',
-        'P-521',
+        self::P_256_CURVE,
+        self::P_384_CURVE,
+        self::P_521_CURVE,
     ];
 
     /**
@@ -28,16 +31,16 @@ class EcdsaController extends KeygenController
     {
         $this->display('Ecdsa key generate');
 
-        $curve = $this->hasParam('curve') ? $this->getParam('curve') : self::DEFAULT_CURVE;
+        $curve = $this->hasParam('curve') ? $this->getParam('curve') : self::P_256_CURVE;
         if (!in_array($curve, self::CURVES)) {
             throw new \UnexpectedValueException(
-                'Ecdsa curve must be P-256, P-384 or P-521'
+                'Ecdsa curve must be one of ' implode(', ', self::CURVES) . ' curves'
             );
         }
 
         $curveName = match ($curve) {
-            'P-384' => 'secp384r1',
-            'P-521' => 'secp521r1',
+            self::P_384_CURVE => 'secp384r1',
+            self::P_521_CURVE => 'secp521r1',
             default => 'secp256r1',
         };
         $ecKey = EC::createKey($curveName);
