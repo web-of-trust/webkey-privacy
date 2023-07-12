@@ -23,6 +23,11 @@ use Psr\Http\Message\{
  */
 interface AuthenticationInterface
 {
+    const COOKIE_NAME          = 'AUTH_TOKEN';
+    const AUTHORIZATION_HEADER = 'Authorization';
+    const BEARER_TOKEN_PATTERN = '/^Bearer\s+(.*?)$/i';
+    const BASIC_TOKEN_PATTERN  = '/^Basic\s+(.*?)$/i';
+
     /**
      * Authenticate the http request and return a valid user or null if not authenticated
      * 

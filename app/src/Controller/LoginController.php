@@ -57,12 +57,12 @@ class LoginController extends BaseController
             $response->getBody()->write(json_encode([
                 'token' => $token->getToken(),
                 'user' => [
-                    TokenRepositoryInterface::USER_IDENTITY => $user->getIdentity(),
-                    TokenRepositoryInterface::USER_DISPLAY_NAME => $user->getDetail(
-                        TokenRepositoryInterface::USER_DISPLAY_NAME
+                    UserInterface::USER_IDENTITY => $user->getIdentity(),
+                    UserInterface::USER_DISPLAY_NAME => $user->getDetail(
+                        UserInterface::USER_DISPLAY_NAME
                     ),
-                    TokenRepositoryInterface::USER_EMAIL => $user->getDetail(
-                        TokenRepositoryInterface::USER_EMAIL
+                    UserInterface::USER_EMAIL => $user->getDetail(
+                        UserInterface::USER_EMAIL
                     ),
                 ],
             ]));

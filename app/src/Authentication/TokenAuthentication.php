@@ -53,7 +53,7 @@ class TokenAuthentication extends BaseAuthentication
         if ($token instanceof TokenInterface) {
             $payload = $token->getPayload();
             $identity = filter_var(
-                $payload[TokenRepositoryInterface::USER_IDENTITY] ?? '',
+                $payload[UserInterface::USER_IDENTITY] ?? '',
                 FILTER_SANITIZE_FULL_SPECIAL_CHARS,
             );
             $user = $this->getUserEntity($identity);
@@ -73,15 +73,15 @@ class TokenAuthentication extends BaseAuthentication
     private static function getAuthToken(ServerRequestInterface $request): string
     {
         $header = $request->getHeaderLine(
-            TokenRepositoryInterface::AUTHORIZATION_HEADER
+            self::AUTHORIZATION_HEADER
         );
         if (!empty($header) &&
-            preg_match(TokenRepositoryInterface::BEARER_TOKEN_PATTERN, $header, $matches)) {
+            preg_match(self::BEARER_TOKEN_PATTERN, $header, $matches)) {
             return $matches[1];
         }
         else {
             $params = $request->getCookieParams();
-            return $params[TokenRepositoryInterface::COOKIE_NAME] ?? '';
+            return $params[self::COOKIE_NAME] ?? '';
         }
     }
 }

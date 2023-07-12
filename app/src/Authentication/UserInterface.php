@@ -18,6 +18,10 @@ namespace App\Authentication;
  */
 interface UserInterface
 {
+    const USER_IDENTITY     = 'identity';
+    const USER_DISPLAY_NAME = 'displayName';
+    const USER_EMAIL        = 'email';
+
     /**
      * Get the unique user identity (id, username, email address or ...)
      * 

@@ -41,7 +41,7 @@ final class Kernel implements KernelInterface
      *
      * @var ContainerInterface
      */
-    private static ?ContainerInterface $container = null;
+    private static ContainerInterface $container;
 
     /**
      * Slim application

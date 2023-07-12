@@ -44,10 +44,10 @@ class LoginAuthentication extends BaseAuthentication
             $password = $request->getServerParams()['PHP_AUTH_PW'] ?? null;
             if ($username === null || $password === null) {
                 $header = $request->getHeaderLine(
-                    TokenRepositoryInterface::AUTHORIZATION_HEADER
+                    self::AUTHORIZATION_HEADER
                 );
                 if (!empty($header) &&
-                    preg_match(TokenRepositoryInterface::BASIC_TOKEN_PATTERN, $header, $matches)) {
+                    preg_match(self::BASIC_TOKEN_PATTERN, $header, $matches)) {
                     list($username, $password) = array_map(
                         static fn ($value) => $value === '' ? null : $value,
                         explode(':', base64_decode($matches[1]), 2)

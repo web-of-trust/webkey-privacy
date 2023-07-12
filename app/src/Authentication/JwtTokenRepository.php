@@ -83,11 +83,11 @@ class JwtTokenRepository implements TokenRepositoryInterface
             ->issuedAt($now)
             ->canOnlyBeUsedAfter($now)
             ->expiresAt($expiresAt)
-            ->withClaim(self::USER_IDENTITY, $user->getIdentity())
+            ->withClaim(UserInterface::USER_IDENTITY, $user->getIdentity())
             ->withClaim(
-                self::USER_DISPLAY_NAME, $user->getDetail(self::USER_DISPLAY_NAME)
+                UserInterface::USER_DISPLAY_NAME, $user->getDetail(UserInterface::USER_DISPLAY_NAME)
             )
-            ->withClaim(self::USER_EMAIL, $user->getDetail(self::USER_EMAIL))
+            ->withClaim(UserInterface::USER_EMAIL, $user->getDetail(UserInterface::USER_EMAIL))
             ->getToken(
                 $this->configuration->signer(),
                 $this->configuration->signingKey(),

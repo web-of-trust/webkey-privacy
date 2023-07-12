@@ -49,15 +49,15 @@ abstract class BaseAuthentication implements AuthenticationInterface
     /**
      * Get user entity
      * 
-     * @param string $uid
+     * @param string $identity
      * @return UserEntity
      */
-    protected function getUserEntity(string $uid = ''): ?UserEntity
+    protected function getUserEntity(string $identity = ''): ?UserEntity
     {
         return $this->entityManager->getRepository(
             UserEntity::class
         )->findOneBy([
-            'username' => $uid,
+            'username' => $identity,
             'status' => UserEntity::ACTIVE_STATUS,
         ]);
     }
@@ -74,11 +74,9 @@ abstract class BaseAuthentication implements AuthenticationInterface
             $entity->getUsername(),
             $entity->getRoles(),
             [
-                'id' => $entity->getId(),
-                'username' => $entity->getUsername(),
-                'displayName' => $entity->getDisplayName(),
-                'email' => $entity->getEmail(),
-                'status' => $entity->getStatus(),
+                UserInterface::USER_IDENTITY => $entity->getUsername(),
+                UserInterface::USER_DISPLAY_NAME => $entity->getDisplayName(),
+                UserInterface::USER_EMAIL => $entity->getEmail(),
             ],
         );
     }

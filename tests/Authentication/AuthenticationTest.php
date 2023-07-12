@@ -23,9 +23,10 @@ class AuthenticationTest extends TestCase
         );
 
         $repositoryProphecy = $this->prophesize(ObjectRepository::class);
-        $repositoryProphecy->findOneBy(['username' => $username])
-            ->willReturn($userEntity)
-            ->shouldBeCalledOnce();
+        $repositoryProphecy->findOneBy([
+            'username' => $username,
+            'status' => UserEntity::ACTIVE_STATUS,
+        ])->willReturn($userEntity)->shouldBeCalledOnce();
 
         $managerProphecy = $this->prophesize(EntityManagerInterface::class);
         $managerProphecy->getRepository(UserEntity::class)

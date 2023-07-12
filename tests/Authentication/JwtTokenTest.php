@@ -19,7 +19,14 @@ class JwtTokenTest extends TestCase
 
         $repository = $container->get(TokenRepositoryInterface::class);
         $token = $repository->create(
-            new AuthenticatedUser($username, [], ['displayName' => $displayName, 'email' => $email])
+            new AuthenticatedUser(
+                $username,
+                [],
+                [
+                    'displayName' => $displayName,
+                    'email' => $email
+                ]
+            )
         );
 
         $now = new \DateTimeImmutable();
@@ -29,14 +36,14 @@ class JwtTokenTest extends TestCase
         );
 
         $payload = $token->getPayload();
-        $this->assertEquals($username, $payload['uid']);
-        $this->assertEquals($displayName, $payload['displayName']);
-        $this->assertEquals($email, $payload['email']);
+        $this->assertEquals($username, $payload[AuthenticatedUser::USER_IDENTITY]);
+        $this->assertEquals($displayName, $payload[AuthenticatedUser::USER_DISPLAY_NAME]);
+        $this->assertEquals($email, $payload[AuthenticatedUser::USER_EMAIL]);
 
         $loadedToken = $repository->load($token->getToken());
         $payload = $loadedToken->getPayload();
-        $this->assertEquals($username, $payload['uid']);
-        $this->assertEquals($displayName, $payload['displayName']);
-        $this->assertEquals($email, $payload['email']);
+        $this->assertEquals($username, $payload[AuthenticatedUser::USER_IDENTITY]);
+        $this->assertEquals($displayName, $payload[AuthenticatedUser::USER_DISPLAY_NAME]);
+        $this->assertEquals($email, $payload[AuthenticatedUser::USER_EMAIL]);
     }
 }
