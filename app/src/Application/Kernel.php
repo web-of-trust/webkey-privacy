@@ -14,6 +14,7 @@ use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Application as ConsoleApplication;
 
 /**
  * Kernel class
@@ -82,9 +83,9 @@ final class Kernel implements KernelInterface
     /**
      * {@inheritdoc}
      */
-    public function runCommand(array $argv = []): void
+    public function runCommand(): void
     {
-        $this->container->get(\Minicli\App::class)->runCommand($argv);
+        $this->container->get(ConsoleApplication::class)->run();
     }
 
     /**

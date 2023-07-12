@@ -9,25 +9,24 @@
 
 namespace App\Command;
 
-use Minicli\Command\CommandController;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Abstract keygen command controller class
+ * Abstract keygen command class
  * 
  * @package  App
  * @category Command
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-abstract class KeygenController extends CommandController
+abstract class KeygenCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
-    public function required(): array
+    protected function configure(): void
     {
-        return [
-            'sign-key-file',
-            'verify-key-file',
-        ];
+        $this->addOption('sign-key-file', null, InputOption::VALUE_REQUIRED, 'The sign key file.')
+             ->addOption('verify-key-file', null, InputOption::VALUE_REQUIRED, 'The verify key file.');
     }
 }

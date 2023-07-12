@@ -4,19 +4,10 @@ return [
     // main configuration
     'app.name'      => \DI\env('APP_NAME', 'Webkey Privacy'),
     'app.env'       => \DI\env('APP_ENV', 'development'),
+    'app.version'   => \DI\env('APP_VERSION', '1.0.0'),
     'app.base_dir'  => \DI\env('APP_BASE_DIR', BASE_DIR),
     'app.cache_dir' => \DI\string('{app.base_dir}/var/cache/app'),
     'app.log_dir'   => \DI\string('{app.base_dir}/var/log'),
-
-    // cli configuration
-    'cli.name'      => \DI\env('CLI_NAME', 'Webkey Privacy CLI'),
-    'cli.signature' => \DI\env('CLI_SIGNATURE', './bin/webkey help'),
-    'cli.logs_path' => \DI\string('{app.base_dir}/var/log'),
-    'cli.logging'   => [
-        'type' => 'daily',
-        'level' => 'INFO',
-        'timestamp_format' => 'Y-m-d H:i:s',
-    ],
 
     // database configuration
     'database.dsn'       => \DI\env('DATABASE_DSN', 'mysqli://user:secret@localhost/webkey-db'),

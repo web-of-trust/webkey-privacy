@@ -19,6 +19,12 @@ use App\Authorization\{
     AuthorizationInterface,
     DefaultAuthorization,
 };
+use App\Command\Keygen\{
+    EcdsaCommand,
+    EddsaCommand,
+    HmacCommand,
+    RsaCommand,
+};
 use DI\ContainerBuilder;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
@@ -38,9 +44,6 @@ use Lcobucci\JWT\Validation\Constraint\{
     SignedWith,
     StrictValidAt,
 };
-use Minicli\App as MinicliApp;
-use Minicli\Factories\AppFactory as MinicliFactory;
-use Minicli\Logging\Logger as MinicliLogger;
 use Monolog\Logger;
 use Monolog\Handler\{
     ErrorLogHandler,
@@ -50,6 +53,7 @@ use Monolog\Processor\WebProcessor;
 use Psr\Container\ContainerInterface as Container;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Cookies;
+use Symfony\Component\Console\Application as ConsoleApplication;
 
 /**
  * Service definitions class
@@ -156,23 +160,19 @@ final class ServiceDefinitions
                     $container->get('authorization.allow'),
                 );
             },
-            MinicliApp::class => static function (Container $container) {
-                $cliApp = MinicliFactory::make([
-                    'app_name' => $container->get('cli.name'),
-                    'app_path' => [
-                        dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Command',
-                        '@minicli/command-help'
-                    ],
-                    'logging' => $container->get('cli.logging'),
-                    'debug' => $container->get('app.env') === Environment::Development->value,
-                ], $container->get('cli.signature'));
-                $cliApp->addService(
-                    'logs_path', fn () => $container->get('cli.logs_path')
+            ConsoleApplication::class => static function (Container $container) {
+                $console = new ConsoleApplication(
+                    $container->get('app.name'),
+                    $container->get('app.version'),
                 );
-                $cliApp->addService(
-                    'logger', new MinicliLogger()
-                );
-                return $cliApp;
+                $console->addCommands([
+                    new EcdsaCommand(),
+                    new EddsaCommand(),
+                    new HmacCommand(),
+                    new RsaCommand(),
+                ]);
+
+                return $console;
             },
             Cookies::class => static function (Container $container) {
                 return (new Cookies())->setDefaults([

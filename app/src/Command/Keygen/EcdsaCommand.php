@@ -9,17 +9,26 @@
 
 namespace App\Command\Keygen;
 
-use App\Command\KeygenController;
+use App\Command\KeygenCommand;
 use phpseclib3\Crypt\EC;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Ecdsa keygen command controller class
+ * Ecdsa keygen command class
  * 
  * @package  App
  * @category Command
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class EcdsaController extends KeygenController
+#[AsCommand(
+    name: 'keygen:ecdsa',
+    description: 'Generate a new ecdsa key.'
+)]
+final class EcdsaCommand extends KeygenCommand
 {
     private const P_256_CURVE = 'P-256';
     private const P_384_CURVE = 'P-384';
@@ -34,11 +43,21 @@ class EcdsaController extends KeygenController
     /**
      * {@inheritdoc}
      */
-    public function handle(): void
+    protected function configure(): void
     {
-        $this->display('Ecdsa key generate');
+        parent::configure();
+        $this->setHelp('This command allows you to generate an ecdsa key.')
+             ->addArgument(
+                'curve', InputArgument::OPTIONAL, 'The curve of the key.', self::P_256_CURVE
+             );
+    }
 
-        $curve = $this->hasParam('curve') ? $this->getParam('curve') : self::P_256_CURVE;
+    /**
+     * {@inheritdoc}
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $curve = $input->getArgument('curve');
         if (!in_array($curve, self::CURVES)) {
             throw new \UnexpectedValueException(
                 'Ecdsa curve must be one of ' . implode(', ', self::CURVES) . ' curves'
@@ -52,12 +71,15 @@ class EcdsaController extends KeygenController
         };
         $ecKey = EC::createKey($curveName);
         file_put_contents(
-            $this->getParam('sign-key-file'),
+            $input->getOption('sign-key-file'),
             $ecKey->toString('PKCS8')
         );
         file_put_contents(
-            $this->getParam('verify-key-file'),
+            $input->getOption('verify-key-file'),
             $ecKey->getPublicKey()->toString('PKCS8')
         );
+
+        $output->writeln('Ecdsa key successfully generated!');
+        return Command::SUCCESS;
     }
 }

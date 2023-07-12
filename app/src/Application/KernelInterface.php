@@ -40,5 +40,5 @@ interface KernelInterface
      *
      * @return void
      */
-    function runCommand(array $argv = []): void;
+    function runCommand(): void;
 }
