@@ -26,10 +26,10 @@ use Slim\Routing\RouteCollectorProxy;
 final class RouteDefinitions
 {
     /**
-     * Add route definitions.
+     * Add routes to slim application.
      *
      * @param App $app.
-     * @see https://php-di.org/doc/php-definitions.html
+     * @see https://www.slimframework.com/docs/v4/objects/routing.html
      */
     public function __invoke(App $app): void
     {
