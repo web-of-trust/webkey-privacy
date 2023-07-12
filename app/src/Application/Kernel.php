@@ -211,6 +211,7 @@ final class Kernel implements KernelInterface
         $container = $app->getContainer();
 
         $app->get('/', \App\Controller\HomeController::class);
+        $app->get('/logout', \App\Controller\LogoutController::class);
         $app->post(
             '/login', \App\Controller\LoginController::class
         )->addMiddleware(new AuthenticationFilter(

@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
 
         logout() {
             const self = this;
-            axios.post('/logout').then(function (response) {
+            axios.get('/logout').then(function (response) {
                 localStorage.removeItem('AUTH_TOKEN')
                 localStorage.removeItem('USER_IDENTITY')
                 localStorage.removeItem('USER_DISPLAY_NAME')
