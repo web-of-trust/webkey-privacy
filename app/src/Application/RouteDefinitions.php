@@ -9,6 +9,10 @@
 
 namespace App\Application;
 
+use App\Middleware\{
+    AuthenticationFilter,
+    AuthorizationFilter,
+};
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 

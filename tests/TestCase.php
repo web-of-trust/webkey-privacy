@@ -18,13 +18,14 @@ class TestCase extends PHPUnit_TestCase
 {
     use ProphecyTrait;
 
+    protected $kernel;
     protected $faker;
 
     protected function setUp(): void
     {
         parent::setUp();
-        Kernel::initialize();
-        $this->faker = \Faker\Factory::create();
+        $this->kernel = new Kernel();
+        $this->faker  = \Faker\Factory::create();
     }
 
     /**
@@ -33,7 +34,7 @@ class TestCase extends PHPUnit_TestCase
      */
     protected function getAppInstance(): App
     {
-        $app = Bridge::create(Kernel::getContainer());
+        $app = Bridge::create($this->kernel->getContainer());
         $app->addRoutingMiddleware();
         return $app;
     }

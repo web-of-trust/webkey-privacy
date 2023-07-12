@@ -8,7 +8,5 @@ if (php_sapi_name() !== 'cli') {
 define('BASE_DIR', dirname(__DIR__));
 require_once BASE_DIR . '/vendor/autoload.php';
 
-use App\Application\Kernel;
-
-\Dotenv\Dotenv::createImmutable(BASE_DIR)->safeLoad();
-Kernel::runCommand($argv);
+Dotenv\Dotenv::createImmutable(BASE_DIR)->safeLoad();
+(new App\Application\Kernel())->runCommand($argv);

@@ -14,7 +14,7 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 
 Dotenv\Dotenv::createImmutable(BASE_DIR)->safeLoad();
-Kernel::initialize();
+$kernel = new Kernel();
 ConsoleRunner::run(
-    new SingleManagerProvider(Kernel::getContainer()->get(EntityManagerInterface::class))
+    new SingleManagerProvider($kernel->getContainer()->get(EntityManagerInterface::class))
 );

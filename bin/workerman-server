@@ -27,7 +27,7 @@ $worker->onWorkerStart = static function (Worker $worker) {
 };
 $worker->onMessage = static function (ConnectionInterface $connection, Request $request) {
     ob_start();
-    Kernel::serve();
+    (new Kernel())->serve();
     header('Date: ' . gmdate('D, d M Y H:i:s') . ' GMT');
     $connection->send(ob_get_clean());
 };

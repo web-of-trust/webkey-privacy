@@ -9,6 +9,7 @@
 
 namespace App\Application;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -21,16 +22,23 @@ use Psr\Http\Message\ServerRequestInterface;
 interface KernelInterface
 {
     /**
+     * Get psr container
+     *
+     * @return ContainerInterface
+     */
+    function getContainer(): ContainerInterface;
+
+    /**
      * Start application and serve user requests.
      *
      * @return void
      */
-	static function serve(?ServerRequestInterface $request = null): void;
+	function serve(?ServerRequestInterface $request = null): void;
 
     /**
      * Run a command from CLI.
      *
      * @return void
      */
-    static function runCommand(array $argv = []): void;
+    function runCommand(array $argv = []): void;
 }

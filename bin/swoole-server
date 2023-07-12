@@ -36,7 +36,7 @@ $server->on('start', static function (Server $server) {
 
 $server->on('request', static function (Request $request, Response $response) {
     ob_start();
-    Kernel::serve();
+    (new Kernel())->serve();
     header('Date: ' . gmdate('D, d M Y H:i:s') . ' GMT');
     $response->end(ob_get_clean());
 });

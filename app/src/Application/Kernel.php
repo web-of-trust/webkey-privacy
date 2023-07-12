@@ -8,17 +8,7 @@
  */
 
 namespace App\Application;
-use App\Authentication\{
-    LoginAuthentication,
-    TokenAuthentication,
-};
-use App\Authorization\{
-    AuthorizationInterface,
-};
-use App\Middleware\{
-    AuthenticationFilter,
-    AuthorizationFilter,
-};
+
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 use Minicli\Factories\AppFactory as CliFactory;
@@ -37,108 +27,81 @@ use Psr\Log\LoggerInterface;
 final class Kernel implements KernelInterface
 {
     /**
-     * Psr container
-     *
-     * @var ContainerInterface
-     */
-    private static ContainerInterface $container;
-
-    /**
-     * Slim application
-     *
-     * @var Slim\App
-     */
-    private static ?\Slim\App $app = null;
-
-    /**
-     * Mini cli application
-     *
-     * @var Minicli\App
-     */
-    private static ?\Minicli\App $cli = null;
-
-    /**
      * Application environment
      *
      * @var Environment
      */
-    private static ?Environment $env = null;
+    private readonly Environment $environment;
 
     /**
-     * Initialize application.
+     * Psr container
      *
-     * @param string $env
-     * @return void
+     * @var ContainerInterface
      */
-    public static function initialize(?Environment $env = null): void
-    {
-        self::$env = $env ?? Environment::tryFrom(
+    private readonly ContainerInterface $container;
+
+    /**
+     * Constructor
+     *
+     * @param Environment $environment
+     * @return self
+     */
+    public function __construct(?Environment $environment = null) {
+        $this->environment = $environment ?? Environment::tryFrom(
             self::getEnvValue('APP_ENV') ?? ''
         ) ?? Environment::Development;
 
-        if (empty(self::$container)) {
-            $builder = new ContainerBuilder();
-            if (self::$env === Environment::Production) {
-                $baseDir = self::getEnvValue('APP_BASE_DIR') ?? BASE_DIR;
-                $builder->enableCompilation($baseDir . '/var/cache/app');
-            }
-            self::registerConfig($builder);
-            self::registerServices($builder);
-            self::$container = $builder->build();
+        $builder = new ContainerBuilder();
+        if ($this->environment === Environment::Production) {
+            $baseDir = self::getEnvValue('APP_BASE_DIR') ?? BASE_DIR;
+            $builder->enableCompilation($baseDir . '/var/cache/app');
         }
+        self::registerConfig($builder);
+        self::registerServices($builder);
+        $this->container = $builder->build();
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function serve(?ServerRequestInterface $request = null): void
+    public function getContainer(): ContainerInterface
     {
-        self::initialize();
-
-        if (empty(self::$app)) {
-            self::$app = Bridge::create(self::$container);
-            self::registerMiddlewares(self::$app);
-            self::registerRoutes(self::$app);
-        }
-
-        self::$app->run($request);
+        return $this->container;
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function runCommand(array $argv = []): void
+    public function serve(?ServerRequestInterface $request = null): void
     {
-        self::initialize();
-        if (empty(self::$cli)) {
-            self::$cli = CliFactory::make([
-                'app_name' => self::$container->get('cli.name'),
-                'app_path' => [
-                    dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Command',
-                    '@minicli/command-help'
-                ],
-                'logging' => self::$container->get('cli.logging'),
-                'debug' => self::$env === Environment::Development,
-            ], self::$container->get('cli.signature'));
-            self::$cli->addService(
-                'logs_path', fn () => self::$container->get('cli.logs_path')
-            );
-            self::$cli->addService(
-                'logger', new CliLogger()
-            );
-        }
-        self::$cli->runCommand($argv);
+        $app = Bridge::create($this->container);
+        self::registerMiddlewares($app);
+        self::registerRoutes($app);
+
+        $app->run($request);
     }
 
     /**
-     * Get Psr container
-     *
-     * @return ContainerInterface
+     * {@inheritdoc}
      */
-    public static function getContainer(): ContainerInterface
+    public function runCommand(array $argv = []): void
     {
-        self::initialize();
-        return self::$container;
+        $cli = CliFactory::make([
+            'app_name' => $this->container->get('cli.name'),
+            'app_path' => [
+                dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Command',
+                '@minicli/command-help'
+            ],
+            'logging' => $this->container->get('cli.logging'),
+            'debug' => $this->environment === Environment::Development,
+        ], $this->container->get('cli.signature'));
+        $cli->addService(
+            'logs_path', fn () => $this->container->get('cli.logs_path')
+        );
+        $cli->addService(
+            'logger', new CliLogger()
+        );
+        $cli->runCommand($argv);
     }
 
     /**

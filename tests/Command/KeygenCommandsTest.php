@@ -20,7 +20,7 @@ class KeygenCommandsTest extends TestCase
     public function testEcdsaKeygen()
     {
         $this->expectOutputRegex('/Ecdsa key generate/');
-        Kernel::runCommand([
+        $this->kernel->runCommand([
             'webkey',
             'keygen',
             'ecdsa',
@@ -32,7 +32,7 @@ class KeygenCommandsTest extends TestCase
     public function testEddsaKeygen()
     {
         $this->expectOutputRegex('/Eddsa key generate/');
-        Kernel::runCommand([
+        $this->kernel->runCommand([
             'webkey',
             'keygen',
             'eddsa',
@@ -44,7 +44,7 @@ class KeygenCommandsTest extends TestCase
     public function testHmacKeygen()
     {
         $this->expectOutputRegex('/Hmac key generate/');
-        Kernel::runCommand([
+        $this->kernel->runCommand([
             'webkey',
             'keygen',
             'hmac',
@@ -55,7 +55,7 @@ class KeygenCommandsTest extends TestCase
     public function testRsaKeygen()
     {
         $this->expectOutputRegex('/Rsa key generate/');
-        Kernel::runCommand([
+        $this->kernel->runCommand([
             'webkey',
             'keygen',
             'rsa',
