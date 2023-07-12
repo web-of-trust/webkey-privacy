@@ -4,63 +4,75 @@ namespace App\Tests\Command;
 
 use App\Application\Kernel;
 use App\Tests\TestCase;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class KeygenCommandsTest extends TestCase
 {
+    private $console;
     private $signKeyFile;
     private $verifyKeyFile;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->console = $this->kernel->getContainer()->get(Application::class);
         $this->signKeyFile = tempnam(sys_get_temp_dir(), 'sign');
         $this->verifyKeyFile = tempnam(sys_get_temp_dir(), 'verify');
     }
 
     public function testEcdsaKeygen()
     {
-        $this->expectOutputRegex('/Ecdsa key generate/');
-        $this->kernel->runCommand([
-            'webkey',
-            'keygen',
-            'ecdsa',
-            'sign-key-file=' . $this->signKeyFile,
-            'verify-key-file=' . $this->verifyKeyFile,
+        $command = $this->console->find('keygen:ecdsa');
+        $tester = new CommandTester($command);
+        $tester->execute([
+            '--sign-key-file' => $this->signKeyFile,
+            '--verify-key-file' => $this->verifyKeyFile,
         ]);
+        $tester->assertCommandIsSuccessful();
+        $this->assertStringContainsString(
+            'Ecdsa key successfully generated!', $tester->getDisplay()
+        );
     }
 
     public function testEddsaKeygen()
     {
-        $this->expectOutputRegex('/Eddsa key generate/');
-        $this->kernel->runCommand([
-            'webkey',
-            'keygen',
-            'eddsa',
-            'sign-key-file=' . $this->signKeyFile,
-            'verify-key-file=' . $this->verifyKeyFile,
+        $command = $this->console->find('keygen:eddsa');
+        $tester = new CommandTester($command);
+        $tester->execute([
+            '--sign-key-file' => $this->signKeyFile,
+            '--verify-key-file' => $this->verifyKeyFile,
         ]);
+        $tester->assertCommandIsSuccessful();
+        $this->assertStringContainsString(
+            'Eddsa key successfully generated!', $tester->getDisplay()
+        );
     }
 
     public function testHmacKeygen()
     {
-        $this->expectOutputRegex('/Hmac key generate/');
-        $this->kernel->runCommand([
-            'webkey',
-            'keygen',
-            'hmac',
-            'key-file=' . $this->signKeyFile,
+        $command = $this->console->find('keygen:hmac');
+        $tester = new CommandTester($command);
+        $tester->execute([
+            '--key-file' => $this->signKeyFile,
         ]);
+        $tester->assertCommandIsSuccessful();
+        $this->assertStringContainsString(
+            'Hmac key successfully generated!', $tester->getDisplay()
+        );
     }
 
     public function testRsaKeygen()
     {
-        $this->expectOutputRegex('/Rsa key generate/');
-        $this->kernel->runCommand([
-            'webkey',
-            'keygen',
-            'rsa',
-            'sign-key-file=' . $this->signKeyFile,
-            'verify-key-file=' . $this->verifyKeyFile,
+        $command = $this->console->find('keygen:rsa');
+        $tester = new CommandTester($command);
+        $tester->execute([
+            '--sign-key-file' => $this->signKeyFile,
+            '--verify-key-file' => $this->verifyKeyFile,
         ]);
+        $tester->assertCommandIsSuccessful();
+        $this->assertStringContainsString(
+            'Rsa key successfully generated!', $tester->getDisplay()
+        );
     }
 }
