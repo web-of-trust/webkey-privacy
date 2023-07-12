@@ -23,12 +23,9 @@ use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 use Minicli\Factories\AppFactory as CliFactory;
 use Minicli\Logging\Logger as CliLogger;
-use Minicli\App as CliApp;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Slim\App as SlimApp;
-use Slim\Routing\RouteCollectorProxy;
 
 /**
  * Kernel class
@@ -49,16 +46,16 @@ final class Kernel implements KernelInterface
     /**
      * Slim application
      *
-     * @var SlimApp
+     * @var Slim\App
      */
-    private static ?SlimApp $app = null;
+    private static ?\Slim\App $app = null;
 
     /**
      * Mini cli application
      *
-     * @var CliApp
+     * @var Minicli\App
      */
-    private static ?CliApp $cli = null;
+    private static ?\Minicli\App $cli = null;
 
     /**
      * Application environment
@@ -184,10 +181,10 @@ final class Kernel implements KernelInterface
     /**
      * Register middlewares
      * 
-     * @param SlimApp $app
+     * @param Slim\App $app
      * @return void
      */
-    private static function registerMiddlewares(SlimApp $app): void
+    private static function registerMiddlewares(\Slim\App $app): void
     {
         $container = $app->getContainer();
         $app->addRoutingMiddleware();
@@ -203,27 +200,11 @@ final class Kernel implements KernelInterface
     /**
      * Register routes
      * 
-     * @param SlimApp $app
+     * @param Slim\App $app
      * @return void
      */
-    private static function registerRoutes(SlimApp $app): void
+    private static function registerRoutes(\Slim\App $app): void
     {
-        $container = $app->getContainer();
-
-        $app->get('/', \App\Controller\HomeController::class);
-        $app->get('/logout', \App\Controller\LogoutController::class);
-        $app->post(
-            '/login', \App\Controller\LoginController::class
-        )->addMiddleware(new AuthenticationFilter(
-            $container->get(LoginAuthentication::class)
-        ));
-
-        $app->group('/rest/v1', static function (RouteCollectorProxy $group) {
-            $group->get('/profile', \App\Controller\HomeController::class);
-        })->addMiddleware(new AuthenticationFilter(
-            $container->get(TokenAuthentication::class)
-        ))->addMiddleware(new AuthorizationFilter(
-            $container->get(AuthorizationInterface::class)
-        ));
+        (new RouteDefinitions())($app);
     }
 }
