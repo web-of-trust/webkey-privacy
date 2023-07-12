@@ -9,10 +9,12 @@
 
 namespace App\Controller;
 
+use App\Authentication\TokenRepositoryInterface;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
+use Slim\Psr7\Cookies;
 
 /**
  * Logout controller class
@@ -24,6 +26,18 @@ use Psr\Http\Message\{
 class LogoutController extends BaseController
 {
     /**
+     * Constructor
+     *
+     * @param Cookies $cookies
+     * @return self
+     */
+    public function __construct(
+        private readonly Cookies $cookies
+    )
+    {
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function action(
@@ -32,6 +46,17 @@ class LogoutController extends BaseController
         array $args
     ): ResponseInterface
     {
+        $response->getBody()->write(json_encode([
+            'token' => '',
+        ]));
+        $this->cookies->set(
+            TokenRepositoryInterface::COOKIE_NAME, ''
+        );
+        $response = $response->withHeader(
+            'Set-Cookie', $this->cookies->toHeaders()
+        )->withHeader(
+            'Content-Type', 'application/json'
+        )->withStatus(201);
         return $response;
     }
 }
