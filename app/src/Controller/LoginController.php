@@ -10,6 +10,7 @@
 namespace App\Controller;
 
 use App\Authentication\{
+    AuthenticationInterface,
     TokenRepositoryInterface,
     UserInterface,
 };
@@ -67,7 +68,7 @@ class LoginController extends BaseController
                 ],
             ]));
             $this->cookies->set(
-                TokenRepositoryInterface::COOKIE_NAME, $token->getToken()
+                AuthenticationInterface::COOKIE_NAME, $token->getToken()
             );
             $response = $response->withHeader(
                 'Set-Cookie', $this->cookies->toHeaders()

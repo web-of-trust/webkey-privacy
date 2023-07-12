@@ -9,7 +9,7 @@
 
 namespace App\Controller;
 
-use App\Authentication\TokenRepositoryInterface;
+use App\Authentication\AuthenticationInterface;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
@@ -50,7 +50,7 @@ class LogoutController extends BaseController
             'token' => '',
         ]));
         $this->cookies->set(
-            TokenRepositoryInterface::COOKIE_NAME, ''
+            AuthenticationInterface::COOKIE_NAME, ''
         );
         $response = $response->withHeader(
             'Set-Cookie', $this->cookies->toHeaders()
