@@ -11,8 +11,6 @@ namespace App\Application;
 
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
-use Minicli\Factories\AppFactory as CliFactory;
-use Minicli\Logging\Logger as CliLogger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -86,22 +84,7 @@ final class Kernel implements KernelInterface
      */
     public function runCommand(array $argv = []): void
     {
-        $cli = CliFactory::make([
-            'app_name' => $this->container->get('cli.name'),
-            'app_path' => [
-                dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Command',
-                '@minicli/command-help'
-            ],
-            'logging' => $this->container->get('cli.logging'),
-            'debug' => $this->environment === Environment::Development,
-        ], $this->container->get('cli.signature'));
-        $cli->addService(
-            'logs_path', fn () => $this->container->get('cli.logs_path')
-        );
-        $cli->addService(
-            'logger', new CliLogger()
-        );
-        $cli->runCommand($argv);
+        $this->container->get(\Minicli\App::class)->runCommand($argv);
     }
 
     /**

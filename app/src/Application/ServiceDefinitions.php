@@ -38,13 +38,15 @@ use Lcobucci\JWT\Validation\Constraint\{
     SignedWith,
     StrictValidAt,
 };
+use Minicli\App as MinicliApp;
+use Minicli\Factories\AppFactory as MinicliFactory;
+use Minicli\Logging\Logger as MinicliLogger;
 use Monolog\Logger;
 use Monolog\Handler\{
     ErrorLogHandler,
     RotatingFileHandler,
 };
 use Monolog\Processor\WebProcessor;
-
 use Psr\Container\ContainerInterface as Container;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Cookies;
@@ -153,6 +155,24 @@ final class ServiceDefinitions
                 return new DefaultAuthorization(
                     $container->get('authorization.allow'),
                 );
+            },
+            MinicliApp::class => static function (Container $container) {
+                $cliApp = MinicliFactory::make([
+                    'app_name' => $container->get('cli.name'),
+                    'app_path' => [
+                        dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Command',
+                        '@minicli/command-help'
+                    ],
+                    'logging' => $container->get('cli.logging'),
+                    'debug' => $container->get('app.env') === Environment::Development->value,
+                ], $container->get('cli.signature'));
+                $cliApp->addService(
+                    'logs_path', fn () => $container->get('cli.logs_path')
+                );
+                $cliApp->addService(
+                    'logger', new MinicliLogger()
+                );
+                return $cliApp;
             },
             Cookies::class => static function (Container $container) {
                 return (new Cookies())->setDefaults([

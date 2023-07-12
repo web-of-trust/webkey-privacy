@@ -16,7 +16,6 @@ use App\Middleware\{
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
-
 /**
  * Route definitions class
  * 
