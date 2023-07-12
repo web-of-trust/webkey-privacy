@@ -57,13 +57,17 @@ class LoginController extends BaseController
             $response->getBody()->write(json_encode([
                 'token' => $token->getToken(),
                 'user' => [
-                    'uid' => $user->getIdentity(),
-                    'displayName' => $user->getDetail('displayName'),
-                    'email' => $user->getDetail('email'),
+                    TokenRepositoryInterface::USER_IDENTITY => $user->getIdentity(),
+                    TokenRepositoryInterface::USER_DISPLAY_NAME => $user->getDetail(
+                        TokenRepositoryInterface::USER_DISPLAY_NAME
+                    ),
+                    TokenRepositoryInterface::USER_EMAIL => $user->getDetail(
+                        TokenRepositoryInterface::USER_EMAIL
+                    ),
                 ],
             ]));
             $this->cookies->set(
-                TokenRepositoryInterface::TOKEN_COOKIE, $token->getToken()
+                TokenRepositoryInterface::COOKIE_NAME, $token->getToken()
             );
             $response = $response->withHeader(
                 'Set-Cookie', $this->cookies->toHeaders()

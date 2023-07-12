@@ -129,11 +129,9 @@ final class ServiceDefinitions
             TokenRepositoryInterface::class => static function (Container $container) {
                 return new JwtTokenRepository(
                     $container->get(JwtConfiguration::class),
-                    [
-                        'expires'       => $container->get('jwt.expires'),
-                        'issued_by'     => $container->get('jwt.issued_by'),
-                        'identified_by' => $container->get('jwt.identified_by'),
-                    ],
+                    $container->get('jwt.issued_by'),
+                    $container->get('jwt.identified_by'),
+                    (int) $container->get('jwt.expires'),
                 );
             },
             LoginAuthentication::class => static function (Container $container) {

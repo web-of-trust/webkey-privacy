@@ -20,9 +20,14 @@ use DateTimeInterface;
  */
 interface TokenRepositoryInterface
 {
-    const TOKEN_COOKIE  = 'AUTH_TOKEN';
-    const TOKEN_HEADER  = 'Authorization';
-    const TOKEN_PATTERN = '/^Bearer\s+(.*?)$/i';
+    const COOKIE_NAME          = 'AUTH_TOKEN';
+    const AUTHORIZATION_HEADER = 'Authorization';
+    const BEARER_TOKEN_PATTERN = '/^Bearer\s+(.*?)$/i';
+    const BASIC_TOKEN_PATTERN  = '/^Basic\s+(.*?)$/i';
+
+    const USER_IDENTITY     = 'identity';
+    const USER_DISPLAY_NAME = 'displayName';
+    const USER_EMAIL        = 'email';
 
     /**
      * Load token by id, must return null if token not found.

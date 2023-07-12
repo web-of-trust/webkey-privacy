@@ -24,8 +24,8 @@ use Psr\Http\Message\{
  */
 class LoginAuthentication extends BaseAuthentication
 {
-    private const USERNAME = 'username';
-    private const PASSWORD = 'password';
+    private const USERNAME_PARAM = 'username';
+    private const PASSWORD_PARAM = 'password';
 
     /**
      * {@inheritdoc}
@@ -36,20 +36,21 @@ class LoginAuthentication extends BaseAuthentication
     {
         $parsedBody = $request->getParsedBody();
         if (is_array($parsedBody)) {
-            $username = $parsedBody[self::USERNAME] ?? null;
-            $password = $parsedBody[self::PASSWORD] ?? null;
+            $username = $parsedBody[self::USERNAME_PARAM] ?? null;
+            $password = $parsedBody[self::PASSWORD_PARAM] ?? null;
         }
         else {
             $username = $request->getServerParams()['PHP_AUTH_USER'] ?? null;
             $password = $request->getServerParams()['PHP_AUTH_PW'] ?? null;
             if ($username === null || $password === null) {
                 $header = $request->getHeaderLine(
-                    TokenRepositoryInterface::TOKEN_HEADER
+                    TokenRepositoryInterface::AUTHORIZATION_HEADER
                 );
-                if (!empty($header) && strncasecmp($token, 'basic', 5) === 0) {
+                if (!empty($header) &&
+                    preg_match(TokenRepositoryInterface::BASIC_TOKEN_PATTERN, $header, $matches)) {
                     list($username, $password) = array_map(
                         static fn ($value) => $value === '' ? null : $value,
-                        explode(':', base64_decode(substr($header, 6)), 2)
+                        explode(':', base64_decode($matches[1]), 2)
                     );
                 }
             }

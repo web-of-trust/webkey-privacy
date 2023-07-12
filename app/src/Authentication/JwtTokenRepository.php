@@ -27,12 +27,16 @@ class JwtTokenRepository implements TokenRepositoryInterface
      * Constructor
      *
      * @param Configuration $configuration
-     * @param array $options
+     * @param string $issuedBy
+     * @param string $identifiedBy
+     * @param int $expires
      * @return self
      */
     public function __construct(
         private readonly Configuration $configuration,
-        private readonly array $options = []
+        private readonly string $issuedBy,
+        private readonly string $identifiedBy,
+        private readonly int $expires = 0
     )
     {
     }
@@ -70,18 +74,20 @@ class JwtTokenRepository implements TokenRepositoryInterface
     {
         $now = new DateTimeImmutable();
         $expiresAt = $expiresAt ?? $now->setTimestamp(
-            $now->getTimestamp() + (int) $this->options['expires']
+            $now->getTimestamp() + $this->expires
         );
         $token = $this->configuration->builder()
-            ->issuedBy($this->options['issued_by'] ?? '')
-            ->identifiedBy($this->options['identified_by'] ?? '')
+            ->issuedBy($this->issuedBy)
+            ->identifiedBy($this->identifiedBy)
             ->permittedFor($user->getIdentity())
             ->issuedAt($now)
             ->canOnlyBeUsedAfter($now)
             ->expiresAt($expiresAt)
-            ->withClaim('uid', $user->getIdentity())
-            ->withClaim('displayName', $user->getDetail('displayName'))
-            ->withClaim('email', $user->getDetail('email'))
+            ->withClaim(self::USER_IDENTITY, $user->getIdentity())
+            ->withClaim(
+                self::USER_DISPLAY_NAME, $user->getDetail(self::USER_DISPLAY_NAME)
+            )
+            ->withClaim(self::USER_EMAIL, $user->getDetail(self::USER_EMAIL))
             ->getToken(
                 $this->configuration->signer(),
                 $this->configuration->signingKey(),
