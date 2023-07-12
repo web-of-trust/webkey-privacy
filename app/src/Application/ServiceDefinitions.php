@@ -43,6 +43,8 @@ use Monolog\Handler\{
     ErrorLogHandler,
     RotatingFileHandler,
 };
+use Monolog\Processor\WebProcessor;
+
 use Psr\Container\ContainerInterface as Container;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Cookies;
@@ -79,7 +81,9 @@ final class ServiceDefinitions
                 }
                 return (new Logger(
                     $container->get('logger.name')
-                ))->setHandlers($handlers);
+                ))
+                ->setHandlers($handlers)
+                ->pushProcessor(new WebProcessor());
             },
             JwtConfiguration::class => static function (Container $container) {
                 $signer = self::selectJwtSigner($container);
