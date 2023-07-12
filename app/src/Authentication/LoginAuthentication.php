@@ -24,8 +24,8 @@ use Psr\Http\Message\{
  */
 class LoginAuthentication extends BaseAuthentication
 {
-    public const USERNAME = 'username';
-    public const PASSWORD = 'password';
+    private const USERNAME = 'username';
+    private const PASSWORD = 'password';
 
     /**
      * {@inheritdoc}
@@ -36,12 +36,29 @@ class LoginAuthentication extends BaseAuthentication
     {
         $parsedBody = $request->getParsedBody();
         if (is_array($parsedBody)) {
-            $username = filter_var(
-                $parsedBody[self::USERNAME] ?? '',
+            $username = $parsedBody[self::USERNAME] ?? null;
+            $password = $parsedBody[self::PASSWORD] ?? null;
+        }
+        else {
+            $username = $request->getServerParams()['PHP_AUTH_USER'] ?? null;
+            $password = $request->getServerParams()['PHP_AUTH_PW'] ?? null;
+            if ($username === null || $password === null) {
+                $header = $request->getHeaderLine(
+                    TokenRepositoryInterface::TOKEN_HEADER
+                );
+                if (!empty($header) && strncasecmp($token, 'basic', 5) === 0) {
+                    list($username, $password) = array_map(
+                        static fn ($value) => $value === '' ? null : $value,
+                        explode(':', base64_decode(substr($authToken, 6)), 2)
+                    );
+                }
+            }
+        }
+        if ($username !== null && $password !== null) {
+            $user = $this->getUserEntity(filter_var(
+                $username,
                 FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-            );
-            $password = $parsedBody[self::PASSWORD] ?? '';
-            $user = $this->getUserEntity($username);
+            ));
             if ($user instanceof UserEntity &&
                 password_verify($password, $user->getPassword())) {
                 return $this->dtoUserEntity($user);

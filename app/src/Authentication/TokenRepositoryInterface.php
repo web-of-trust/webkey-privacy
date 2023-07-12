@@ -22,7 +22,7 @@ interface TokenRepositoryInterface
 {
     const TOKEN_COOKIE  = 'AUTH_TOKEN';
     const TOKEN_HEADER  = 'Authorization';
-    const TOKEN_PATTERN = '/Bearer\s+(.*)$/i';
+    const TOKEN_PATTERN = '/^Bearer\s+(.*?)$/i';
 
     /**
      * Load token by id, must return null if token not found.

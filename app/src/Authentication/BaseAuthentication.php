@@ -56,7 +56,10 @@ abstract class BaseAuthentication implements AuthenticationInterface
     {
         return $this->entityManager->getRepository(
             UserEntity::class
-        )->findOneBy(['username' => $uid]);
+        )->findOneBy([
+            'username' => $uid,
+            'status' => UserEntity::ACTIVE_STATUS,
+        ]);
     }
 
     /**
