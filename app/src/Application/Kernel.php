@@ -54,9 +54,9 @@ final class Kernel implements KernelInterface
         $builder = new ContainerBuilder();
         if ($this->environment === Environment::Production) {
             $baseDir = self::getEnvValue('APP_BASE_DIR') ?? BASE_DIR;
-            $builder->enableCompilation($baseDir . '/var/cache/app');
+            $builder->enableCompilation($baseDir . '/var/cache');
         }
-        self::registerConfig($builder);
+        self::initializeConfiguration($builder);
         self::registerServices($builder);
         $this->container = $builder->build();
     }
@@ -117,13 +117,13 @@ final class Kernel implements KernelInterface
     }
 
     /**
-     * Register configuration
+     * Initialize configuration
      * Configuration can be set within the .env file.
      * 
      * @param ContainerBuilder $builder
      * @return void
      */
-    private static function registerConfig(ContainerBuilder $builder): void
+    private static function initializeConfiguration(ContainerBuilder $builder): void
     {
         $baseDir = self::getEnvValue('APP_BASE_DIR') ?? BASE_DIR;
         $builder->addDefinitions($baseDir . '/app/config/app.php')
