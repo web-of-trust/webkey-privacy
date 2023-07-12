@@ -49,7 +49,7 @@ class LoginAuthentication extends BaseAuthentication
                 if (!empty($header) && strncasecmp($token, 'basic', 5) === 0) {
                     list($username, $password) = array_map(
                         static fn ($value) => $value === '' ? null : $value,
-                        explode(':', base64_decode(substr($authToken, 6)), 2)
+                        explode(':', base64_decode(substr($header, 6)), 2)
                     );
                 }
             }
