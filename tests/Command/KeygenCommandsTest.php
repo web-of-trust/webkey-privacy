@@ -54,7 +54,8 @@ class KeygenCommandsTest extends TestCase
         $command = $this->console->find('keygen:hmac');
         $tester = new CommandTester($command);
         $tester->execute([
-            '--key-file' => $this->signKeyFile,
+            '--sign-key-file' => $this->signKeyFile,
+            '--verify-key-file' => $this->verifyKeyFile,
         ]);
         $tester->assertCommandIsSuccessful();
         $this->assertStringContainsString(

@@ -12,7 +12,6 @@ namespace App\Command\Keygen;
 use App\Command\KeygenCommand;
 use phpseclib3\Crypt\EC;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,27 +58,38 @@ final class EcdsaCommand extends KeygenCommand
     {
         $curve = $input->getArgument('curve');
         if (!in_array($curve, self::CURVES)) {
-            throw new \UnexpectedValueException(
-                'Ecdsa curve must be one of ' . implode(', ', self::CURVES) . ' curves'
+            $helper = $this->getHelper('question');
+            $question = new ChoiceQuestion(
+                'Please select the curve (defaults to P-256)',
+                self::CURVES,
+                0,
             );
+            $question->setErrorMessage('The curve %s is invalid.');
+            $curve = $helper->ask($input, $output, $question);
         }
 
-        $curveName = match ($curve) {
-            self::P_384_CURVE => 'secp384r1',
-            self::P_521_CURVE => 'secp521r1',
-            default => 'secp256r1',
-        };
-        $ecKey = EC::createKey($curveName);
-        file_put_contents(
-            $input->getOption('sign-key-file'),
-            $ecKey->toString('PKCS8')
-        );
-        file_put_contents(
-            $input->getOption('verify-key-file'),
-            $ecKey->getPublicKey()->toString('PKCS8')
-        );
+        if (!empty($this->signKeyFile) && !empty($this->verifyKeyFile)) {
+            $curveName = match ($curve) {
+                self::P_384_CURVE => 'secp384r1',
+                self::P_521_CURVE => 'secp521r1',
+                default => 'secp256r1',
+            };
+            $ecKey = EC::createKey($curveName);
+
+            file_put_contents(
+                $this->signKeyFile,
+                $ecKey->toString('PKCS8')
+            );
+            file_put_contents(
+                $this->verifyKeyFile,
+                $ecKey->getPublicKey()->toString('PKCS8')
+            );
+        }
+        else {
+            return $this->missingParameter($output);
+        }
 
         $output->writeln('Ecdsa key successfully generated!');
-        return Command::SUCCESS;
+        return 0;
     }
 }

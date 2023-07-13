@@ -12,7 +12,6 @@ namespace App\Command\Keygen;
 use App\Command\KeygenCommand;
 use phpseclib3\Crypt\EC;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -45,17 +44,22 @@ final class EddsaCommand extends KeygenCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $edKey = EC::createKey(self::CURVE_NAME);
-        file_put_contents(
-            $input->getOption('sign-key-file'),
-            $edKey->toString('libsodium')
-        );
-        file_put_contents(
-            $input->getOption('verify-key-file'),
-            $edKey->getPublicKey()->toString('libsodium')
-        );
+        if (!empty($this->signKeyFile) && !empty($this->verifyKeyFile)) {
+            $edKey = EC::createKey(self::CURVE_NAME);
+            file_put_contents(
+                $this->signKeyFile,
+                $edKey->toString('libsodium')
+            );
+            file_put_contents(
+                $this->verifyKeyFile,
+                $edKey->getPublicKey()->toString('libsodium')
+            );
+        }
+        else {
+            return $this->missingParameter($output);
+        }
 
         $output->writeln('Eddsa key successfully generated!');
-        return Command::SUCCESS;
+        return 0;
     }
 }

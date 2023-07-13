@@ -12,10 +12,10 @@ namespace App\Command\Keygen;
 use App\Command\KeygenCommand;
 use phpseclib3\Crypt\RSA;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
  * Rsa keygen command class
@@ -30,7 +30,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 final class RsaCommand extends KeygenCommand
 {
-    private const MINIMUM_KEY_SIZE = 2048;
+    private const DEFAULT_KEY_SIZE = 2048;
+    private const KEY_SIZES = [
+        2048,
+        2560,
+        3072,
+        3584,
+        4096,
+    ];
 
     /**
      * {@inheritdoc}
@@ -40,7 +47,7 @@ final class RsaCommand extends KeygenCommand
         parent::configure();
         $this->setHelp('This command allows you to generate an rsa key.')
              ->addArgument(
-                'size', InputArgument::OPTIONAL, 'The size of the key.', self::MINIMUM_KEY_SIZE
+                'size', InputArgument::OPTIONAL, 'The size of the key.', self::DEFAULT_KEY_SIZE
              );
     }
 
@@ -50,23 +57,33 @@ final class RsaCommand extends KeygenCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $keySize = (int) $input->getArgument('size');
-        if ($keySize < self::MINIMUM_KEY_SIZE) {
-            throw new \UnexpectedValueException(
-                'Rsa key size must be at least ' . self::MINIMUM_KEY_SIZE . ' bits.'
+        if (!in_array($keySize, self::KEY_SIZES)) {
+            $helper = $this->getHelper('question');
+            $question = new ChoiceQuestion(
+                'Please select the key size (defaults to 2048)',
+                self::KEY_SIZES,
+                0,
             );
+            $question->setErrorMessage('Key size %s is invalid.');
+            $keySize = $helper->ask($input, $output, $question);
         }
 
-        $rsaKey = RSA::createKey($keySize);
-        file_put_contents(
-            $input->getOption('sign-key-file'),
-            $rsaKey->toString('PKCS8')
-        );
-        file_put_contents(
-            $input->getOption('verify-key-file'),
-            $rsaKey->getPublicKey()->toString('PKCS8')
-        );
+        if (!empty($this->signKeyFile) && !empty($this->verifyKeyFile)) {
+            $rsaKey = RSA::createKey($keySize);
+            file_put_contents(
+                $this->signKeyFile,
+                $rsaKey->toString('PKCS8')
+            );
+            file_put_contents(
+                $this->verifyKeyFile,
+                $rsaKey->getPublicKey()->toString('PKCS8')
+            );
+        }
+        else {
+            return $this->missingParameter($output);
+        }
 
         $output->writeln('Rsa key successfully generated!');
-        return Command::SUCCESS;
+        return 0;
     }
 }

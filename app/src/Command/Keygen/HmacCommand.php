@@ -9,12 +9,11 @@
 
 namespace App\Command\Keygen;
 
+use App\Command\KeygenCommand;
 use phpseclib3\Crypt\Random;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -28,20 +27,25 @@ use Symfony\Component\Console\Output\OutputInterface;
     name: 'keygen:hmac',
     description: 'Generate a new hmac key.'
 )]
-final class HmacCommand extends Command
+final class HmacCommand extends KeygenCommand
 {
-    private const MINIMUM_KEY_SIZE = 256;
+    private const DEFAULT_KEY_SIZE = 256;
+    private const KEY_SIZES = [
+        256,
+        384,
+        512,
+    ];
 
     /**
      * {@inheritdoc}
      */
     protected function configure(): void
     {
+        parent::configure();
         $this->setHelp('This command allows you to generate an hmac key.')
              ->addArgument(
-                'size', InputArgument::OPTIONAL, 'The size of the key.', self::MINIMUM_KEY_SIZE
-             )
-             ->addOption('key-file', null, InputOption::VALUE_REQUIRED, 'The key file.');
+                'size', InputArgument::OPTIONAL, 'The size of the key.', self::DEFAULT_KEY_SIZE
+             );
     }
 
     /**
@@ -50,17 +54,33 @@ final class HmacCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $keySize = (int) $input->getArgument('size');
-        if ($keySize < self::MINIMUM_KEY_SIZE) {
-            throw new \UnexpectedValueException(
-                'Hmac key size must be at least ' . self::MINIMUM_KEY_SIZE . ' bits.'
+        if (!in_array($keySize, self::KEY_SIZES)) {
+            $helper = $this->getHelper('question');
+            $question = new ChoiceQuestion(
+                'Please select the key size (defaults to 256)',
+                self::KEY_SIZES,
+                0,
+            );
+            $question->setErrorMessage('Key size %s is invalid.');
+            $keySize = $helper->ask($input, $output, $question);
+        }
+
+        if (!empty($this->signKeyFile) && !empty($this->verifyKeyFile)) {
+            $key = Random::string(($keySize + 7) >> 3);
+            file_put_contents(
+                $this->signKeyFile,
+                $key,
+            );
+            file_put_contents(
+                $this->verifyKeyFile,
+                $key,
             );
         }
-        file_put_contents(
-            $input->getOption('key-file'),
-            Random::string(($keySize + 7) >> 3)
-        );
+        else {
+            return $this->missingParameter($output);
+        }
 
         $output->writeln('Hmac key successfully generated!');
-        return Command::SUCCESS;
+        return 0;
     }
 }
