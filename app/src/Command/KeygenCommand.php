@@ -53,12 +53,18 @@ abstract class KeygenCommand extends Command
 
         $helper = $this->getHelper('question');
         if (empty($this->signKeyFile)) {
-            $question = new Question('Please enter the sign key file: ');
-            $this->signKeyFile = $helper->ask($input, $output, $question);
+            $this->signKeyFile = $helper->ask(
+                $input,
+                $output,
+                new Question('Please enter the sign key file: '),
+            );
         }
         if (empty($this->verifyKeyFile)) {
-            $question = new Question('Please enter the verify key file: ');
-            $this->verifyKeyFile = $helper->ask($input, $output, $question);
+            $this->verifyKeyFile = $helper->ask(
+                $input,
+                $output,
+                new Question('Please enter the verify key file: '),
+            );
         }
     }
 
@@ -71,8 +77,8 @@ abstract class KeygenCommand extends Command
      */
     protected function missingParameter(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-        $io->error(
+        $style = new SymfonyStyle($input, $output);
+        $style->error(
             self::SIGN_KEY_FILE_OPTION
             . ' or '
             . self::VERIFY_KEY_FILE_OPTION
