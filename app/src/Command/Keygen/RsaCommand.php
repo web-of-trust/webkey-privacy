@@ -80,7 +80,7 @@ final class RsaCommand extends KeygenCommand
             );
         }
         else {
-            return $this->missingParameter($output);
+            return $this->missingParameter($input, $output);
         }
 
         $output->writeln('Rsa key successfully generated!');

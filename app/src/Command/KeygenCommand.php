@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Abstract keygen command class
@@ -64,12 +65,14 @@ abstract class KeygenCommand extends Command
     /**
      * Output missing parameter.
      *
+     * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
      */
-    protected function missingParameter(OutputInterface $output): int
+    protected function missingParameter(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln(
+        $io = new SymfonyStyle($input, $output);
+        $io->error(
             self::SIGN_KEY_FILE_OPTION
             . ' or '
             . self::VERIFY_KEY_FILE_OPTION

@@ -86,7 +86,7 @@ final class EcdsaCommand extends KeygenCommand
             );
         }
         else {
-            return $this->missingParameter($output);
+            return $this->missingParameter($input, $output);
         }
 
         $output->writeln('Ecdsa key successfully generated!');

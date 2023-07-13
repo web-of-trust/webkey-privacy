@@ -77,7 +77,7 @@ final class HmacCommand extends KeygenCommand
             );
         }
         else {
-            return $this->missingParameter($output);
+            return $this->missingParameter($input, $output);
         }
 
         $output->writeln('Hmac key successfully generated!');

@@ -56,7 +56,7 @@ final class EddsaCommand extends KeygenCommand
             );
         }
         else {
-            return $this->missingParameter($output);
+            return $this->missingParameter($input, $output);
         }
 
         $output->writeln('Eddsa key successfully generated!');
