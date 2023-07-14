@@ -16,6 +16,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\{
     Column,
     Entity,
+    Index,
     Table,
 };
 
@@ -26,7 +27,8 @@ use Doctrine\ORM\Mapping\{
  * @category Entity
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-#[Entity, Table(name: 'user_logins')]
+#[Entity]
+#[Table(name: 'user_logins', indexes: [Index(name: 'username_idx', columns: ['username'])])]
 class UserLoginEntity extends BaseEntity
 {
     #[Column(name: 'username', type: Types::STRING, nullable: false)]
