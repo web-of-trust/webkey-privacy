@@ -1,4 +1,11 @@
 <?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * Licensed under GNU Affero General Public License v3.0
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Entity;
 
@@ -46,9 +53,6 @@ class UserEntity extends BaseEntity {
     #[Column(name: 'roles', type: Types::SIMPLE_ARRAY, nullable: false)]
     private readonly array $roles;
 
-    #[Column(name: 'login_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
-    private readonly ?DateTimeInterface $loginAt;
-
     /**
      * Constructor
      *
@@ -59,7 +63,6 @@ class UserEntity extends BaseEntity {
      * @param string $email
      * @param string $status
      * @param array $roles
-     * @param DateTimeInterface $loginAt
      * @param int $createdBy
      * @param int $updatedBy
      * @param DateTimeInterface $createdAt
@@ -74,7 +77,6 @@ class UserEntity extends BaseEntity {
         string $email,
         string $status,
         array $roles = [],
-        ?DateTimeInterface $loginAt = null,
         int $createdBy = 0,
         int $updatedBy = 0,
         ?DateTimeInterface $createdAt = null,
@@ -91,8 +93,6 @@ class UserEntity extends BaseEntity {
         $this->email = $email;
         $this->status = $status;
         $this->roles = $roles;
-
-        $this->loginAt = $loginAt;
     }
 
     /**
@@ -153,16 +153,6 @@ class UserEntity extends BaseEntity {
     public function getRoles(): array
     {
         return $this->roles;
-    }
-
-    /**
-     * Get login at
-     *
-     * @return DateTimeInterface
-     */
-    public function getLoginAt(): ?DateTimeInterface
-    {
-        return $this->loginAt;
     }
 
     /**
