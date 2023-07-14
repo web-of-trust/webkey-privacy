@@ -25,8 +25,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 abstract class KeygenCommand extends Command
 {
-    protected const SIGN_KEY_FILE_OPTION   = 'sign-key-file';
-    protected const VERIFY_KEY_FILE_OPTION = 'verify-key-file';
+    private const SIGN_KEY_FILE_OPTION   = 'sign-key-file';
+    private const VERIFY_KEY_FILE_OPTION = 'verify-key-file';
 
     protected ?string $signKeyFile;
     protected ?string $verifyKeyFile;
@@ -78,12 +78,11 @@ abstract class KeygenCommand extends Command
     protected function missingParameter(InputInterface $input, OutputInterface $output): int
     {
         $style = new SymfonyStyle($input, $output);
-        $style->error(
-            self::SIGN_KEY_FILE_OPTION
-            . ' or '
-            . self::VERIFY_KEY_FILE_OPTION
-            . ' parameter is missing!'
-        );
+        $style->error(sprintf(
+            '%s or %s parameter is missing!',
+            self::SIGN_KEY_FILE_OPTION,
+            self::VERIFY_KEY_FILE_OPTION,
+        ));
         return 1;
     }
 }
