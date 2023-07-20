@@ -10,6 +10,7 @@
 namespace App\Application;
 
 use App\Authentication\{
+    AuthenticationInterface,
     LoginAuthentication,
     TokenAuthentication,
     JwtTokenRepository,
@@ -149,7 +150,7 @@ final class ServiceDefinitions
                     $container->get(EntityManagerInterface::class),
                 );
             },
-            TokenAuthentication::class => static function (Container $container) {
+            AuthenticationInterface::class => static function (Container $container) {
                 return new TokenAuthentication(
                     $container->get(TokenRepositoryInterface::class),
                     $container->get(EntityManagerInterface::class),

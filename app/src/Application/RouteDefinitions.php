@@ -9,6 +9,11 @@
 
 namespace App\Application;
 
+use App\Authentication\{
+    AuthenticationInterface,
+    LoginAuthentication,
+};
+use App\Authorization\AuthorizationInterface;
 use App\Middleware\{
     AuthenticationFilter,
     AuthorizationFilter,
@@ -52,7 +57,7 @@ final class RouteDefinitions
                 '/profile', \App\Controller\HomeController::class
             )->setName('profile');
         })->addMiddleware(new AuthenticationFilter(
-            $container->get(TokenAuthentication::class)
+            $container->get(AuthenticationInterface::class)
         ))->addMiddleware(new AuthorizationFilter(
             $container->get(AuthorizationInterface::class)
         ));
