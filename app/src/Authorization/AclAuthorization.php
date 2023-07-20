@@ -10,24 +10,25 @@
 namespace App\Authorization;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 
 /**
- * Default authorization class
+ * Access control list authorization class
  * 
  * @package  App
  * @category Authorization
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class DefaultAuthorization implements AuthorizationInterface
+class AclAuthorization implements AuthorizationInterface
 {
     /**
      * Constructor
      *
-     * @param array $rules
+     * @param array $acl access control list
      * @return self
      */
     public function __construct(
-        private readonly array $rules
+        private readonly array $acl
     )
     {
     }
@@ -41,15 +42,14 @@ class DefaultAuthorization implements AuthorizationInterface
             return true;
         }
         elseif ($role instanceof Role::AuthenticatedUser) {
-            $uri = preg_replace(
-                '#/+#', '/', '/' . $request->getUri()->getPath()
-            );
-            $paths = $this->rules[$role->name] ?? [];
-            if (is_array($paths)) {
-                foreach ($paths as $path) {
-                    $path = rtrim($path, '/');
-                    if (!!preg_match("@^{$path}(/.*)?$@", $uri)) {
-                        return true;
+            $routeName = RouteContext::fromRequest($request)->getRoute()?->getName();
+            if (!empty($routeName)) {
+                $resources = $this->acl[$role->name] ?? [];
+                if (is_array($resources)) {
+                    foreach ($resources as $resource) {
+                        if ($resource === $routeName) {
+                            return true;
+                        }
                     }
                 }
             }

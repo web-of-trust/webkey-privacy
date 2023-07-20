@@ -16,8 +16,8 @@ use App\Authentication\{
     TokenRepositoryInterface,
 };
 use App\Authorization\{
+    AclAuthorization,
     AuthorizationInterface,
-    DefaultAuthorization,
 };
 use App\Command\Keygen\{
     EcdsaCommand,
@@ -156,8 +156,8 @@ final class ServiceDefinitions
                 );
             },
             AuthorizationInterface::class => static function (Container $container) {
-                return new DefaultAuthorization(
-                    $container->get('authorization.allow'),
+                return new AclAuthorization(
+                    $container->get('authorization.acl'),
                 );
             },
             ConsoleApplication::class => static function (Container $container) {

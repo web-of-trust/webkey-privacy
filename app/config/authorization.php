@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
 return [
-    'authorization.allow' => [
+    'authorization.acl' => [
         'AuthenticatedUser' => [
-            '/rest/v1/profile/*',
+            'profile',
         ],
     ],
 ];

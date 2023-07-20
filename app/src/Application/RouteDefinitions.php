@@ -35,16 +35,22 @@ final class RouteDefinitions
     {
         $container = $app->getContainer();
 
-        $app->get('/', \App\Controller\HomeController::class);
-        $app->get('/logout', \App\Controller\LogoutController::class);
+        $app->get(
+            '/', \App\Controller\HomeController::class
+        )->setName('home');
+        $app->get(
+            '/logout', \App\Controller\LogoutController::class
+        )->setName('logout');
         $app->post(
             '/login', \App\Controller\LoginController::class
         )->addMiddleware(new AuthenticationFilter(
             $container->get(LoginAuthentication::class)
-        ));
+        ))->setName('login');
 
         $app->group('/rest/v1', static function (RouteCollectorProxy $group) {
-            $group->get('/profile', \App\Controller\HomeController::class);
+            $group->get(
+                '/profile', \App\Controller\HomeController::class
+            )->setName('profile');
         })->addMiddleware(new AuthenticationFilter(
             $container->get(TokenAuthentication::class)
         ))->addMiddleware(new AuthorizationFilter(
