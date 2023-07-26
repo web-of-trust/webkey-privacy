@@ -50,6 +50,7 @@ services:
     webkey-app:
         container_name: webkey-app
         image: php:alpine
+        build: ./docker/php
         hostname: webkey-app
         restart: ${RESTART_POLICY:-unless-stopped}
         working_dir: /var/www
