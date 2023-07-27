@@ -35,7 +35,7 @@ use Doctrine\ORM\{
     ORMSetup,
 };
 use Lcobucci\Clock\SystemClock;
-use Lcobucci\JWT\Configuration as JwtConfiguration;
+use Lcobucci\JWT\Configuration as JwtConfig;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Validation\Constraint\{
@@ -92,10 +92,10 @@ final class ServiceDefinitions
                 ->setHandlers($handlers)
                 ->pushProcessor(new WebProcessor());
             },
-            JwtConfiguration::class => static function (Container $container) {
+            JwtConfig::class => static function (Container $container) {
                 $signer = self::selectJwtSigner($container);
                 if (self::isSymmetricSigner($signer)) {
-                    $configuration = JwtConfiguration::forSymmetricSigner(
+                    $configuration = JwtConfig::forSymmetricSigner(
                         $signer,
                         InMemory::file(
                             $container->get('jwt.sign_key_file')
@@ -103,7 +103,7 @@ final class ServiceDefinitions
                     );
                 }
                 else {
-                    $configuration = JwtConfiguration::forAsymmetricSigner(
+                    $configuration = JwtConfig::forAsymmetricSigner(
                         $signer,
                         InMemory::file(
                             $container->get('jwt.sign_key_file')
@@ -139,7 +139,7 @@ final class ServiceDefinitions
             },
             TokenRepositoryInterface::class => static function (Container $container) {
                 return new JwtTokenRepository(
-                    $container->get(JwtConfiguration::class),
+                    $container->get(JwtConfig::class),
                     $container->get('jwt.issued_by'),
                     $container->get('jwt.identified_by'),
                     (int) $container->get('jwt.expires'),
