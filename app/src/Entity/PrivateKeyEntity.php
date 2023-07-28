@@ -31,14 +31,8 @@ class PrivateKeyEntity extends BaseEntity
     #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private readonly UserEntity $user;
 
-    #[Column(name: 'encryption_iv', type: Types::STRING, nullable: false)]
-    private readonly string $encryptionIv;
-
-    #[Column(name: 's2k_salt', type: Types::STRING, nullable: false)]
-    private readonly string $s2kSalt;
-
-    #[Column(name: 'encrypted_key_data', type: Types::TEXT, nullable: false)]
-    private readonly string $encryptedKeyData;
+    #[Column(name: 'private_key_data', type: Types::TEXT, nullable: false)]
+    private readonly string $privateKeyData;
 
     /**
      * Constructor
@@ -46,9 +40,7 @@ class PrivateKeyEntity extends BaseEntity
      * @param int $id
      * @param CertificateEntity $certificate
      * @param UserEntity $user
-     * @param string $encryptionIv
-     * @param string $s2kSalt
-     * @param string $encryptedKeyData
+     * @param string $privateKeyData
      * @param int $createdBy
      * @param int $updatedBy
      * @param DateTimeInterface $createdAt
@@ -59,9 +51,7 @@ class PrivateKeyEntity extends BaseEntity
         int $id,
         CertificateEntity $certificate,
         UserEntity $user,
-        string $encryptionIv,
-        string $s2kSalt,
-        string $encryptedKeyData,
+        string $privateKeyData,
         int $createdBy = 0,
         int $updatedBy = 0,
         ?DateTimeInterface $createdAt = null,
@@ -74,9 +64,7 @@ class PrivateKeyEntity extends BaseEntity
 
         $this->certificate = $certificate;
         $this->user = $user;
-        $this->encryptionIv = $encryptionIv;
-        $this->s2kSalt = $s2kSalt;
-        $this->encryptedKeyData = $encryptedKeyData;
+        $this->privateKeyData = $privateKeyData;
     }
 
     /**
@@ -100,32 +88,12 @@ class PrivateKeyEntity extends BaseEntity
     }
 
     /**
-     * Get encryption initialization vector 
+     * Get private key data
      * 
      * @return string
      */
-    public function getEncryptionIv(): string
+    public function getPrivateKeyData(): string
     {
-        return $this->encryptionIv;
-    }
-
-    /**
-     * Get string to key salt
-     * 
-     * @return string
-     */
-    public function getS2kSalt(): string
-    {
-        return $this->s2kSalt;
-    }
-
-    /**
-     * Get encrypted key data
-     * 
-     * @return string
-     */
-    public function getEncryptedKeyData(): string
-    {
-        return $this->encryptedKeyData;
+        return $this->privateKeyData;
     }
 }
