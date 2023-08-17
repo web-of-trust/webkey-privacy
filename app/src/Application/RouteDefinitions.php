@@ -11,7 +11,7 @@ namespace App\Application;
 
 use App\Authentication\{
     AuthenticationInterface,
-    LoginAuthentication,
+    PasswordAuthentication,
 };
 use App\Authorization\AuthorizationInterface;
 use App\Middleware\{
@@ -49,7 +49,7 @@ final class RouteDefinitions
         $app->post(
             '/login', \App\Controller\LoginController::class
         )->addMiddleware(new AuthenticationFilter(
-            $container->get(LoginAuthentication::class)
+            $container->get(PasswordAuthentication::class)
         ))->setName('login');
 
         $app->group('/rest/v1', static function (RouteCollectorProxy $group) {

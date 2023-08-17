@@ -11,9 +11,9 @@ namespace App\Application;
 
 use App\Authentication\{
     AuthenticationInterface,
-    LoginAuthentication,
-    TokenAuthentication,
     JwtTokenRepository,
+    PasswordAuthentication,
+    TokenAuthentication,
     TokenRepositoryInterface,
 };
 use App\Authorization\{
@@ -23,8 +23,8 @@ use App\Authorization\{
 use App\Command\Keygen\{
     EcdsaCommand,
     EddsaCommand,
-    HmacCommand,
     RsaCommand,
+    SecretCommand,
 };
 use DI\ContainerBuilder;
 use Doctrine\DBAL\DriverManager;
@@ -145,8 +145,8 @@ final class ServiceDefinitions
                     (int) $container->get('jwt.expires'),
                 );
             },
-            LoginAuthentication::class => static function (Container $container) {
-                return new LoginAuthentication(
+            PasswordAuthentication::class => static function (Container $container) {
+                return new PasswordAuthentication(
                     $container->get(EntityManagerInterface::class),
                 );
             },
@@ -169,8 +169,8 @@ final class ServiceDefinitions
                 $console->addCommands([
                     new EcdsaCommand(),
                     new EddsaCommand(),
-                    new HmacCommand(),
                     new RsaCommand(),
+                    new SecretCommand(),
                 ]);
 
                 return $console;

@@ -16,13 +16,13 @@ use Psr\Http\Message\{
 };
 
 /**
- * Login authentication class
+ * Password authentication class
  * 
  * @package  App
  * @category Authentication
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class LoginAuthentication extends BaseAuthentication
+class PasswordAuthentication extends BaseAuthentication
 {
     private const USERNAME_PARAM = 'username';
     private const PASSWORD_PARAM = 'password';

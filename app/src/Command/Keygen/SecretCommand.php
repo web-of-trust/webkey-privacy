@@ -17,17 +17,17 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Hmac keygen command class
+ * Secret keygen command class
  * 
  * @package  App
  * @category Command
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
 #[AsCommand(
-    name: 'keygen:hmac',
-    description: 'Generate a new hmac key.'
+    name: 'keygen:secret',
+    description: 'Generate a new secret key.'
 )]
-final class HmacCommand extends KeygenCommand
+final class SecretCommand extends KeygenCommand
 {
     private const DEFAULT_KEY_SIZE = 256;
     private const KEY_SIZES = [
@@ -42,7 +42,7 @@ final class HmacCommand extends KeygenCommand
     protected function configure(): void
     {
         parent::configure();
-        $this->setHelp('This command allows you to generate an hmac key.')
+        $this->setHelp('This command allows you to generate an secret key.')
              ->addArgument(
                 'size', InputArgument::OPTIONAL, 'The size of the key.', self::DEFAULT_KEY_SIZE
              );
@@ -80,7 +80,7 @@ final class HmacCommand extends KeygenCommand
             return $this->missingParameter($input, $output);
         }
 
-        $output->writeln('Hmac key successfully generated!');
+        $output->writeln('Secret key successfully generated!');
         return 0;
     }
 }
