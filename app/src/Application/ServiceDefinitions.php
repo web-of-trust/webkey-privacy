@@ -35,8 +35,10 @@ use Doctrine\ORM\{
     ORMSetup,
 };
 use Lcobucci\Clock\SystemClock;
-use Lcobucci\JWT\Configuration as JwtConfig;
-use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\{
+    Configuration as JwtConfig,
+    Signer,
+};
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Validation\Constraint\{
     IdentifiedBy,

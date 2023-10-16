@@ -53,7 +53,7 @@ services:
         build: ./docker/php
         hostname: webkey-app
         restart: ${RESTART_POLICY:-unless-stopped}
-        working_dir: /var/www
+        working_dir: /var/www/html
         command: php -S 0.0.0.0:${HTTP_PORT:-8080} -t public
         depends_on:
             - webkey-database
@@ -62,6 +62,6 @@ services:
         ports:
             - "${HTTP_PORT:-8080}:${HTTP_PORT:-8080}"
         volumes:
-            - .:/var/www
+            - .:/var/www/html
         networks:
             - webkey-network
