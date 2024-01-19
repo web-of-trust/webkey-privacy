@@ -1,4 +1,11 @@
 <?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * Licensed under GNU Affero General Public License v3.0
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Entity;
 
@@ -20,6 +27,9 @@ use Doctrine\ORM\Mapping\{
 #[Entity, Table(name: 'certificates')]
 class CertificateEntity extends BaseEntity
 {
+    #[Column(name: 'certificate_data', type: Types::TEXT, nullable: false)]
+    private readonly string $certificateData;
+
     #[Column(name: 'fingerprint', type: Types::STRING, unique: true, nullable: false)]
     private readonly string $fingerprint;
 
@@ -32,9 +42,6 @@ class CertificateEntity extends BaseEntity
     #[Column(name: 'key_strength', type: Types::INTEGER, nullable: false)]
     private readonly int $keyStrength;
 
-    #[Column(name: 'certificate_data', type: Types::TEXT, nullable: false)]
-    private readonly string $certificateData;
-
     #[Column(name: 'creation_time', type: Types::DATETIMETZ_IMMUTABLE, nullable: false)]
     private readonly DateTimeInterface $creationTime;
 
@@ -45,11 +52,11 @@ class CertificateEntity extends BaseEntity
      * Constructor
      *
      * @param int $id
+     * @param string $certificateData
      * @param string $fingerprint
      * @param string $primaryUser
      * @param string $keyAlgorithm
      * @param int $keyStrength
-     * @param string $certificateData
      * @param DateTimeInterface $creationTime
      * @param DateTimeInterface $expirationTime
      * @param int $createdBy
@@ -60,11 +67,11 @@ class CertificateEntity extends BaseEntity
      */
     public function __construct(
         int $id,
+        string $certificateData,
         string $fingerprint,
         string $primaryUser,
         string $keyAlgorithm,
         int $keyStrength,
-        string $certificateData,
         ?DateTimeInterface $creationTime = null,
         ?DateTimeInterface $expirationTime = null,
         int $createdBy = 0,
@@ -77,13 +84,23 @@ class CertificateEntity extends BaseEntity
             $id, $createdBy, $updatedBy, $createdAt, $updatedAt
         );
 
+        $this->certificateData = $certificateData;
         $this->fingerprint = $fingerprint;
         $this->primaryUser = $primaryUser;
         $this->keyAlgorithm = $keyAlgorithm;
         $this->keyStrength = $keyStrength;
-        $this->certificateData = $certificateData;
         $this->creationTime = $creationTime ?? new \DateTimeImmutable('now');
         $this->expirationTime = $expirationTime;
+    }
+
+    /**
+     * Get certificate data
+     * 
+     * @return string
+     */
+    public function getCertificateData(): string
+    {
+        return $this->certificateData;
     }
 
     /**
@@ -124,16 +141,6 @@ class CertificateEntity extends BaseEntity
     public function getKeyStrength(): int
     {
         return $this->keyStrength;
-    }
-
-    /**
-     * Get certificate data
-     * 
-     * @return string
-     */
-    public function getCertificateData(): string
-    {
-        return $this->certificateData;
     }
 
     /**

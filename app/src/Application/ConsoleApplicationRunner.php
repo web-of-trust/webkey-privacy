@@ -26,7 +26,8 @@ final class ConsoleApplicationRunner extends ApplicationRunner
      */
     public function run(): void
     {
-        $exitCode = $this->getContainer()->get(Application::class)->run();
-        exit($exitCode);
+        exit(
+            $this->getContainer()->get(Application::class)->run()
+        );
     }
 }
