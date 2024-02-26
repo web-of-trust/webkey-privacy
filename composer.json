@@ -36,8 +36,7 @@
     "require-dev": {
         "fakerphp/faker": "^1.0",
         "phpunit/phpunit": "^9.0 | ^10.0",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "workerman/workerman": "^4.0"
+        "phpspec/prophecy-phpunit": "^2.0"
     },
     "scripts": {
         "test": [
