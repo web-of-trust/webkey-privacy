@@ -1,6 +1,6 @@
-Webkey Privacy
-==============
-The application for managing OpenPGP keys within organizations
+The Webkey Privacy
+-------------------
+The Webkey Privacy is an application for managing OpenPGP keys within organizations
 
 ## Features
 - Centrally creating new user keys

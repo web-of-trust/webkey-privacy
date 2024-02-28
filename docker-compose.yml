@@ -1,67 +1,98 @@
 version: '3'
 
 networks:
-    webkey-network:
+    webkey-privacy-network:
         driver: bridge
+        ipam:
+            config:
+                - subnet: 172.111.111.0/24
 
-services:
-    # webkey database
-    webkey-database:
-        container_name: webkey-database
-        image: mariadb:latest
-        hostname: webkey-database
+privacys:
+    # database privacy
+    webkey-privacy-database:
+        container_name: webkey-privacy-database
+        image: mariadb:${MARIADB_VERSION:-latest}
+        hostname: webkey-privacy-database
         restart: ${RESTART_POLICY:-unless-stopped}
         environment:
-            - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-rootP@ssw0rd}
-            - MARIADB_DATABASE=${MARIADB_DATABASE:-webkey}
-            - MARIADB_USER=${MARIADB_USER:-webkey}
-            - MARIADB_PASSWORD=${MARIADB_PASSWORD:-webkeyP@ssw0rd}
+            - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-rootP@ssw0rd}
+            - MARIADB_DATABASE=${DB_DATABASE:-webkey-privacy}
+            - MARIADB_USER=${DB_USERNAME:-webkey-privacy}
+            - MARIADB_PASSWORD=${DB_PASSWORD:-webkeyP@ssw0rd}
             - TZ=${TZ:-Asia/Ho_Chi_Minh}
         volumes:
-            - ./var/database/data:/var/lib/mysql
-            - ./var/database/log:/var/log/mysql
+            - ./storage/database/mariadb:/var/lib/mysql
+            - ./storage/database/log:/var/log/mysql
         networks:
-            - webkey-network
+            - webkey-privacy-network
         healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-p${MARIADB_PASSWORD}"]
+            test: ['CMD', 'healthcheck.sh', '--connect --innodb_initialized']
             retries: 3
             timeout: 5s
 
-    # emd phpmyadmin
-    webkey-phpmyadmin:
-        container_name: webkey-phpmyadmin
+    # redis privacy
+    webkey-privacy-redis:
+        container_name: webkey-privacy-redis
+        image: redis:alpine
+        hostname: webkey-privacy-redis
+        restart: ${RESTART_POLICY:-unless-stopped}
+        volumes:
+            - ./storage/database/redis:/data
+        networks:
+            - webkey-privacy-network
+        healthcheck:
+            test: ['CMD', 'redis-cli', 'ping']
+            retries: 3
+            timeout: 5s
+
+    # phpmyadmin privacy
+    webkey-privacy-phpmyadmin:
+        container_name: webkey-privacy-phpmyadmin
         image: phpmyadmin:latest
-        hostname: webkey-phpmyadmin
+        hostname: webkey-privacy-phpmyadmin
         restart: ${RESTART_POLICY:-unless-stopped}
         depends_on:
-            - webkey-database
+            - webkey-privacy-database
         environment:
-            - PMA_HOST=${PMA_HOST:-webkey-database}
-            - PMA_PORT=${PMA_PORT:-3306}
-            - PMA_USER=${PMA_USER:-root}
-            - PMA_PASSWORD=${PMA_PASSWORD:-rootP@ssw0rd}
+            - PMA_HOST=${DB_HOST:-webkey-privacy-database}
+            - PMA_PORT=${DB_PORT:-3306}
+            - PMA_USER=${DB_ROOT_USER:-root}
+            - PMA_PASSWORD=${DB_ROOT_PASSWORD:-rootP@ssw0rd}
             - TZ=${TZ:-Asia/Ho_Chi_Minh}
-        ports:
-            - "${PMA_HTTP_PORT:-9090}:80"
         networks:
-            - webkey-network
+            webkey-privacy-network:
+                ipv4_address: 172.111.111.11
 
-    # webkey app
-    webkey-app:
-        container_name: webkey-app
-        image: php:alpine
+    # webkey privacy admin
+    webkey-privacy-admin:
+        container_name: webkey-privacy-admin
+        image: php:webkey-privacy
         build: ./docker/php
-        hostname: webkey-app
+        hostname: webkey-privacy-admin
         restart: ${RESTART_POLICY:-unless-stopped}
         working_dir: /var/www/html
-        command: php -S 0.0.0.0:${HTTP_PORT:-8080} -t public
+        command: php -d variables_order=EGPCS /var/www/html/artisan serve --host=0.0.0.0 --port=80
         depends_on:
-            - webkey-database
+            - webkey-privacy-database
+            - webkey-privacy-redis
         environment:
+            - APP_NAME=${APP_NAME:-Webkey Privacy}
+            - APP_ENV=${APP_ENV:-local}
+            - APP_KEY=${APP_KEY:-base64:Tu284oQOvWj4u2UAkzdT8vo6RDOAYaaGVIoTchCO5Gg=}
+            - APP_DEBUG=${APP_DEBUG:-true}
+            - APP_URL=${APP_URL:-http://172.111.111.10}
+            - DB_CONNECTION=${DB_CONNECTION:-mysql}
+            - DB_HOST=${DB_HOST:-webkey-privacy-database}
+            - DB_PORT=${DB_PORT:-3306}
+            - DB_DATABASE=${DB_DATABASE:-webkey-privacy}
+            - DB_USERNAME=${DB_USERNAME:-webkey-privacy}
+            - DB_PASSWORD=${DB_PASSWORD:-webkeyP@ssw0rd}
+            - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+            - REDIS_HOST=${REDIS_HOST:-webkey-privacy-redis}
+            - SESSION_DRIVER=${SESSION_DRIVER:-redis}
             - TZ=${TZ:-Asia/Ho_Chi_Minh}
-        ports:
-            - "${HTTP_PORT:-8080}:${HTTP_PORT:-8080}"
         volumes:
             - .:/var/www/html
         networks:
-            - webkey-network
+            webkey-privacy-network:
+                ipv4_address: 172.111.111.10
