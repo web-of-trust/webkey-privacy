@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class Certificate extends Model
@@ -12,6 +13,7 @@ class Certificate extends Model
     protected $table = 'certificates';
 
     protected $fillable = [
+        'domain_id',
         'fingerprint',
         'key_id',
         'key_algorithm',
@@ -23,4 +25,9 @@ class Certificate extends Model
         'creation_time',
         'expiration_time',
     ];
+
+    public function domain(): BelongsTo
+    {
+        return $this->belongsTo(Domain::class, 'domain_id');
+    }
 }

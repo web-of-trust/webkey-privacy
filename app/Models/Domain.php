@@ -14,9 +14,7 @@ class Domain extends Model
     protected $fillable = [
         'name',
         'description',
-        'public_key',
-        'private_key',
-        'passphrase',
+        'openpgp_keypair',
         'dane_record',
     ];
 }

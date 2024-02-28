@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
-            $table->text('public_key')->nullable();
-            $table->text('private_key')->nullable();
-            $table->text('passphrase')->nullable();
+            $table->text('openpgp_keypair')->nullable();
             $table->text('dane_record')->nullable();
             $table->timestamps();
         });

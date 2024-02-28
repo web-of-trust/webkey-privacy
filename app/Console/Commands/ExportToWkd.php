@@ -11,7 +11,7 @@ class ExportToWkd extends Command
      *
      * @var string
      */
-    protected $signature = 'webkey:export-to-wkd';
+    protected $signature = 'webkey:export';
 
     /**
      * The console command description.

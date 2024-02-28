@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('certificates', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('domain_id');
             $table->string('fingerprint', 64)->unique();
             $table->string('key_id', 16)->unique();
             $table->tinyInteger('key_algorithm');
