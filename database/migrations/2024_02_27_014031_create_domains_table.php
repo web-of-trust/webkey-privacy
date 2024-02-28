@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('public_key')->nullable();
             $table->text('private_key')->nullable();
+            $table->text('dane_record')->nullable();
             $table->timestamps();
         });
     }
