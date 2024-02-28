@@ -16,6 +16,7 @@ class Domain extends Model
         'description',
         'public_key',
         'private_key',
+        'passphrase',
         'dane_record',
     ];
 }
