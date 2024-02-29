@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('email')->unique();
+            $table->string('organization', 1024)->nullable();
             $table->text('description')->nullable();
             $table->text('key_data')->nullable();
             $table->text('dane_record')->nullable();

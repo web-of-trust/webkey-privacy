@@ -27,6 +27,7 @@ class Domain extends Model
     protected $fillable = [
         'name',
         'email',
+        'organization',
         'description',
         'key_data',
         'dane_record',
