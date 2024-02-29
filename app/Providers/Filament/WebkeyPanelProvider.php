@@ -24,6 +24,13 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+/**
+ * Webkey panel provider
+ *
+ * @package  App
+ * @category Providers
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class WebkeyPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel

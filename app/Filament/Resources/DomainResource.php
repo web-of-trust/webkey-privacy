@@ -1,18 +1,29 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DomainResource\Pages;
-use App\Filament\Resources\DomainResource\RelationManagers;
 use App\Models\Domain;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions;
+use Filament\Tables\Columns\TextColumn;
 
+/**
+ * Domain resource
+ *
+ * @package  App
+ * @category Filament
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class DomainResource extends Resource
 {
     protected static ?string $model = Domain::class;
@@ -29,23 +40,16 @@ class DomainResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            //
-        ])->filters([
-            //
+            TextColumn::make('name')->label(__('Name')),
+            TextColumn::make('email')->label(__('Email')),
+            TextColumn::make('organization')->label(__('Organization')),
         ])->actions([
-            Tables\Actions\EditAction::make(),
+            Actions\EditAction::make(),
         ])->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
+            Actions\BulkActionGroup::make([
+                Actions\DeleteBulkAction::make(),
             ]),
         ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
