@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('domains', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('email')->unique();
             $table->text('description')->nullable();
             $table->text('openpgp_keypair')->nullable();
             $table->text('dane_record')->nullable();

@@ -16,7 +16,7 @@ class PrivateKey extends Model
     protected $fillable = [
         'user_id',
         'certificate_id',
-        'private_key',
+        'key_data',
     ];
 
     public function certificate(): HasOne

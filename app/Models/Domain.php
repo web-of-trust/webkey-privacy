@@ -13,6 +13,7 @@ class Domain extends Model
 
     protected $fillable = [
         'name',
+        'email',
         'description',
         'openpgp_keypair',
         'dane_record',

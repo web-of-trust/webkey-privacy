@@ -17,11 +17,11 @@ class Certificate extends Model
         'fingerprint',
         'key_id',
         'key_algorithm',
-        'primary_user',
         'key_strength',
         'key_version',
+        'key_data',
+        'primary_user',
         'certify_by',
-        'public_key',
         'creation_time',
         'expiration_time',
     ];

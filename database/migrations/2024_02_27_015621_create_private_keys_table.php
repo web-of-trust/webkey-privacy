@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('certificate_id');
-            $table->text('private_key')->nullable();
+            $table->text('key_data')->nullable();
             $table->timestamps();
         });
     }

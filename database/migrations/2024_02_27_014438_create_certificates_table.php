@@ -19,9 +19,9 @@ return new class extends Migration
             $table->tinyInteger('key_algorithm');
             $table->tinyInteger('key_strength');
             $table->tinyInteger('key_version');
-            $table->string('certify_by', 64)->nullable();
+            $table->text('key_data')->nullable();
             $table->string('primary_user', 1024);
-            $table->text('public_key')->nullable();
+            $table->string('certify_by', 64)->nullable();
             $table->timestamp('creation_time')->nullable()->default(null);
             $table->timestamp('expiration_time')->nullable()->default(null);
             $table->timestamps();

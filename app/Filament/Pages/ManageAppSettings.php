@@ -16,7 +16,8 @@ class ManageAppSettings extends SettingsPage
     public function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('webkey_store')->label(__('Webkey Store')),
+            TextInput::make('passphrase_repo')->label(__('Passphrase Repository')),
+            TextInput::make('webkey_dir')->label(__('Webkey Directory')),
         ]);
     }
 }
