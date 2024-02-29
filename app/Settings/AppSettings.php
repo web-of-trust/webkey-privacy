@@ -10,6 +10,13 @@ namespace App\Settings;
 
 use Spatie\LaravelSettings\Settings;
 
+/**
+ * App settings
+ *
+ * @package  App
+ * @category Settings
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class AppSettings extends Settings
 {
     public static function group(): string
