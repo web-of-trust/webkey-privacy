@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('email')->unique();
             $table->text('description')->nullable();
-            $table->text('key_pair')->nullable();
+            $table->text('key_data')->nullable();
             $table->text('dane_record')->nullable();
             $table->timestamps();
         });

@@ -24,11 +24,11 @@ class Domain extends Model
 
     protected $table = 'domains';
 
-    protected $fillable = [create
+    protected $fillable = [
         'name',
         'email',
         'description',
-        'key_pair',
+        'key_data',
         'dane_record',
     ];
 }
