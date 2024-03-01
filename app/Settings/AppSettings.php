@@ -77,7 +77,7 @@ class AppSettings extends Settings
                 return $keySize;
             }
         }
-        return RSAKeySize::S2048;
+        return RSAKeySize::S3072;
     }
 
     public function preferredDhSize(): DHKeySize

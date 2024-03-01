@@ -13,6 +13,12 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\SettingsPage;
+use OpenPGP\Enum\{
+    CurveOid,
+    DHKeySize,
+    KeyType,
+    RSAKeySize,
+};
 
 /**
  * App settings manager page
@@ -45,32 +51,32 @@ class ManageAppSettings extends SettingsPage
             TextInput::make('webkey_dir')
                 ->required()->label(__('Webkey Directory')),
             Select::make('preferred_key_type')->required()->options([
-                'Rsa' => 'RSA',
-                'Dsa' => 'DSA ElGamal',
-                'Ecc' => 'Elliptic Curve',
+                KeyType::Rsa->name => 'RSA',
+                KeyType::Dsa->name => 'DSA ElGamal',
+                KeyType::Ecc->name => 'Elliptic Curve',
             ])->label(__('Preferred Key Type')),
             Select::make('preferred_ecc')->required()->options([
-                'Secp256k1' => 'SECP 256k1 Curve',
-                'Prime256v1' => 'NIST P-256 Curve',
-                'Secp384r1' => 'NIST P-384 Curve',
-                'Secp521r1' => 'NIST P-521 Curve',
-                'BrainpoolP256r1' => 'BrainpoolP256r1 Curve',
-                'BrainpoolP384r1' => 'BrainpoolP384r1 Curve',
-                'BrainpoolP512r1' => 'BrainpoolP512r1 Curve',
-                'Ed25519' => 'Curve 25519',
+                CurveOid::Secp256k1->name => 'SECP 256k1 Curve',
+                CurveOid::Prime256v1->name => 'NIST P-256 Curve',
+                CurveOid::Secp384r1->name => 'NIST P-384 Curve',
+                CurveOid::Secp521r1->name => 'NIST P-521 Curve',
+                CurveOid::BrainpoolP256r1->name => 'BrainpoolP256r1 Curve',
+                CurveOid::BrainpoolP384r1->name => 'BrainpoolP384r1 Curve',
+                CurveOid::BrainpoolP512r1->name => 'BrainpoolP512r1 Curve',
+                CurveOid::Ed25519->name => 'Curve 25519',
             ])->label(__('Preferred Elliptic Curve')),
             Select::make('preferred_rsa_size')->required()->options([
-                'S2048' => '2048 bits',
-                'S2560' => '2560 bits',
-                'S3072' => '3072 bits',
-                'S3584' => '3584 bits',
-                "S4096" => '4096 bits',
+                RSAKeySize::S2048->name => RSAKeySize::S2048->value . ' bits',
+                RSAKeySize::S2560->name => RSAKeySize::S2560->value . ' bits',
+                RSAKeySize::S3072->name => RSAKeySize::S3072->value . ' bits',
+                RSAKeySize::S3584->name => RSAKeySize::S3584->value . ' bits',
+                RSAKeySize::S4096->name => RSAKeySize::S4096->value . ' bits',
             ])->label(__('Preferred RSA Key Size')),
             Select::make('preferred_dh_size')->required()->options([
-                'L1024_N160' => '1024 bits',
-                'L2048_N224' => '2048 bits (224)',
-                'L2048_N256' => '2048 bits (256)',
-                'L3072_N256' => '3072 bits',
+                DHKeySize::L1024_N160->name => DHKeySize::L1024_N160->lSize() . ' bits',
+                DHKeySize::L2048_N224->name => DHKeySize::L2048_N224->lSize() . ' bits (224)',
+                DHKeySize::L2048_N256->name => DHKeySize::L2048_N256->lSize() . ' bits (256)',
+                DHKeySize::L3072_N256->name => DHKeySize::L3072_N256->lSize() . ' bits',
             ])->label(__('Preferred DSA-ElGamal Key Size')),
         ]);
     }
