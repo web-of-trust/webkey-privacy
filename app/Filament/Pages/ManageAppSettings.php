@@ -27,11 +27,23 @@ class ManageAppSettings extends SettingsPage
 
     protected static string $settings = AppSettings::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('App Settings');
+    }
+
+    public function getTitle(): string
+    {
+        return __('App Settings');
+    }
+
     public function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('passphrase_repo')->required()->label(__('Passphrase Repository')),
-            TextInput::make('webkey_dir')->required()->label(__('Webkey Directory')),
+            TextInput::make('passphrase_repo')
+                ->required()->label(__('Passphrase Repository')),
+            TextInput::make('webkey_dir')
+                ->required()->label(__('Webkey Directory')),
             Select::make('preferred_key_type')->required()->options([
                 'Rsa' => 'RSA',
                 'Dsa' => 'DSA ElGamal',
@@ -45,7 +57,7 @@ class ManageAppSettings extends SettingsPage
                 'BrainpoolP256r1' => 'BrainpoolP256r1 Curve',
                 'BrainpoolP384r1' => 'BrainpoolP384r1 Curve',
                 'BrainpoolP512r1' => 'BrainpoolP512r1 Curve',
-                'Curve25519' => 'Curve 25519',
+                'Ed25519' => 'Curve 25519',
             ])->label(__('Preferred Elliptic Curve')),
             Select::make('preferred_rsa_size')->required()->options([
                 'S2048' => '2048 bits',
