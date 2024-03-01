@@ -27,14 +27,12 @@ use Filament\Tables\Columns\TextColumn;
 class DomainResource extends Resource
 {
     protected static ?string $model = Domain::class;
-
+    protected static ?string $slug = 'domain';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function getNavigationLabel(): string
     {
-        return $form->schema([
-            //
-        ]);
+        return __('Domain Manager');
     }
 
     public static function table(Table $table): Table
