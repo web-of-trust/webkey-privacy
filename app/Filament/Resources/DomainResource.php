@@ -10,12 +10,17 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DomainResource\Pages;
 use App\Models\Domain;
+use App\Settings\AppSettings;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Actions;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
+use OpenPGP\OpenPGP;
 
 /**
  * Domain resource
@@ -57,5 +62,24 @@ class DomainResource extends Resource
             'create' => Pages\CreateDomain::route('/create'),
             'edit' => Pages\EditDomain::route('/{record}/edit'),
         ];
+    }
+
+    public static function generateKey(string $domain, string $email): string
+    {
+        $settings = app(AppSettings::class);
+        $passphase = Str::random();
+
+        Storage::put(
+            $settings->passphraseRepo() . '/' . $domain,
+            Crypt::encryptString($passphase)
+        );
+        return OpenPGP::generateKey(
+            [$email],
+            $passphase,
+            $settings->preferredKeyType(),
+            curve: $settings->preferredEcc(),
+            rsaKeySize: $settings->preferredRsaSize(),
+            dhKeySize: $settings->preferredDhSize(),
+        )->armor();
     }
 }
