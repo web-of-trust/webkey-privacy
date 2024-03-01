@@ -9,13 +9,20 @@
 namespace App\Filament\Resources\DomainResource\Pages;
 
 use App\Filament\Resources\DomainResource;
+use App\Settings\AppSettings;
 use Filament\Actions;
 use Filament\Forms\Form;
 use Filament\Forms\Components\{
     Textarea,
     TextInput,
+    Toggle,
 };
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
+use OpenPGP\OpenPGP;
 
 /**
  * Edit domain record class
@@ -34,8 +41,33 @@ class EditDomain extends EditRecord
             TextInput::make('name')->readonly()->label(__('Name')),
             TextInput::make('email')->readonly()->label(__('Email')),
             TextInput::make('organization')->label(__('Organization')),
+            Toggle::make('generate_key')
+                ->hidden(fn (Model $record): bool => !empty($record->key_data))
+                ->inline(false)->label(__('Generate PGP Key')),
             Textarea::make('description')->columnSpan(2)->label(__('Description')),
         ]);
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (!empty($data['generate_key'])) {
+            $settings = app(AppSettings::class);
+            $passphase = Str::random();
+
+            Storage::put(
+                $settings->passphraseRepo() . '/' . $data['name'],
+                Crypt::encryptString($passphase)
+            );
+            $data['key_data'] = OpenPGP::generateKey(
+                [$data['email']],
+                $passphase,
+                $settings->preferredKeyType(),
+                curve: $settings->preferredEcc(),
+                rsaKeySize: $settings->preferredRsaSize(),
+                dhKeySize: $settings->preferredDhSize(),
+            )->armor();
+        }
+        return $data;
     }
 
     protected function getHeaderActions(): array

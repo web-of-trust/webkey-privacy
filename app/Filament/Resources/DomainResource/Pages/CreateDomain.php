@@ -13,9 +13,9 @@ use App\Settings\AppSettings;
 use Filament\Actions;
 use Filament\Forms\Form;
 use Filament\Forms\Components\{
-    Toggle,
     Textarea,
     TextInput,
+    Toggle,
 };
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
@@ -60,7 +60,7 @@ class CreateDomain extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        if ($data['generate_key']) {
+        if (!empty($data['generate_key'])) {
             $settings = app(AppSettings::class);
             $passphase = Str::random();
 

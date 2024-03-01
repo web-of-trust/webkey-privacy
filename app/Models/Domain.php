@@ -42,25 +42,37 @@ class Domain extends Model
     protected static function boot(): void
     {
         parent::boot();
-        static::created(static function (self $model) {
-            if (!empty($model->key_data)) {
-                $publicKey = OpenPGP::readPrivateKey(
-                    $model->key_data
-                )->toPublic();
 
-                Certificate::create([
-                    'domain_id' => $model->id,
-                    'fingerprint' => $publicKey->getFingerprint(true),
-                    'key_id' => $publicKey->getKeyID(true),
-                    'key_algorithm' => $publicKey->getKeyAlgorithm()->value,
-                    'key_strength' => $publicKey->getKeyStrength(),
-                    'key_version' => $publicKey->getVersion(),
-                    'key_data' => $publicKey->armor(),
-                    'primary_user' => $publicKey->getPrimaryUser()?->getUserID(),
-                    'creation_time' => $publicKey->getCreationTime(),
-                    'expiration_time' => $publicKey->getExpirationTime(),
-                ]);
+        static::created(static function (self $model) {
+            self::createCertificate($model);
+        });
+
+        static::updating(static function (self $model) {
+            if ($model->isDirty('key_data')) {
+                self::createCertificate($model);
             }
         });
+    }
+
+    private static function createCertificate(self $model): void
+    {
+        if (!empty($model->key_data)) {
+            $publicKey = OpenPGP::readPrivateKey(
+                $model->key_data
+            )->toPublic();
+
+            Certificate::create([
+                'domain_id' => $model->id,
+                'fingerprint' => $publicKey->getFingerprint(true),
+                'key_id' => $publicKey->getKeyID(true),
+                'key_algorithm' => $publicKey->getKeyAlgorithm()->value,
+                'key_strength' => $publicKey->getKeyStrength(),
+                'key_version' => $publicKey->getVersion(),
+                'key_data' => $publicKey->armor(),
+                'primary_user' => $publicKey->getPrimaryUser()?->getUserID(),
+                'creation_time' => $publicKey->getCreationTime(),
+                'expiration_time' => $publicKey->getExpirationTime(),
+            ]);
+        }
     }
 }
