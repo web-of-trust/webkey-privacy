@@ -7,7 +7,7 @@ networks:
             config:
                 - subnet: 172.111.111.0/24
 
-privacys:
+services:
     # database privacy
     webkey-privacy-database:
         container_name: webkey-privacy-database
