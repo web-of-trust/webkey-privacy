@@ -42,7 +42,7 @@ class CreateDomain extends CreateRecord
                 ->rules([
                     function () {
                         return function (string $attribute, $value, \Closure $fail) {
-                            if (filter_var($value, FILTER_VALIDATE_DOMAIN)) {
+                            if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
                                 $fail('The domain name is invalid.');
                             }
                         };

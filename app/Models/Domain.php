@@ -41,6 +41,7 @@ class Domain extends Model
      */
     protected static function boot(): void
     {
+        parent::boot();
         static::created(static function (self $model) {
             if (!empty($model->key_data)) {
                 $publicKey = OpenPGP::readPrivateKey(

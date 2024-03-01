@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('fingerprint', 64)->unique();
             $table->string('key_id', 16)->unique();
             $table->tinyInteger('key_algorithm');
-            $table->tinyInteger('key_strength');
+            $table->mediumInteger('key_strength');
             $table->tinyInteger('key_version');
             $table->text('key_data')->nullable();
             $table->string('primary_user', 1024);

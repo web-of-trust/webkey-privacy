@@ -63,12 +63,12 @@ services:
             webkey-privacy-network:
                 ipv4_address: 172.111.111.11
 
-    # webkey privacy admin
-    webkey-privacy-admin:
-        container_name: webkey-privacy-admin
-        image: php:webkey-privacy
+    # webkey privacy web
+    webkey-privacy-web:
+        container_name: webkey-privacy-web
+        image: php:webkey-privacy-web
         build: ./docker/php
-        hostname: webkey-privacy-admin
+        hostname: webkey-privacy-web
         restart: ${RESTART_POLICY:-unless-stopped}
         working_dir: /var/www/html
         command: php -d variables_order=EGPCS /var/www/html/artisan serve --host=0.0.0.0 --port=80

@@ -80,7 +80,7 @@ class AppSettings extends Settings
         return RSAKeySize::S2048;
     }
 
-    public function preferredDhSize(): RSAKeySize
+    public function preferredDhSize(): DHKeySize
     {
         foreach (DHKeySize::cases() as $keySize) {
             if ($keySize->name === $this->preferred_dh_size) {
