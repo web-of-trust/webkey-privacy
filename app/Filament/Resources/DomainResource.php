@@ -11,14 +11,12 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DomainResource\Pages;
 use App\Models\Domain;
 use App\Settings\AppSettings;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
-use Filament\Tables\Actions;
-use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{
+    Crypt,
+    Storage,
+};
 use OpenPGP\OpenPGP;
 
 /**
@@ -37,21 +35,6 @@ class DomainResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('Domain Manager');
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table->columns([
-            TextColumn::make('name')->label(__('Name')),
-            TextColumn::make('email')->label(__('Email')),
-            TextColumn::make('organization')->label(__('Organization')),
-        ])->actions([
-            Actions\EditAction::make(),
-        ])->bulkActions([
-            Actions\BulkActionGroup::make([
-                Actions\DeleteBulkAction::make(),
-            ]),
-        ]);
     }
 
     public static function getPages(): array
