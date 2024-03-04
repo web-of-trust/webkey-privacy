@@ -48,8 +48,9 @@ class ManageAppSettings extends SettingsPage
         return $form->schema([
             TextInput::make('passphrase_repo')
                 ->required()->label(__('Passphrase Repository')),
-            TextInput::make('webkey_dir')
-                ->required()->label(__('Webkey Directory')),
+            TextInput::make('passphase_length')
+                ->numeric()->minValue(16)->maxValue(64)
+                ->required()->label(__('Passphrase Length')),
             Select::make('preferred_key_type')->required()->options([
                 KeyType::Rsa->name => 'RSA',
                 KeyType::Dsa->name => 'DSA ElGamal',

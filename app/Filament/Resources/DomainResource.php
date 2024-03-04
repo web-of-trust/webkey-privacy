@@ -49,7 +49,7 @@ class DomainResource extends Resource
     public static function generateKey(string $domain, string $email): string
     {
         $settings = app(AppSettings::class);
-        $passphase = Str::random();
+        $passphase = Str::random($settings->passphraseLength());
 
         Storage::put(
             $settings->passphraseRepo() . '/' . $domain,

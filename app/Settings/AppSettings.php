@@ -25,11 +25,11 @@ use Spatie\LaravelSettings\Settings;
  */
 class AppSettings extends Settings
 {
-    const PASSPHRASE_REPO = 'passphrase';
-    const WEBKEY_DIR = 'wkd';
+    const PASSPHRASE_REPO  = 'passphrase';
+    const PASSPHASE_LENGTH = 32;
 
     public string $passphrase_repo;
-    public string $webkey_dir;
+    public int $passphase_length;
     public string $preferred_key_type;
     public string $preferred_ecc;
     public string $preferred_rsa_size;
@@ -45,9 +45,9 @@ class AppSettings extends Settings
         return $this->passphrase_repo ?: self::PASSPHRASE_REPO;
     }
 
-    public function webkeyDir(): string
+    public function passphraseLength(): string
     {
-        return $this->webkey_dir ?: self::WEBKEY_DIR;
+        return $this->passphase_length ?: self::PASSPHASE_LENGTH;
     }
 
     public function preferredKeyType(): KeyType
