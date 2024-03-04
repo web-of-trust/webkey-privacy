@@ -49,7 +49,7 @@ class ManageAppSettings extends SettingsPage
             TextInput::make('passphrase_repo')
                 ->required()->label(__('Passphrase Repository')),
             TextInput::make('passphase_length')
-                ->numeric()->minValue(16)->maxValue(64)
+                ->numeric()->minValue(32)->maxValue(64)
                 ->required()->label(__('Passphrase Length')),
             Select::make('preferred_key_type')->required()->options([
                 KeyType::Rsa->name => 'RSA',
