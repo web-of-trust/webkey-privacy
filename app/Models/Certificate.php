@@ -34,7 +34,7 @@ class Certificate extends Model
         'key_version',
         'key_data',
         'primary_user',
-        'certify_by',
+        'is_revoked',
         'creation_time',
         'expiration_time',
     ];
