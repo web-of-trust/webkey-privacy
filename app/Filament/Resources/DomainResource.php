@@ -30,7 +30,7 @@ class DomainResource extends Resource
 {
     protected static ?string $model = Domain::class;
     protected static ?string $slug = 'domain';
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
 
     public static function getNavigationLabel(): string
     {

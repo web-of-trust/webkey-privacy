@@ -30,7 +30,7 @@ use OpenPGP\Enum\{
 class ManageAppSettings extends SettingsPage
 {
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
-
+    protected static ?string $slug = 'app-settings';
     protected static string $settings = AppSettings::class;
 
     public static function getNavigationLabel(): string
