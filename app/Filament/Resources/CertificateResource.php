@@ -23,7 +23,7 @@ class CertificateResource extends Resource
 {
     protected static ?string $model = Certificate::class;
     protected static ?string $slug = 'certificate';
-    protected static ?string $navigationIcon = 'heroicon-o-key';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     public static function getNavigationLabel(): string
     {
