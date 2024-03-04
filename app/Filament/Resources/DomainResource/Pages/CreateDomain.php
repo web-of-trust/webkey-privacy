@@ -49,7 +49,8 @@ class CreateDomain extends CreateRecord
             TextInput::make('organization')->label(__('Organization')),
             Toggle::make('generate_key')
                 ->default(true)->inline(false)->label(__('Generate PGP Key')),
-            Textarea::make('description')->columnSpan(2)->label(__('Description')),
+            Textarea::make('description')
+                ->columnSpan(2)->label(__('Description')),
         ]);
     }
 
