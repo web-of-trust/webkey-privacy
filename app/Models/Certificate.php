@@ -25,6 +25,11 @@ class Certificate extends Model
 
     protected $table = 'certificates';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'domain_id',
         'fingerprint',
@@ -37,6 +42,15 @@ class Certificate extends Model
         'is_revoked',
         'creation_time',
         'expiration_time',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_revoked' => 'boolean',
     ];
 
     public function domain(): BelongsTo

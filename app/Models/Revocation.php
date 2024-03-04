@@ -25,6 +25,11 @@ class Revocation extends Model
 
     protected $table = 'revocations';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'certificate_id',
         'revoke_by',

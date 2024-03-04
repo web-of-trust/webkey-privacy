@@ -9,8 +9,10 @@
 namespace App\Filament\Pages;
 
 use App\Settings\AppSettings;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\{
+    Select,
+    TextInput,
+};
 use Filament\Forms\Form;
 use Filament\Pages\SettingsPage;
 use OpenPGP\Enum\{

@@ -25,6 +25,11 @@ class Domain extends Model
 
     protected $table = 'domains';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name',
         'email',

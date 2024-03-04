@@ -26,6 +26,11 @@ class PrivateKey extends Model
 
     protected $table = 'private_keys';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'user_id',
         'certificate_id',
