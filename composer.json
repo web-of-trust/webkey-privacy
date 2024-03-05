@@ -1,10 +1,10 @@
 {
-    "name": "web-of-trust/webkey-service",
+    "name": "web-of-trust/webkey-privacy",
     "type": "project",
-    "description": "Webkey Service Project.",
+    "description": "Webkey Privacy Project.",
     "keywords": [
         "web of trust",
-        "webkey service"
+        "webkey privacy"
     ],
     "license": "AGPL-3.0",
     "authors": [
