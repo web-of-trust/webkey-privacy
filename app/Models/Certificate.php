@@ -23,6 +23,8 @@ class Certificate extends Model
 {
     use HasFactory;
 
+    const EMAIL_PATTERN = '/[\w\.-]+@[\w\.-]+\.\w{2,4}/';
+
     protected $table = 'certificates';
 
     /**
@@ -34,12 +36,13 @@ class Certificate extends Model
         'domain_id',
         'fingerprint',
         'key_id',
+        'wkd_hash',
         'key_algorithm',
         'key_strength',
         'key_version',
-        'key_data',
-        'primary_user',
         'is_revoked',
+        'primary_user',
+        'key_data',
         'creation_time',
         'expiration_time',
     ];
@@ -53,8 +56,35 @@ class Certificate extends Model
         'is_revoked' => 'boolean',
     ];
 
+    /**
+     * The "boot" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(static function (self $model) {
+            $parts = explode(
+                '@', self::extractEmail($model->primary_user)
+            );
+            if (empty($model->wkd_hash) && !empty($parts[0])) {
+                $model->wkd_hash = hash('sha1', $parts[0]);
+            }
+        });
+    }
+
     public function domain(): BelongsTo
     {
         return $this->belongsTo(Domain::class, 'domain_id');
+    }
+
+    private static function extractEmail(string $userId): string
+    {
+        if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
+            return $matches[0];
+        };
+        return '';
     }
 }

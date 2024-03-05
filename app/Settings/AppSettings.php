@@ -25,11 +25,11 @@ use Spatie\LaravelSettings\Settings;
  */
 class AppSettings extends Settings
 {
-    const PASSPHRASE_REPO  = 'passphrase';
-    const PASSPHASE_LENGTH = 32;
+    const PASSPHRASE_STORE  = 'passphrase';
+    const PASSPHRASE_LENGTH = 32;
 
-    public string $passphrase_repo;
-    public int $passphase_length;
+    public string $passphrase_store;
+    public int $passphrase_length;
     public string $preferred_key_type;
     public string $preferred_ecc;
     public string $preferred_rsa_size;
@@ -40,14 +40,14 @@ class AppSettings extends Settings
         return 'app_settings';
     }
 
-    public function passphraseRepo(): string
+    public function passphraseStore(): string
     {
-        return $this->passphrase_repo ?: self::PASSPHRASE_REPO;
+        return $this->passphrase_length ?: self::PASSPHRASE_LENGTH;
     }
 
-    public function passphraseLength(): string
+    public function passphraseLength(): int
     {
-        return $this->passphase_length ?: self::PASSPHASE_LENGTH;
+        return $this->passphrase_length ?: self::PASSPHASE_LENGTH;
     }
 
     public function preferredKeyType(): KeyType

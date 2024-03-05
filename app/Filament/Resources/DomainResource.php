@@ -52,7 +52,7 @@ class DomainResource extends Resource
         $passphase = Str::password($settings->passphraseLength());
 
         Storage::put(
-            $settings->passphraseRepo() . '/' . $domain,
+            $settings->passphraseStore() . '/' . $domain,
             Crypt::encryptString($passphase)
         );
         return OpenPGP::generateKey(
