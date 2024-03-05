@@ -8,16 +8,23 @@
 
 namespace App\Enums;
 
+/**
+ * Roles enum
+ *
+ * @package  App
+ * @category Enum
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 enum RolesEnum: string
 {
-    case ADMINISTRATOR      = 'administrator';
     case AUTHENTICATED_USER = 'authenticated-user';
+    case ADMINISTRATOR      = 'administrator';
 
     public function label(): string
     {
         return match ($this) {
-            static::ADMINISTRATOR      => __('Administrator'),
-            static::AUTHENTICATED_USER => __('Authenticated User'),
+            self::AUTHENTICATED_USER => __('Authenticated User'),
+            self::ADMINISTRATOR      => __('Administrator'),
         };
     }
 }

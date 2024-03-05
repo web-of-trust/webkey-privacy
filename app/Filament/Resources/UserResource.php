@@ -14,7 +14,6 @@ use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Spatie\Permission\Models\Role;
 
 /**
  * User resource
@@ -37,10 +36,8 @@ class UserResource extends Resource
     public static function roles(): array
     {
         $roles = [];
-        foreach (Role::all() as $role) {
-            if ($enum = RolesEnum::tryFrom($role->name)) {
-                $roles[$role->name] = $enum->label();
-            }
+        foreach (RolesEnum::cases() as $role) {
+            $roles[$role->value] = $role->label();
         }
         return $roles;
     }
