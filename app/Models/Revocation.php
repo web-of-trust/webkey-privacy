@@ -33,8 +33,8 @@ class Revocation extends Model
     protected $fillable = [
         'certificate_id',
         'revoke_by',
+        'tag',
         'reason',
-        'description',
     ];
 
     public function certificate(): HasOne

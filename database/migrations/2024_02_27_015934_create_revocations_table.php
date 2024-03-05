@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('certificate_id');
             $table->string('revoke_by', 64);
-            $table->tinyInteger('reason');
-            $table->string('description', 1024);
+            $table->tinyInteger('tag');
+            $table->text('reason')->nullable();
             $table->timestamps();
         });
     }
