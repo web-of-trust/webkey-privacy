@@ -22,8 +22,8 @@ use Filament\Resources\Resource;
 class CertificateResource extends Resource
 {
     protected static ?string $model = Certificate::class;
-    protected static ?string $slug = 'certificate';
     protected static ?string $navigationIcon = 'heroicon-o-identification';
+    protected static ?string $slug = 'certificate';
 
     public static function getNavigationLabel(): string
     {

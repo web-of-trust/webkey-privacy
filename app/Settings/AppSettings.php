@@ -25,7 +25,7 @@ use Spatie\LaravelSettings\Settings;
  */
 class AppSettings extends Settings
 {
-    const PASSPHRASE_STORE  = 'passphrase';
+    const PASSPHRASE_STORE  = 'key_vault';
     const PASSPHRASE_LENGTH = 32;
 
     public string $passphrase_store;
@@ -42,7 +42,7 @@ class AppSettings extends Settings
 
     public function passphraseStore(): string
     {
-        return $this->passphrase_length ?: self::PASSPHRASE_LENGTH;
+        return $this->passphrase_store ?: self::PASSPHRASE_STORE;
     }
 
     public function passphraseLength(): int

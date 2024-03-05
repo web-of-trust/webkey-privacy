@@ -29,8 +29,8 @@ use OpenPGP\OpenPGP;
 class DomainResource extends Resource
 {
     protected static ?string $model = Domain::class;
-    protected static ?string $slug = 'domain';
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
+    protected static ?string $slug = 'domain';
 
     public static function getNavigationLabel(): string
     {
@@ -51,8 +51,8 @@ class DomainResource extends Resource
         $settings = app(AppSettings::class);
         $passphase = Str::password($settings->passphraseLength());
 
-        Storage::put(
-            $settings->passphraseStore() . '/' . $domain,
+        Storage::disk($settings->passphraseStore())->put(
+            hash('sha256', $domain),
             Crypt::encryptString($passphase)
         );
         return OpenPGP::generateKey(
