@@ -49,10 +49,10 @@ class ManageAppSettings extends SettingsPage
     {
         $disks = array_keys(config('filesystems.disks'));
         return $form->schema([
-            Select::make('passphrase_repo')->required()->options([
+            Select::make('passphrase_store')->required()->options(
                 array_combine($disks, $disks)
-            ])->label(__('Passphrase Repository')),
-            TextInput::make('passphase_length')
+            )->label(__('Passphrase Repository')),
+            TextInput::make('passphrase_length')
                 ->numeric()->minValue(32)->maxValue(64)
                 ->required()->label(__('Passphrase Length')),
             Select::make('preferred_key_type')->required()->options([
