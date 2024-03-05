@@ -17,6 +17,13 @@ use Filament\Forms\Components\{
 };
 use Filament\Resources\Pages\EditRecord;
 
+/**
+ * Edit user record page
+ *
+ * @package  App
+ * @category Filament
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class EditUser extends EditRecord
 {
     protected static string $resource = UserResource::class;

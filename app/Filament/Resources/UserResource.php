@@ -10,6 +10,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\RolesEnum;
 use App\Filament\Resources\UserResource\Pages;
+use App\Models\Domain;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -40,6 +41,11 @@ class UserResource extends Resource
             $roles[$role->value] = $role->label();
         }
         return $roles;
+    }
+
+    public static function domainNames(): array
+    {
+         return Domain::all()->pluck('name', 'id')->toArray();
     }
 
     public static function getPages(): array

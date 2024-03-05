@@ -29,9 +29,13 @@ class CreateUser extends CreateRecord
 
     public function form(Form $form): Form
     {
+        $domains = [];
         return $form->schema([
             TextInput::make('name')->required()->label(__('Name')),
-            TextInput::make('email')->email()->required()->label(__('Email Address')),
+            TextInput::make('email')
+                ->email()->required()->endsWith(
+                    static::getResource()::domainNames()
+                )->label(__('Email Address')),
             TextInput::make('password')->password()
                 ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                 ->dehydrated(fn ($state) => filled($state))
