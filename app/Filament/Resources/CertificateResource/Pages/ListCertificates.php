@@ -21,7 +21,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * List certificate record class
+ * List certificate record page
  *
  * @package  App
  * @category Filament

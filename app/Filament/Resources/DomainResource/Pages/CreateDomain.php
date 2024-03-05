@@ -20,7 +20,7 @@ use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Str;
 
 /**
- * Create domain record class
+ * Create domain record page
  *
  * @package  App
  * @category Filament

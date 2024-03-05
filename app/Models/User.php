@@ -69,4 +69,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return true;
     }
+
+    public function isSupperAdmin(): bool
+    {
+        return $this->id === 1;
+    }
 }

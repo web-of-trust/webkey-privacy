@@ -20,7 +20,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 /**
- * List domain record class
+ * List domain record page
  *
  * @package  App
  * @category Filament

@@ -20,7 +20,7 @@ use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Edit domain record class
+ * Edit domain record page
  *
  * @package  App
  * @category Filament

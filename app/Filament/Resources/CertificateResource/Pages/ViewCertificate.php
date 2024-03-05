@@ -21,7 +21,7 @@ use OpenPGP\Enum\{
 use OpenPGP\OpenPGP;
 
 /**
- * View certificate record class
+ * View certificate record page
  *
  * @package  App
  * @category Filament
