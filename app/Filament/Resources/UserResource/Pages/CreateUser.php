@@ -34,11 +34,13 @@ class CreateUser extends CreateRecord
         $domains = [];
         return $form->schema([
             TextInput::make('name')->required()->label(__('Name')),
-            TextInput::make('email')->endsWith(
+            TextInput::make('email')->email()->required()->unique()
+                ->endsWith(
                     static::getResource()::domainNames()
                 )->validationMessages([
-                    'ends_with' => 'The email address does belong to any domains.',
-                ])->email()->required()->label(__('Email Address')),
+                    'unique' => __('The email address has already been taken.'),
+                    'ends_with' => __('The email address does not belong to any domains.'),
+                ])->label(__('Email Address')),
             TextInput::make('password')->password()
                 ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                 ->dehydrated(fn ($state) => filled($state))
