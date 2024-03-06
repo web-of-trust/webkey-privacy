@@ -9,7 +9,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\{
+    BelongsTo,
+    HasOne,
+};
 use Illuminate\Database\Eloquent\Model;
 use ParagonIE\ConstantTime\Base32;
 
@@ -81,6 +84,11 @@ class Certificate extends Model
     public function domain(): BelongsTo
     {
         return $this->belongsTo(Domain::class, 'domain_id');
+    }
+
+    public function revocation(): HasOne
+    {
+        return $this->hasOne(Revocation::class, 'id', 'certificate_id');
     }
 
     private static function extractEmail(string $userId): string
