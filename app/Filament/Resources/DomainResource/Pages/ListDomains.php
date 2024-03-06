@@ -12,7 +12,10 @@ use App\Filament\Resources\DomainResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\{
+    IconColumn,
+    TextColumn,
+};
 use Filament\Tables\Table;
 
 /**
@@ -32,6 +35,7 @@ class ListDomains extends ListRecords
             TextColumn::make('name')->label(__('Name')),
             TextColumn::make('email')->label(__('Email')),
             TextColumn::make('organization')->label(__('Organization')),
+            IconColumn::make('has_key')->boolean()->label(__('Has PGP Key')),
         ])->actions([
             EditAction::make(),
         ]);

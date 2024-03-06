@@ -56,6 +56,10 @@ class Domain extends Model
     {
         parent::boot();
 
+        static::retrieved(static function (self $model) {
+            $model->has_key = !empty($model->key_data);
+        });
+
         static::created(static function (self $model) {
             self::createCertificate($model);
         });

@@ -35,10 +35,9 @@ class EditDomain extends EditRecord
             TextInput::make('name')->readonly()->label(__('Name')),
             TextInput::make('email')->readonly()->label(__('Email')),
             TextInput::make('organization')->label(__('Organization')),
-            Toggle::make('generate_key')
-                ->hidden(
-                    !empty($this->record->key_data)
-                )->inline(false)->label(__('Generate PGP Key')),
+            Toggle::make('generate_key')->hidden(
+                $this->record->has_key
+            )->inline(false)->label(__('Generate PGP Key')),
             Textarea::make('description')
                 ->columnSpan(2)->label(__('Description')),
         ]);
