@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('organization', 1024)->nullable();
             $table->text('description')->nullable();
             $table->text('key_data')->nullable();
-            $table->text('dane_record')->nullable();
             $table->timestamps();
         });
     }

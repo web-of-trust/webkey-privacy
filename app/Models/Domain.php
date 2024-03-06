@@ -36,7 +36,6 @@ class Domain extends Model
         'organization',
         'description',
         'key_data',
-        'dane_record',
     ];
 
     /**
