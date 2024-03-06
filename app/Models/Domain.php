@@ -44,6 +44,7 @@ class Domain extends Model
      * @var array<int, string>
      */
     protected $hidden = [
+        'has_key',
         'key_data',
     ];
 
@@ -68,6 +69,7 @@ class Domain extends Model
             if ($model->isDirty('key_data')) {
                 self::createCertificate($model);
             }
+            unset($model->has_key);
         });
     }
 
