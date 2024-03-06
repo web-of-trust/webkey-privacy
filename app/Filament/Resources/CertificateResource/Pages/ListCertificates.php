@@ -10,13 +10,20 @@ namespace App\Filament\Resources\CertificateResource\Pages;
 
 use App\Filament\Resources\CertificateResource;
 use App\Models\Domain;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\{
+    TextInput,
+    Toggle,
+};
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Columns\{
+    IconColumn,
+    TextColumn,
+};
+use Filament\Tables\Filters\{
+    Filter,
+    SelectFilter,
+};
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -43,6 +50,14 @@ class ListCertificates extends ListRecords
                 ->sortable()->label(__('Creation Time')),
             TextColumn::make('key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
+            IconColumn::make('is_revoked')
+                ->icon(fn (bool $state): string => match ($state) {
+                    false => 'heroicon-o-x-circle',
+                    true => 'heroicon-o-check-circle',
+                })->color(fn (bool $state): string => match ($state) {
+                    false => 'success',
+                    true => 'danger',
+                })->label(__('Is Revoked')),
         ])->filters([
             Filter::make('user')->form([
                 TextInput::make('user')->label(__('User ID')),

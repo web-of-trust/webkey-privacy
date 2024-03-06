@@ -40,6 +40,15 @@ class Domain extends Model
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'key_data',
+    ];
+
+    /**
      * The "boot" method of the model.
      *
      * @return void

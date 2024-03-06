@@ -17,7 +17,6 @@ use Filament\Forms\Components\{
     Toggle,
 };
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Edit domain record page
@@ -38,7 +37,7 @@ class EditDomain extends EditRecord
             TextInput::make('organization')->label(__('Organization')),
             Toggle::make('generate_key')
                 ->hidden(
-                    static fn (Model $domain): bool => !empty($domain->key_data)
+                    !empty($this->record->key_data)
                 )->inline(false)->label(__('Generate PGP Key')),
             Textarea::make('description')
                 ->columnSpan(2)->label(__('Description')),

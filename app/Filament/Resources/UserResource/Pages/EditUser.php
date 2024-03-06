@@ -81,7 +81,7 @@ class EditUser extends EditRecord
     {
         return [
             DeleteAction::make()->hidden(
-                auth()->user()->isSupperAdmin()
+                $this->record->isSupperAdmin()
             ),
         ];
     }
