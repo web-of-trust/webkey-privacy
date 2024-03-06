@@ -38,17 +38,17 @@ class WebkeyPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('webkey')
-            ->path('webkey')
+            ->path(env('WEBKEY_PANEL_PATH', 'webkey'))
             ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Webkey/Resources'), for: 'App\\Filament\\Webkey\\Resources')
+            ->discoverPages(in: app_path('Filament/Webkey/Pages'), for: 'App\\Filament\\Webkey\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Webkey\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,

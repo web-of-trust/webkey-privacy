@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect(env('PANEL_PATH', 'webkey'));
+    return redirect(env('ADMIN_PANEL_PATH', 'admin'));
 });
