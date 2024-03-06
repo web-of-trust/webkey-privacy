@@ -9,15 +9,10 @@
 namespace App\Filament\Resources\CertificateResource\Pages;
 
 use App\Filament\Resources\CertificateResource;
-use Filament\Actions\Action;
-use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use OpenPGP\Enum\{
-    KeyAlgorithm,
-    RevocationReasonTag,
-};
+use OpenPGP\Enum\KeyAlgorithm;
 use OpenPGP\OpenPGP;
 
 /**
@@ -58,21 +53,6 @@ class ViewCertificate extends ViewRecord
                 )
                 ->html()->columnSpan(2)->label(__('Key Data')),
         ]);
-    }
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Action::make('revoke')
-                ->form([
-                    TextInput::make('reason')->label(__('Revocation Reason')),
-                ])
-                ->visible(!$this->record->is_revoked)
-                ->action(function (array $data) {
-                    $publicKey = OpenPGP::readPublicKey($this->record->key_data);
-                })
-                ->label(__('Revoke')),
-        ];
     }
 
     private static function keyAlgorithm(int $algo): string

@@ -11,11 +11,7 @@ namespace App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\{
-    BulkActionGroup,
-    DeleteBulkAction,
-    EditAction,
-};
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -38,10 +34,6 @@ class ListUsers extends ListRecords
             TextColumn::make('created_at')->dateTime()->sortable()->label(__('Created At')),
         ])->actions([
             EditAction::make(),
-        ])->bulkActions([
-            BulkActionGroup::make([
-                DeleteBulkAction::make(),
-            ]),
         ]);
     }
 
