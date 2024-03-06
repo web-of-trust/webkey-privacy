@@ -8,7 +8,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -70,6 +69,11 @@ class User extends Authenticatable implements FilamentUser
         return true;
     }
 
+    /**
+     * User is supper admin.
+     *
+     * @return bool
+     */
     public function isSupperAdmin(): bool
     {
         return $this->id === 1;

@@ -11,11 +11,7 @@ namespace App\Filament\Resources\DomainResource\Pages;
 use App\Filament\Resources\DomainResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\{
-    BulkActionGroup,
-    DeleteBulkAction,
-    EditAction,
-};
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -38,10 +34,6 @@ class ListDomains extends ListRecords
             TextColumn::make('organization')->label(__('Organization')),
         ])->actions([
             EditAction::make(),
-        ])->bulkActions([
-            BulkActionGroup::make([
-                DeleteBulkAction::make(),
-            ]),
         ]);
     }
 

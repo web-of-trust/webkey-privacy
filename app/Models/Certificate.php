@@ -11,6 +11,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use ParagonIE\ConstantTime\Base32;
 
 /**
  * Certificate model
@@ -70,7 +71,9 @@ class Certificate extends Model
                 '@', self::extractEmail($model->primary_user)
             );
             if (empty($model->wkd_hash) && !empty($parts[0])) {
-                $model->wkd_hash = hash('sha1', $parts[0]);
+                $model->wkd_hash = Base32::encode(
+                    hash('sha1', $parts[0], true)
+                );
             }
         });
     }

@@ -9,16 +9,17 @@
 namespace App\Filament\Resources\DomainResource\Pages;
 
 use App\Filament\Resources\DomainResource;
-use Filament\Forms\Form;
+use Filament\Forms\{
+    Form,
+    Get,
+};
 use Filament\Forms\Components\{
     Textarea,
     TextInput,
     Toggle,
 };
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Str;
-
 /**
  * Create domain record page
  *
@@ -45,7 +46,13 @@ class CreateDomain extends CreateRecord
                 ])
                 ->required()->unique()->label(__('Name')),
             TextInput::make('email')
-                ->email()->required()->unique()->label(__('Email Address')),
+                ->rules([
+                    fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
+                        if (!Str::endsWith($value, $get('name'))) {
+                            $fail('The email address must match the domain name.');
+                        }
+                    },
+                ])->email()->required()->unique()->label(__('Email Address')),
             TextInput::make('organization')->label(__('Organization')),
             Toggle::make('generate_key')
                 ->default(true)->inline(false)->label(__('Generate PGP Key')),
@@ -62,19 +69,6 @@ class CreateDomain extends CreateRecord
             );
         }
         return $data;
-    }
-
-    protected function afterValidate(): void
-    {
-        $data = $this->form->getState();
-        if (!Str::endsWith($data['email'], $data['name'])) {
-            Notification::make()
-                ->warning()
-                ->title(__('The email address is invalid!'))
-                ->body(__('The email address must match the domain name.'))
-                ->send();
-            $this->halt();
-        }
     }
 
     protected function getCreatedNotificationTitle(): ?string

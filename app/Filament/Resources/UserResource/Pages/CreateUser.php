@@ -14,7 +14,9 @@ use Filament\Forms\Components\{
     Select,
     TextInput,
 };
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Create user record page
@@ -32,10 +34,11 @@ class CreateUser extends CreateRecord
         $domains = [];
         return $form->schema([
             TextInput::make('name')->required()->label(__('Name')),
-            TextInput::make('email')
-                ->email()->required()->endsWith(
+            TextInput::make('email')->endsWith(
                     static::getResource()::domainNames()
-                )->label(__('Email Address')),
+                )->validationMessages([
+                    'ends_with' => 'The email address does belong to any domains.',
+                ])->email()->required()->label(__('Email Address')),
             TextInput::make('password')->password()
                 ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                 ->dehydrated(fn ($state) => filled($state))

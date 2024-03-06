@@ -16,6 +16,7 @@ use Filament\Forms\Components\{
     TextInput,
 };
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Edit user record page
@@ -32,14 +33,14 @@ class EditUser extends EditRecord
     {
         return $form->schema([
             TextInput::make('name')->required()->label(__('Name')),
-            TextInput::make('email')->email()->required()->label(__('Email Address')),
+            TextInput::make('email')->readonly()->label(__('Email Address')),
             TextInput::make('password')->password()
                 ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                 ->dehydrated(fn ($state) => filled($state))
                 ->required(false)->label(__('Password')),
             Select::make('role')->required()->options(
                 static::getResource()::roles()
-            )->label(__('Role')),
+            )->hidden(auth()->user()->isSupperAdmin())->label(__('Role')),
         ]);
     }
 
