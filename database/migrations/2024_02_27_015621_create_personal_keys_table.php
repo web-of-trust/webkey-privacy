@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('private_keys', function (Blueprint $table) {
+        Schema::create('personal_keys', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('certificate_id');
+            $table->boolean('is_revoked')->default(false);
             $table->text('key_data')->nullable();
             $table->timestamps();
         });
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('private_keys');
+        Schema::dropIfExists('personal_keys');
     }
 };

@@ -14,17 +14,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Private key model
+ * Personal key model
  *
  * @package  App
  * @category Models
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class PrivateKey extends Model
+class PersonalKey extends Model
 {
     use HasFactory;
 
-    protected $table = 'private_keys';
+    protected $table = 'personal_keys';
 
     /**
      * The attributes that are mass assignable.
@@ -34,7 +34,17 @@ class PrivateKey extends Model
     protected $fillable = [
         'user_id',
         'certificate_id',
+        'is_revoked',
         'key_data',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_revoked' => 'boolean',
     ];
 
     public function certificate(): HasOne
