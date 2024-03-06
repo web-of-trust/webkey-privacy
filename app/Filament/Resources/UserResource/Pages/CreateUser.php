@@ -16,6 +16,7 @@ use Filament\Forms\Components\{
 };
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -49,6 +50,13 @@ class CreateUser extends CreateRecord
                 static::getResource()::roles()
             )->label(__('Role')),
         ]);
+    }
+
+    protected function handleRecordCreation(array $data): Model
+    {
+       $user = parent::handleRecordCreation($data);
+       $user->assignRole($data['role']);
+       return $user;
     }
 
     protected function getCreatedNotificationTitle(): ?string

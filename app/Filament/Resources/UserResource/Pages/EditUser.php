@@ -16,6 +16,7 @@ use Filament\Forms\Components\{
     TextInput,
 };
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -41,9 +42,29 @@ class EditUser extends EditRecord
             Select::make('role')->required()->options(
                 static::getResource()::roles()
             )->hidden(
-                auth()->user()->isSupperAdmin()
+                $this->record->isSupperAdmin()
             )->label(__('Role')),
         ]);
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['role'] = $this->record->getRoleNames()->first();
+        return $data;
+    }
+
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        $assignedRole = $record->getRoleNames()->first();
+        $role = $data['role'] ?? '';
+        if (empty($assignedRole)) {
+           $record->assignRole($role);
+        }
+        elseif (!empty($role) && $role !== $assignedRole) {
+           $record->removeRole($assignedRole);
+           $record->assignRole($role);
+        }
+        return parent::handleRecordUpdate($record, $data);
     }
 
     protected function getSavedNotificationTitle(): ?string
