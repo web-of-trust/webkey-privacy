@@ -9,17 +9,20 @@
 namespace App\Filament\Resources\DomainResource\Pages;
 
 use App\Filament\Resources\DomainResource;
+use App\Settings\AppSettings;
 use Filament\Forms\{
     Form,
     Get,
 };
 use Filament\Forms\Components\{
+    Fieldset,
     Textarea,
     TextInput,
     Toggle,
 };
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Str;
+
 /**
  * Create domain record page
  *
@@ -34,30 +37,35 @@ class CreateDomain extends CreateRecord
     public function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('name')
-                ->rules([
-                    function () {
-                        return function (string $attribute, $value, \Closure $fail) {
-                            if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
-                                $fail('The domain name is invalid.');
+            Fieldset::make(__('Domain Information'))->schema([
+                TextInput::make('name')
+                    ->rules([
+                        function () {
+                            return function (string $attribute, $value, \Closure $fail) {
+                                if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
+                                    $fail('The domain name is invalid.');
+                                }
+                            };
+                        },
+                    ])
+                    ->required()->unique()->label(__('Name')),
+                TextInput::make('email')
+                    ->rules([
+                        fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
+                            if (!Str::endsWith($value, $get('name'))) {
+                                $fail('The email address must match the domain name.');
                             }
-                        };
-                    },
-                ])
-                ->required()->unique()->label(__('Name')),
-            TextInput::make('email')
-                ->rules([
-                    fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
-                        if (!Str::endsWith($value, $get('name'))) {
-                            $fail('The email address must match the domain name.');
-                        }
-                    },
-                ])->email()->required()->unique()->label(__('Email Address')),
-            TextInput::make('organization')->label(__('Organization')),
-            Toggle::make('generate_key')
-                ->default(true)->inline(false)->label(__('Generate PGP Key')),
-            Textarea::make('description')
-                ->columnSpan(2)->label(__('Description')),
+                        },
+                    ])->email()->required()->unique()->label(__('Email Address')),
+                TextInput::make('organization')->label(__('Organization')),
+                Toggle::make('generate_key')->live()
+                    ->inline(false)->label(__('Generate PGP Key')),
+                Textarea::make('description')
+                    ->columnSpan(2)->label(__('Description')),
+            ]),
+            Fieldset::make(__('Key Settings'))->schema(
+                AppSettings::keySettings()
+            )->hidden(fn (Get $get): bool => ! $get('generate_key')),
         ]);
     }
 
@@ -65,7 +73,7 @@ class CreateDomain extends CreateRecord
     {
         if (!empty($data['generate_key'])) {
             $data['key_data'] = static::getResource()::generateKey(
-                $data['name'], $data['email']
+                $data['name'], $data['email'], $data
             );
         }
         return $data;

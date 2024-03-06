@@ -46,9 +46,12 @@ class DomainResource extends Resource
         ];
     }
 
-    public static function generateKey(string $domain, string $email): string
+    public static function generateKey(
+        string $domain, string $email, array $dataSettings = []
+    ): string
     {
         $settings = app(AppSettings::class);
+        $settings->fill($dataSettings);
         $passphase = Str::password($settings->passphraseLength());
 
         Storage::disk($settings->passphraseStore())->put(
@@ -58,10 +61,10 @@ class DomainResource extends Resource
         return OpenPGP::generateKey(
             [$email],
             $passphase,
-            $settings->preferredKeyType(),
-            curve: $settings->preferredEcc(),
-            rsaKeySize: $settings->preferredRsaSize(),
-            dhKeySize: $settings->preferredDhSize(),
+            $settings->keyType(),
+            curve: $settings->ellipticCurve(),
+            rsaKeySize: $settings->rsaKeySize(),
+            dhKeySize: $settings->dhKeySize(),
         )->armor();
     }
 }

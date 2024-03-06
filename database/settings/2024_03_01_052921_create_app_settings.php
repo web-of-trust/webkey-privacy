@@ -8,9 +8,9 @@ return new class extends SettingsMigration
     {
         $this->migrator->add('app_settings.passphrase_store', '');
         $this->migrator->add('app_settings.passphrase_length', 0);
-        $this->migrator->add('app_settings.preferred_key_type', '');
-        $this->migrator->add('app_settings.preferred_ecc', '');
-        $this->migrator->add('app_settings.preferred_rsa_size', '');
-        $this->migrator->add('app_settings.preferred_dh_size', '');
+        $this->migrator->add('app_settings.key_type', '');
+        $this->migrator->add('app_settings.elliptic_curve', '');
+        $this->migrator->add('app_settings.rsa_key_size', '');
+        $this->migrator->add('app_settings.dh_key_size', '');
     }
 };
