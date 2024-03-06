@@ -9,9 +9,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\{
+    BelongsTo,
+    HasOne,
+};
 use Illuminate\Database\Eloquent\Model;
+use OpenPGP\OpenPGP;
 
 /**
  * Personal key model
@@ -46,6 +49,69 @@ class PersonalKey extends Model
     protected $casts = [
         'is_revoked' => 'boolean',
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'key_data',
+    ];
+
+    /**
+     * The "boot" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(static function (self $model) {
+            if (!empty($model->key_data)) {
+                $publicKey = OpenPGP::readPrivateKey(
+                    $model->key_data
+                )->toPublic();
+
+                $parts = explode('@', User::find($model->user_id)->email);
+                $domain = Domain::firstWhere('name', $parts[1] ?? '');
+
+                $model->certificate_id = Certificate::create([
+                    'domain_id' => $domain->id,
+                    'fingerprint' => $publicKey->getFingerprint(true),
+                    'key_id' => $publicKey->getKeyID(true),
+                    'key_algorithm' => $publicKey->getKeyAlgorithm()->value,
+                    'key_strength' => $publicKey->getKeyStrength(),
+                    'key_version' => $publicKey->getVersion(),
+                    'key_data' => $publicKey->armor(),
+                    'primary_user' => $publicKey->getPrimaryUser()?->getUserID(),
+                    'creation_time' => $publicKey->getCreationTime(),
+                    'expiration_time' => $publicKey->getExpirationTime(),
+                ])->id;
+            }
+        });
+
+        static::updating(static function (self $model) {
+            if ($model->isDirty('key_data')) {
+                $publicKey = OpenPGP::readPrivateKey(
+                    $model->key_data
+                )->toPublic();
+
+                Certificate::find($model->certificate_id)->update([
+                    'fingerprint' => $publicKey->getFingerprint(true),
+                    'key_id' => $publicKey->getKeyID(true),
+                    'key_algorithm' => $publicKey->getKeyAlgorithm()->value,
+                    'key_strength' => $publicKey->getKeyStrength(),
+                    'key_version' => $publicKey->getVersion(),
+                    'key_data' => $publicKey->armor(),
+                    'primary_user' => $publicKey->getPrimaryUser()?->getUserID(),
+                    'creation_time' => $publicKey->getCreationTime(),
+                    'expiration_time' => $publicKey->getExpirationTime(),
+                ]);
+            }
+        });
+    }
 
     public function certificate(): HasOne
     {
