@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Enums\RolesEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -66,7 +67,20 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        if ($panel->getPath() === env('ADMIN_PANEL_PATH', 'admin')) {
+            return $this->isAdministrator();
+        }
+        return this->hasRole(RolesEnum::AUTHENTICATED_USER);
+    }
+
+    /**
+     * User is administrator.
+     *
+     * @return bool
+     */
+    public function isAdministrator(): true
+    {
+        return $this->isSupperAdmin() || $this->hasRole(RolesEnum::ADMINISTRATOR);
     }
 
     /**

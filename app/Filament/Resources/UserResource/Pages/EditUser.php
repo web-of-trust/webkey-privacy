@@ -40,7 +40,9 @@ class EditUser extends EditRecord
                 ->required(false)->label(__('Password')),
             Select::make('role')->required()->options(
                 static::getResource()::roles()
-            )->hidden(auth()->user()->isSupperAdmin())->label(__('Role')),
+            )->hidden(
+                auth()->user()->isSupperAdmin()
+            )->label(__('Role')),
         ]);
     }
 
@@ -57,7 +59,9 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            DeleteAction::make()->hidden(
+                auth()->user()->isSupperAdmin()
+            ),
         ];
     }
 }
