@@ -76,7 +76,9 @@ class ListPersonalKeys extends ListRecords
                 ->form([
                     Fieldset::make(__('Key Settings'))->schema([
                         ...AppSettings::keySettings(),
-                        TextInput::make('passphrase')->readonly()
+                        TextInput::make('passphrase')
+                            ->readonly()->password()
+                            ->revealable(filament()->arePasswordsRevealable())
                             ->default(self::randomPassphrase())
                             ->helperText('You must remember and/or save the passphrase.')
                             ->hintActions([
