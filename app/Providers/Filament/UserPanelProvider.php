@@ -8,9 +8,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\User\Pages\EditUserProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -23,7 +25,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-
 /**
  * User panel provider
  *
@@ -37,9 +38,10 @@ class UserPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('user')
+            ->id('user_pane')
             ->path(env('USER_PANEL_PATH', 'user'))
             ->login()
+            ->profile(EditUserProfile::class, isSimple: false)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -51,6 +53,13 @@ class UserPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\User\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Edit Profile')->url(
+                    fn (): string => EditUserProfile::getUrl()
+                )->icon('heroicon-o-user')->isActiveWhen(
+                    fn () => request()->routeIs(EditUserProfile::getRouteName())
+                ),
             ])
             ->middleware([
                 EncryptCookies::class,

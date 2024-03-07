@@ -44,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('admin')
+            ->id('admin_panel')
             ->path(env('ADMIN_PANEL_PATH', 'admin'))
             ->login()
             ->colors([
