@@ -70,7 +70,7 @@ class User extends Authenticatable implements FilamentUser
         if ($panel->getPath() === env('ADMIN_PANEL_PATH', 'admin')) {
             return $this->isAdministrator();
         }
-        return this->hasRole(RolesEnum::AUTHENTICATED_USER);
+        return $this->hasRole(RolesEnum::AUTHENTICATED_USER);
     }
 
     /**
@@ -78,7 +78,7 @@ class User extends Authenticatable implements FilamentUser
      *
      * @return bool
      */
-    public function isAdministrator(): true
+    public function isAdministrator(): bool
     {
         return $this->isSupperAdmin() || $this->hasRole(RolesEnum::ADMINISTRATOR);
     }
