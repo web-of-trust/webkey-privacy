@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 /**
- * This file is part of the Webkey Privacy project.
+ * This file is part of the User Privacy project.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,30 +25,30 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /**
- * Webkey panel provider
+ * User panel provider
  *
  * @package  App
  * @category Providers
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class WebkeyPanelProvider extends PanelProvider
+class UserPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
-            ->id('webkey')
-            ->path(env('WEBKEY_PANEL_PATH', 'webkey'))
+            ->id('user')
+            ->path(env('USER_PANEL_PATH', 'user'))
             ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Webkey/Resources'), for: 'App\\Filament\\Webkey\\Resources')
-            ->discoverPages(in: app_path('Filament/Webkey/Pages'), for: 'App\\Filament\\Webkey\\Pages')
+            ->discoverResources(in: app_path('Filament/User/Resources'), for: 'App\\Filament\\User\\Resources')
+            ->discoverPages(in: app_path('Filament/User/Pages'), for: 'App\\Filament\\User\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Webkey\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\User\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
             ])
