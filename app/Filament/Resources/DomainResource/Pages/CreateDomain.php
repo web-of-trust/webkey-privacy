@@ -59,7 +59,7 @@ class CreateDomain extends CreateRecord
                     ])->email()->required()->unique()->label(__('Email Address')),
                 TextInput::make('organization')->label(__('Organization')),
                 Toggle::make('generate_key')->live()
-                    ->inline(false)->label(__('Generate PGP Key')),
+                    ->inline(false)->label(__('Generate Domain Key')),
                 Textarea::make('description')
                     ->columnSpan(2)->label(__('Description')),
             ]),

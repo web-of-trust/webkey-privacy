@@ -45,7 +45,7 @@ class ManageAppSettings extends SettingsPage
         return $form->schema([
             Select::make('passphrase_store')->required()->options(
                 array_combine($disks, $disks)
-            )->label(__('Passphrase Repository')),
+            )->label(__('Passphrase Store')),
             TextInput::make('passphrase_length')
                 ->numeric()->minValue(32)->maxValue(64)
                 ->required()->label(__('Passphrase Length')),

@@ -1,39 +1,35 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Filament\User\Resources;
 
-use App\Filament\Resources\PersonalKeyResource\Pages;
-use App\Filament\Resources\PersonalKeyResource\RelationManagers;
+use App\Filament\User\Resources\PersonalKeyResource\Pages;
 use App\Models\PersonalKey;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+/**
+ * User personal key resource
+ *
+ * @package  App
+ * @category Filament
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class PersonalKeyResource extends Resource
 {
+    const PASSPHRASE_STORAGE_ITEM = 'wkp-passphrase';
+
     protected static ?string $model = PersonalKey::class;
     protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $slug = 'personal-key';
 
     public static function getNavigationLabel(): string
     {
-        return __('Personal Keys');
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                //
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-            ]);
+        return __('Personal Key');
     }
 
     public static function getPages(): array

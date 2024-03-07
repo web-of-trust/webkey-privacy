@@ -92,4 +92,14 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->id === 1;
     }
+
+    /**
+     * User has personal key.
+     *
+     * @return bool
+     */
+    public function hasPersonalKey(): bool
+    {
+        return PersonalKey::where('user_id', $this->id)->count() > 0;
+    }
 }

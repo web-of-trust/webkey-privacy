@@ -43,7 +43,7 @@ class EditDomain extends EditRecord
                 TextInput::make('organization')->label(__('Organization')),
                 Toggle::make('generate_key')->hidden(
                     $this->record->has_key
-                )->live()->inline(false)->label(__('Generate PGP Key')),
+                )->live()->inline(false)->label(__('Generate Domain Key')),
                 Textarea::make('description')
                     ->columnSpan(2)->label(__('Description')),
             ]),
