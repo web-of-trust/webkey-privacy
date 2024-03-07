@@ -115,7 +115,7 @@ class PersonalKey extends Model
 
     public function certificate(): HasOne
     {
-        return $this->hasOne(Certificate::class, 'certificate_id');
+        return $this->hasOne(Certificate::class, 'id', 'certificate_id');
     }
 
     public function user(): BelongsTo

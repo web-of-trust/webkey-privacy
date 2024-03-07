@@ -28,6 +28,7 @@ use Filament\Tables\Columns\{
     TextColumn,
 };
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Livewire\Component as Livewire;
 use OpenPGP\OpenPGP;
@@ -51,6 +52,23 @@ class ListPersonalKeys extends ListRecords
     public function table(Table $table): Table
     {
         return $table->columns([
+            TextColumn::make('certificate.primary_user')->label(__('User ID')),
+            TextColumn::make('certificate.key_id')
+                ->formatStateUsing(
+                    static fn (string $state): string => strtoupper($state)
+                )->label(__('Key ID')),
+            TextColumn::make('certificate.creation_time')
+                ->sortable()->label(__('Creation Time')),
+            TextColumn::make('certificate.key_strength')
+                ->suffix(' bits')->label(__('Key Strength')),
+            IconColumn::make('is_revoked')
+                ->icon(fn (bool $state): string => match ($state) {
+                    false => 'heroicon-o-x-circle',
+                    true => 'heroicon-o-check-circle',
+                })->color(fn (bool $state): string => match ($state) {
+                    false => 'success',
+                    true => 'danger',
+                })->label(__('Is Revoked')),
         ])->headerActions([
             Action::make('generate_key')
                 ->label(__('Generate Personal Key'))
@@ -90,7 +108,9 @@ class ListPersonalKeys extends ListRecords
                 }),
         ])->actions([
             ViewAction::make(),
-        ]);
+        ])->modifyQueryUsing(
+            fn (Builder $query) => $query->where('user_id', auth()->user()->id)
+        );
     }
 
     private static function generateKey(
