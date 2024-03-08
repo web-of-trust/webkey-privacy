@@ -10,6 +10,7 @@ namespace App\Filament\Resources\CertificateResource\Pages;
 
 use App\Filament\Resources\CertificateResource;
 use App\Infolists\Components\CertificateKey;
+use Filament\Actions\Action;
 use Filament\Infolists\Components\{
     Fieldset,
     RepeatableEntry,
@@ -17,6 +18,7 @@ use Filament\Infolists\Components\{
 };
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Support\Facades\Storage;
 use OpenPGP\OpenPGP;
 
 /**
@@ -73,5 +75,29 @@ class ViewCertificate extends ViewRecord
                     TextEntry::make('expiration_time')->dateTime()->label(__('Expiration Time')),
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
         ]);
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('export')
+                ->action(function ($record) {
+                    $filePath = 'certificates/' . $record->fingerprint . '.pgp';
+                    if (!Storage::exists($filePath)) {
+                        Storage::put(
+                            $filePath,
+                            $record->key_data
+                        );
+                    }
+                    return Storage::download(
+                        $filePath,
+                        $record->primary_user . '.pgp'
+                    );
+                })
+                ->label(__('Export Certificate')),
+            Action::make('back')->url(
+                url()->previous()
+            )->color('gray')->label(__('Back')),
+        ];
     }
 }

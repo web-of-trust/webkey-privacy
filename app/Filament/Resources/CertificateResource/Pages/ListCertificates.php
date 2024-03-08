@@ -83,8 +83,6 @@ class ListCertificates extends ListRecords
                 ->options(
                     Domain::all()->pluck('name', 'id')
                 )->label(__('Domain')),
-        ])->defaultSort('creation_time', 'desc')->actions([
-            ViewAction::make(),
-        ]);
+        ])->defaultSort('creation_time', 'desc');
     }
 }
