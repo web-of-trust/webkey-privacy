@@ -9,6 +9,7 @@
 namespace App\Filament\User\Resources\PersonalKeyResource\Pages;
 
 use App\Filament\User\Resources\PersonalKeyResource;
+use App\Models\Domain;
 use App\Settings\AppSettings;
 use Filament\Forms\{
     Form,
@@ -29,6 +30,11 @@ use Filament\Tables\Columns\{
 };
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\{
+    Crypt,
+    Log,
+    Storage,
+};
 use Illuminate\Support\Str;
 use Livewire\Component as Livewire;
 use OpenPGP\OpenPGP;
@@ -90,11 +96,10 @@ class ListPersonalKeys extends ListRecords
                                         );
                                     }),
                             ])->label(__('Passphrase')),
-                            Toggle::make('remember')->live()->default(true)->inline(false)
-                                ->label(__('Save passphrase into browser storage')),
+                        Toggle::make('remember')->live()->default(true)->inline(false)
+                            ->label(__('Save passphrase into browser storage')),
                     ]),
-                ])
-                ->action(function (Livewire $livewire, array $data) {
+                ])->action(function (Livewire $livewire, array $data) {
                     $passphrase = $data['passphrase'];
                     if (!empty($data['remember'])) {
                         self::rememberPassphrase($livewire, $passphrase);
@@ -108,10 +113,20 @@ class ListPersonalKeys extends ListRecords
                     ]);
                     redirect()->to(static::getResource()::getUrl('index'));
                 }),
+            Action::make('export_key')->label(__('Export Personal Key'))
+                ->hidden(
+                    !auth()->user()->hasPersonalKey()
+                )->action(function () {
+                    static::$resource::getModel();
+                }),
         ])->actions([
             ViewAction::make(),
         ])->modifyQueryUsing(
             fn (Builder $query) => $query->where('user_id', auth()->user()->id)
+        )->emptyStateHeading(
+            __('No personal key yet')
+        )->emptyStateDescription(
+            __('Once you generate personal key, it will appear here.')
         );
     }
 
@@ -124,14 +139,34 @@ class ListPersonalKeys extends ListRecords
     {
         $settings = app(AppSettings::class)->fill($keySettings);
 
-        return OpenPGP::generateKey(
+        $key = OpenPGP::generateKey(
             [$name . " <$email>"],
             $passphrase,
             $settings->keyType(),
             curve: $settings->ellipticCurve(),
             rsaKeySize: $settings->rsaKeySize(),
             dhKeySize: $settings->dhKeySize(),
-        )->armor();
+        );
+
+        $parts = explode('@', $email);
+        $domain = Domain::firstWhere('name', $parts[1] ?? '');
+        if (!empty($domain->key_data)) {
+            try {
+                $key = OpenPGP::decryptPrivateKey(
+                    $domain->key_data,
+                    Crypt::decryptString(
+                        Storage::disk($settings->passphraseStore())->get(
+                            hash('sha256', $domain->name),
+                        )
+                    )
+                )->certifyKey($key);
+            }
+            catch (\Throwable $e) {
+                Log::error($e);
+            }
+        }
+
+        return $key->armor();
     }
 
     private static function randomPassphrase(): string

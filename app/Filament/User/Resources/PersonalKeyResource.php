@@ -11,6 +11,12 @@ namespace App\Filament\User\Resources;
 use App\Filament\User\Resources\PersonalKeyResource\Pages;
 use App\Models\PersonalKey;
 use Filament\Resources\Resource;
+use Filament\Infolists\Components\{
+    Fieldset,
+    TextEntry,
+};
+use Filament\Infolists\Infolist;
+use OpenPGP\Enum\KeyAlgorithm;
 
 /**
  * User personal key resource
@@ -32,11 +38,42 @@ class PersonalKeyResource extends Resource
         return __('Personal Key');
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Fieldset::make(__('Certificate Information'))->schema([
+                    TextEntry::make('certificate.domain.name')->label(__('Domain')),
+                    TextEntry::make('certificate.primary_user')->label(__('User ID')),
+                    TextEntry::make('certificate.fingerprint')->formatStateUsing(
+                        static fn (string $state): string => strtoupper($state)
+                    )->label(__('Fingerprint')),
+                    TextEntry::make('certificate.key_id')->formatStateUsing(
+                        static fn (string $state): string => strtoupper($state)
+                    )->label(__('Key ID')),
+                    TextEntry::make('certificate.key_algorithm')->formatStateUsing(
+                        static fn (int $state): string => self::keyAlgorithm($state)
+                    )->label(__('Key Algorithm')),
+                    TextEntry::make('certificate.key_strength')
+                        ->suffix(' bits')->label(__('Key Strength')),
+                    TextEntry::make('certificate.creation_time')->label(__('Creation Time')),
+                    TextEntry::make('certificate.expiration_time')->label(__('Expiration Time')),
+                ]),
+                Fieldset::make(__('Revocation'))->schema([
+                    TextEntry::make('certificate.revocation.reason')->label(__('Reason')),
+                ])->hidden(static fn (?string $state): bool => empty($state)),
+            ]);
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListPersonalKeys::route('/'),
-            'view' => Pages\ViewPersonalKey::route('/{record}'),
         ];
+    }
+
+    public static function keyAlgorithm(int $algo): string
+    {
+        return KeyAlgorithm::tryFrom($algo)?->name ?? '';
     }
 }
