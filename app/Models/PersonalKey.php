@@ -98,13 +98,14 @@ class PersonalKey extends Model
                     $model->key_data
                 )->toPublic();
 
-                Certificate::find($model->certificate_id)->update([
+                $model->certificate()->update([
                     'fingerprint' => $publicKey->getFingerprint(true),
                     'key_id' => $publicKey->getKeyID(true),
                     'key_algorithm' => $publicKey->getKeyAlgorithm()->value,
                     'key_strength' => $publicKey->getKeyStrength(),
                     'key_version' => $publicKey->getVersion(),
                     'key_data' => $publicKey->armor(),
+                    'is_revoked' => $model->is_revoked,
                     'primary_user' => $publicKey->getPrimaryUser()?->getUserID(),
                     'creation_time' => $publicKey->getCreationTime(),
                     'expiration_time' => $publicKey->getExpirationTime(),

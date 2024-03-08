@@ -58,9 +58,6 @@ class ViewCertificate extends ViewRecord
                 TextEntry::make('creation_time')->label(__('Creation Time')),
                 TextEntry::make('expiration_time')->label(__('Expiration Time')),
             ]),
-            Fieldset::make(__('Revocation'))->schema([
-                TextEntry::make('revocation.reason')->label(__('Reason')),
-            ])->hidden(!$this->record->is_revoked),
             RepeatableEntry::make('subKeys')
                 ->schema([
                     TextEntry::make('fingerprint')->formatStateUsing(
@@ -74,6 +71,9 @@ class ViewCertificate extends ViewRecord
                     TextEntry::make('creation_time')->dateTime()->label(__('Creation Time')),
                     TextEntry::make('expiration_time')->dateTime()->label(__('Expiration Time')),
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
+            Fieldset::make(__('Revocation'))->schema([
+                TextEntry::make('revocation.reason')->label(__('Reason')),
+            ])->hidden(!$this->record->is_revoked),
         ]);
     }
 

@@ -88,7 +88,7 @@ class Certificate extends Model
 
     public function revocation(): HasOne
     {
-        return $this->hasOne(Revocation::class, 'id', 'certificate_id');
+        return $this->hasOne(Revocation::class, 'certificate_id', 'id');
     }
 
     private static function extractEmail(string $userId): string

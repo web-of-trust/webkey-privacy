@@ -6,8 +6,16 @@ use App\Filament\Resources\{
     CertificateResource,
     PersonalKeyResource
 };
+use App\Models\{
+    Domain,
+    Revocation,
+};
+use App\Settings\AppSettings;
 use Filament\Actions\Action;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\{
+    Select,
+    TextInput
+};
 use Filament\Infolists\Components\{
     Fieldset,
     RepeatableEntry,
@@ -15,6 +23,12 @@ use Filament\Infolists\Components\{
 };
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Support\Facades\{
+    Crypt,
+    Log,
+    Storage,
+};
+use OpenPGP\Enum\RevocationReasonTag;
 use OpenPGP\OpenPGP;
 
 class ViewPersonalKey extends ViewRecord
@@ -54,9 +68,6 @@ class ViewPersonalKey extends ViewRecord
                 TextEntry::make('certificate.creation_time')->label(__('Creation Time')),
                 TextEntry::make('certificate.expiration_time')->label(__('Expiration Time')),
             ]),
-            Fieldset::make(__('Revocation'))->schema([
-                TextEntry::make('certificate.revocation.reason')->label(__('Reason')),
-            ])->hidden(!$this->record->is_revoked),
             RepeatableEntry::make('subKeys')
                 ->schema([
                     TextEntry::make('fingerprint')->formatStateUsing(
@@ -70,6 +81,9 @@ class ViewPersonalKey extends ViewRecord
                     TextEntry::make('creation_time')->dateTime()->label(__('Creation Time')),
                     TextEntry::make('expiration_time')->dateTime()->label(__('Expiration Time')),
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
+            Fieldset::make(__('Revocation'))->schema([
+                TextEntry::make('certificate.revocation.reason')->label(__('Reason')),
+            ])->hidden(!$this->record->is_revoked),
         ]);
     }
 
@@ -78,11 +92,51 @@ class ViewPersonalKey extends ViewRecord
         return [
             Action::make('revoke')
                 ->form([
-                    TextInput::make('reason')->required()
-                        ->label(__('Revocation Reason')),
+                    Select::make('tag')->selectablePlaceholder(false)
+                        ->options([
+                            RevocationReasonTag::NoReason->value => __('No reason'),
+                            RevocationReasonTag::KeySuperseded->value => __('Key is superseded'),
+                            RevocationReasonTag::KeyCompromised->value => __('Key has been compromised'),
+                            RevocationReasonTag::KeyRetired->value => __('Key is retired'),
+                            RevocationReasonTag::UserIDInvalid->value => __('User ID is invalid'),
+                        ])
+                        ->default(RevocationReasonTag::NoReason->value)->label(__('Reason')),
+                    TextInput::make('reason')->required()->label(__('Description')),
                 ])
                 ->visible(!$this->record->is_revoked)
                 ->action(function (array $data) {
+                    $email = $this->record->user->email;
+                    $parts = explode('@', $email);
+                    $domain = Domain::firstWhere('name', $parts[1] ?? '');
+                    if (!empty($domain->key_data)) {
+                        try {
+                            $settings = app(AppSettings::class);
+                            $domainKey = OpenPGP::decryptPrivateKey(
+                                $domain->key_data,
+                                Crypt::decryptString(
+                                    Storage::disk($settings->passphraseStore())->get(
+                                        hash('sha256', $domain->name),
+                                    )
+                                )
+                            );
+                            $personalKey = $domainKey->revokeKey(
+                                OpenPGP::readPrivateKey($this->record->key_data)
+                            );
+                            Revocation::create([
+                                'certificate_id' => $this->record->certificate_id,
+                                'revoke_by' => $domainKey->getFingerprint(true),
+                                'tag' => $data['tag'],
+                                'reason' => $data['reason'],
+                            ]);
+                            $this->record->update([
+                                'key_data' => $personalKey->armor(),
+                                'is_revoked' => true,
+                            ]);
+                        }
+                        catch (\Throwable $e) {
+                            Log::error($e);
+                        }
+                    }
                     redirect($this->previousUrl ?? self::getResource()::getUrl());
                 })
                 ->label(__('Revoke')),
