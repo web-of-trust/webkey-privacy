@@ -1,16 +1,24 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PersonalKeyResource\Pages;
-use App\Filament\Resources\PersonalKeyResource\RelationManagers;
 use App\Models\PersonalKey;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+/**
+ * Personal key resource
+ *
+ * @package  App
+ * @category Filament
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class PersonalKeyResource extends Resource
 {
     protected static ?string $model = PersonalKey::class;
@@ -20,20 +28,6 @@ class PersonalKeyResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('Personal Keys');
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                //
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-            ]);
     }
 
     public static function getPages(): array

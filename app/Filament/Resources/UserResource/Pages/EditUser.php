@@ -9,7 +9,6 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
-use Filament\Actions\DeleteAction;
 use Filament\Forms\Form;
 use Filament\Forms\Components\{
     Select,
@@ -75,14 +74,5 @@ class EditUser extends EditRecord
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');
-    }
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            DeleteAction::make()->hidden(
-                $this->record->isSupperAdmin()
-            ),
-        ];
     }
 }

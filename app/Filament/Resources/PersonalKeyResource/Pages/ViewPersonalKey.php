@@ -1,10 +1,16 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Filament\Resources\PersonalKeyResource\Pages;
 
 use App\Filament\Resources\{
     CertificateResource,
-    PersonalKeyResource
+    PersonalKeyResource,
 };
 use App\Models\{
     Domain,
@@ -31,6 +37,13 @@ use Illuminate\Support\Facades\{
 use OpenPGP\Enum\RevocationReasonTag;
 use OpenPGP\OpenPGP;
 
+/**
+ * View personal key record page
+ *
+ * @package  App
+ * @category Filament
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class ViewPersonalKey extends ViewRecord
 {
     protected static string $resource = PersonalKeyResource::class;

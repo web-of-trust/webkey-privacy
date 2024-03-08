@@ -1,19 +1,36 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Filament\Resources\PersonalKeyResource\Pages;
 
-use App\Filament\Resources\CertificateResource;
-use App\Filament\Resources\PersonalKeyResource;
+use App\Filament\Resources\{
+    CertificateResource,
+    PersonalKeyResource,
+};
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Actions\{
+    Action,
+    ViewAction,
+};
 use Filament\Tables\Columns\{
     IconColumn,
     TextColumn,
 };
 use Filament\Tables\Table;
 
+/**
+ * List personal key record page
+ *
+ * @package  App
+ * @category Filament
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class ListPersonalKeys extends ListRecords
 {
     protected static string $resource = PersonalKeyResource::class;

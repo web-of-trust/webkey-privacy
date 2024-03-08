@@ -10,10 +10,10 @@ namespace App\Filament\Resources;
 
 use App\Enums\RolesEnum;
 use App\Filament\Resources\UserResource\Pages;
-use App\Models\Domain;
-use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Form;
+use App\Models\{
+    Domain,
+    User,
+};
 use Filament\Resources\Resource;
 
 /**
