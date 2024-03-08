@@ -82,7 +82,10 @@ class ViewPersonalKey extends ViewRecord
                     TextEntry::make('expiration_time')->dateTime()->label(__('Expiration Time')),
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
             Fieldset::make(__('Revocation'))->schema([
-                TextEntry::make('certificate.revocation.reason')->label(__('Reason')),
+                TextEntry::make('certificate.revocation.tag')->formatStateUsing(
+                    static fn (int $state): string => CertificateResource::revocationReason($state)
+                )->label(__('Reason')),
+                TextEntry::make('certificate.revocation.reason')->label(__('Description')),
             ])->hidden(!$this->record->is_revoked),
         ]);
     }

@@ -11,7 +11,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CertificateResource\Pages;
 use App\Models\Certificate;
 use Filament\Resources\Resource;
-use OpenPGP\Enum\KeyAlgorithm;
+use OpenPGP\Enum\{
+    KeyAlgorithm,
+    RevocationReasonTag,
+};
 use OpenPGP\Type\SubkeyInterface;
 
 /**
@@ -43,6 +46,20 @@ class CertificateResource extends Resource
     public static function keyAlgorithm(int $algo): string
     {
         return KeyAlgorithm::tryFrom($algo)?->name ?? '';
+    }
+
+    public static function revocationReason(int $tag): ?string
+    {
+        $reason = RevocationReasonTag::tryFrom($tag);
+        if ($reason) {
+            return match ($reason) {
+                RevocationReasonTag::NoReason => __('No reason'),
+                RevocationReasonTag::KeySuperseded => __('Key is superseded'),
+                RevocationReasonTag::KeyCompromised => __('Key has been compromised'),
+                RevocationReasonTag::KeyRetired => __('Key is retired'),
+                RevocationReasonTag::UserIDInvalid => __('User ID is invalid'),
+            };
+        }
     }
 
     public static function subKey(SubkeyInterface $subKey): mixed

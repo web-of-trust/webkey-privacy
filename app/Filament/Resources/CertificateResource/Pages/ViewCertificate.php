@@ -72,7 +72,10 @@ class ViewCertificate extends ViewRecord
                     TextEntry::make('expiration_time')->dateTime()->label(__('Expiration Time')),
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
             Fieldset::make(__('Revocation'))->schema([
-                TextEntry::make('revocation.reason')->label(__('Reason')),
+                TextEntry::make('revocation.tag')->formatStateUsing(
+                    static fn (int $state): string => self::getResource()::revocationReason($state)
+                )->label(__('Reason')),
+                TextEntry::make('revocation.reason')->label(__('Description')),
             ])->hidden(!$this->record->is_revoked),
         ]);
     }
