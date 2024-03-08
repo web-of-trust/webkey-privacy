@@ -62,7 +62,7 @@ class ListPersonalKeys extends ListRecords
     public function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('certificate.primary_user')->label(__('User ID')),
+            TextColumn::make('certificate.primary_user')->wrap()->label(__('User ID')),
             TextColumn::make('certificate.key_id')
                 ->formatStateUsing(
                     static fn (string $state): string => strtoupper($state)
@@ -124,14 +124,17 @@ class ListPersonalKeys extends ListRecords
                     }
                     redirect(static::getResource()::getUrl('index'));
                 }),
-            Action::make('export_key')->label(__('Export Personal Key'))
-                ->hidden(
-                    !auth()->user()->hasActivePersonalKey()
-                )->action(function () {
-                    static::$resource::getModel();
-                }),
         ])->actions([
             ViewAction::make(),
+            Action::make('export_key')->label(__('Export'))
+                ->icon('heroicon-m-arrow-down-tray')
+                ->action(function ($record) {
+                    $filePath = 'personal-keys/' . $record->certificate->fingerprint . '.pgp';
+                    Storage::put($filePath, $record->key_data);
+                    return response()->download(
+                        Storage::path($filePath), $record->user->email . '.pgp'
+                    )->deleteFileAfterSend(true);
+                }),
         ])->modifyQueryUsing(
             fn (Builder $query) => $query->where('user_id', auth()->user()->id)
         )->emptyStateHeading(
