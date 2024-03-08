@@ -8,6 +8,7 @@
 
 namespace App\Filament\User\Resources\PersonalKeyResource\Pages;
 
+use App\Filament\Resources\CertificateResource;
 use App\Filament\User\Resources\PersonalKeyResource;
 use App\Models\Domain;
 use App\Settings\AppSettings;
@@ -63,8 +64,10 @@ class ListPersonalKeys extends ListRecords
                 ->formatStateUsing(
                     static fn (string $state): string => strtoupper($state)
                 )->label(__('Key ID')),
-            TextColumn::make('certificate.creation_time')
-                ->sortable()->label(__('Creation Time')),
+            TextColumn::make('certificate.key_algorithm')
+                ->formatStateUsing(
+                    static fn (int $state): string => CertificateResource::keyAlgorithm($state)
+                )->label(__('Key Algorithm ')),
             TextColumn::make('certificate.key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
             IconColumn::make('is_revoked')
@@ -75,10 +78,12 @@ class ListPersonalKeys extends ListRecords
                     false => 'success',
                     true => 'danger',
                 })->label(__('Is Revoked')),
+            TextColumn::make('certificate.creation_time')
+                ->sortable()->label(__('Creation Time')),
         ])->headerActions([
             Action::make('generate_key')
                 ->label(__('Generate Personal Key'))
-                ->hidden(auth()->user()->hasPersonalKey())
+                ->hidden(auth()->user()->hasActivePersonalKey())
                 ->form([
                     Fieldset::make(__('Key Settings'))->schema([
                         ...AppSettings::keySettings(),
@@ -115,7 +120,7 @@ class ListPersonalKeys extends ListRecords
                 }),
             Action::make('export_key')->label(__('Export Personal Key'))
                 ->hidden(
-                    !auth()->user()->hasPersonalKey()
+                    !auth()->user()->hasActivePersonalKey()
                 )->action(function () {
                     static::$resource::getModel();
                 }),

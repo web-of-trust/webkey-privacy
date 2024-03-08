@@ -9,6 +9,7 @@
 namespace App\Filament\User\Resources;
 
 use App\Filament\User\Resources\PersonalKeyResource\Pages;
+use App\Filament\Resources\CertificateResource;
 use App\Models\PersonalKey;
 use Filament\Resources\Resource;
 use Filament\Infolists\Components\{
@@ -16,7 +17,6 @@ use Filament\Infolists\Components\{
     TextEntry,
 };
 use Filament\Infolists\Infolist;
-use OpenPGP\Enum\KeyAlgorithm;
 
 /**
  * User personal key resource
@@ -52,7 +52,7 @@ class PersonalKeyResource extends Resource
                         static fn (string $state): string => strtoupper($state)
                     )->label(__('Key ID')),
                     TextEntry::make('certificate.key_algorithm')->formatStateUsing(
-                        static fn (int $state): string => self::keyAlgorithm($state)
+                        static fn (int $state): string => CertificateResource::keyAlgorithm($state)
                     )->label(__('Key Algorithm')),
                     TextEntry::make('certificate.key_strength')
                         ->suffix(' bits')->label(__('Key Strength')),
@@ -60,8 +60,11 @@ class PersonalKeyResource extends Resource
                     TextEntry::make('certificate.expiration_time')->label(__('Expiration Time')),
                 ]),
                 Fieldset::make(__('Revocation'))->schema([
-                    TextEntry::make('certificate.revocation.reason')->label(__('Reason')),
-                ])->hidden(static fn (?string $state): bool => empty($state)),
+                TextEntry::make('certificate.revocation.tag')->formatStateUsing(
+                    static fn (int $state): string => CertificateResource::revocationReason($state)
+                )->label(__('Reason')),
+                    TextEntry::make('certificate.revocation.reason')->label(__('Description')),
+                ])->hidden(static fn (?string $state): bool => !empty($state)),
             ]);
     }
 
@@ -70,10 +73,5 @@ class PersonalKeyResource extends Resource
         return [
             'index' => Pages\ListPersonalKeys::route('/'),
         ];
-    }
-
-    public static function keyAlgorithm(int $algo): string
-    {
-        return KeyAlgorithm::tryFrom($algo)?->name ?? '';
     }
 }

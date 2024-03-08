@@ -32,7 +32,7 @@ class CertificateResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Certificate Manager');
+        return __('Certificates');
     }
 
     public static function getPages(): array
