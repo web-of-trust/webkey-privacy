@@ -20,6 +20,13 @@ use OpenPGP\OpenPGP;
 class ViewPersonalKey extends ViewRecord
 {
     protected static string $resource = PersonalKeyResource::class;
+    protected ?string $previousUrl = null;
+
+    public function mount(int | string $record): void
+    {
+        parent::mount($record);
+        $this->previousUrl = url()->previous();
+    }
 
     public function infolist(Infolist $infolist): Infolist
     {
@@ -76,7 +83,7 @@ class ViewPersonalKey extends ViewRecord
                 ])
                 ->visible(!$this->record->is_revoked)
                 ->action(function (array $data) {
-                    redirect(self::getResource()::getUrl());
+                    redirect($this->previousUrl ?? self::getResource()::getUrl());
                 })
                 ->label(__('Revoke')),
         ];
