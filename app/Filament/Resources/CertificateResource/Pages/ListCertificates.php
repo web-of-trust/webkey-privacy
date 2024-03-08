@@ -46,8 +46,10 @@ class ListCertificates extends ListRecords
                 ->formatStateUsing(
                     static fn (string $state): string => strtoupper($state)
                 )->label(__('Key ID')),
-            TextColumn::make('creation_time')
-                ->sortable()->label(__('Creation Time')),
+            TextColumn::make('key_algorithm')
+                ->formatStateUsing(
+                    static fn (int $state): string => self::getResource()::keyAlgorithm($state)
+                )->label(__('Key Algorithm ')),
             TextColumn::make('key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
             IconColumn::make('is_revoked')
@@ -58,6 +60,8 @@ class ListCertificates extends ListRecords
                     false => 'success',
                     true => 'danger',
                 })->label(__('Is Revoked')),
+            TextColumn::make('creation_time')
+                ->sortable()->label(__('Creation Time')),
         ])->filters([
             Filter::make('user')->form([
                 TextInput::make('user')->label(__('User ID')),

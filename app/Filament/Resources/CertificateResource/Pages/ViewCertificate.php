@@ -9,13 +9,14 @@
 namespace App\Filament\Resources\CertificateResource\Pages;
 
 use App\Filament\Resources\CertificateResource;
+use App\Infolists\Components\CertificateKey;
 use Filament\Infolists\Components\{
     Fieldset,
+    RepeatableEntry,
     TextEntry,
 };
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use OpenPGP\Enum\KeyAlgorithm;
 use OpenPGP\OpenPGP;
 
 /**
@@ -31,6 +32,12 @@ class ViewCertificate extends ViewRecord
 
     public function infolist(Infolist $infolist): Infolist
     {
+        $subKeys = [];
+        $publicKey = OpenPGP::readPublicKey($this->record->key_data);
+        foreach ($publicKey->getSubkeys() as $subKey) {
+            $subKeys[] = self::getResource()::subKey($subKey);
+        }
+        $this->record->subKeys = $subKeys;
         return $infolist->schema([
             Fieldset::make(__('Certificate Information'))->schema([
                 TextEntry::make('domain.name')->label(__('Domain')),
@@ -42,7 +49,7 @@ class ViewCertificate extends ViewRecord
                     static fn (string $state): string => strtoupper($state)
                 )->label(__('Key ID')),
                 TextEntry::make('key_algorithm')->formatStateUsing(
-                    static fn (int $state): string => self::keyAlgorithm($state)
+                    static fn (int $state): string => self::getResource()::keyAlgorithm($state)
                 )->label(__('Key Algorithm')),
                 TextEntry::make('key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),
@@ -52,16 +59,19 @@ class ViewCertificate extends ViewRecord
             Fieldset::make(__('Revocation'))->schema([
                 TextEntry::make('revocation.reason')->label(__('Reason')),
             ])->hidden(!$this->record->is_revoked),
-            Fieldset::make(__('Certificate Key'))->schema([
-                TextEntry::make('key_data')->formatStateUsing(
-                    static fn (string $state): string => "<pre>{$state}</pre>"
-                )->html()->columnSpan(2)->label(__('Key Data')),
-            ]),
+            RepeatableEntry::make('subKeys')
+                ->schema([
+                    TextEntry::make('fingerprint')->formatStateUsing(
+                        static fn (string $state): string => strtoupper($state)
+                    )->label(__('Fingerprint')),
+                    TextEntry::make('key_id')->formatStateUsing(
+                        static fn (string $state): string => strtoupper($state)
+                    )->label(__('Key ID')),
+                    TextEntry::make('key_algorithm')->label(__('Key Algorithm')),
+                    TextEntry::make('key_strength')->suffix(' bits')->label(__('Key Strength')),
+                    TextEntry::make('creation_time')->dateTime()->label(__('Creation Time')),
+                    TextEntry::make('expiration_time')->dateTime()->label(__('Expiration Time')),
+                ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
         ]);
-    }
-
-    private static function keyAlgorithm(int $algo): string
-    {
-        return KeyAlgorithm::tryFrom($algo)?->name ?? '';
     }
 }

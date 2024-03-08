@@ -11,6 +11,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CertificateResource\Pages;
 use App\Models\Certificate;
 use Filament\Resources\Resource;
+use OpenPGP\Enum\KeyAlgorithm;
+use OpenPGP\Type\SubkeyInterface;
 
 /**
  * Certificate resource
@@ -36,5 +38,24 @@ class CertificateResource extends Resource
             'index' => Pages\ListCertificates::route('/'),
             'view' => Pages\ViewCertificate::route('/{record}'),
         ];
+    }
+
+    public static function keyAlgorithm(int $algo): string
+    {
+        return KeyAlgorithm::tryFrom($algo)?->name ?? '';
+    }
+
+    public static function subKey(SubkeyInterface $subKey): mixed
+    {
+        return new class ($subKey) {
+            function __construct(SubkeyInterface $subKey) {
+                $this->fingerprint = $subKey->getFingerprint(true);
+                $this->key_id = $subKey->getKeyID(true);
+                $this->key_algorithm = $subKey->getKeyAlgorithm()->name;
+                $this->key_strength = $subKey->getKeyStrength();
+                $this->creation_time = $subKey->getCreationTime();
+                $this->expiration_time = $subKey->getExpirationTime();
+            }
+        };
     }
 }
