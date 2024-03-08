@@ -8,8 +8,10 @@
 
 namespace App\Filament\User\Resources\PersonalKeyResource\Pages;
 
-use App\Filament\Resources\CertificateResource;
-use App\Filament\User\Resources\PersonalKeyResource;
+use App\Filament\User\Resources\{
+    CertificateResource,
+    PersonalKeyResource,
+};
 use App\Models\Domain;
 use App\Settings\AppSettings;
 use Filament\Forms\{
@@ -38,6 +40,7 @@ use Illuminate\Support\Facades\{
 };
 use Illuminate\Support\Str;
 use Livewire\Component as Livewire;
+use OpenPGP\Type\PrivateKeyInterface;
 use OpenPGP\OpenPGP;
 
 /**
@@ -106,17 +109,20 @@ class ListPersonalKeys extends ListRecords
                     ]),
                 ])->action(function (Livewire $livewire, array $data) {
                     $passphrase = $data['passphrase'];
-                    if (!empty($data['remember'])) {
-                        self::rememberPassphrase($livewire, $passphrase);
-                    }
                     $user = auth()->user();
+                    $pgpKey = self::generateKey(
+                        $user->name, $user->email, $passphrase, $data
+                    );
                     static::$resource::getModel()::create([
                         'user_id' => $user->id,
-                        'key_data' => self::generateKey(
-                            $user->name, $user->email, $passphrase, $data
-                        ),
+                        'key_data' => $pgpKey->armor(),
                     ]);
-                    redirect()->to(static::getResource()::getUrl('index'));
+                    if (!empty($data['remember'])) {
+                        self::rememberPassphrase(
+                            $livewire, $passphrase, $pgpKey->getFingerprint(true)
+                        );
+                    }
+                    redirect(static::getResource()::getUrl('index'));
                 }),
             Action::make('export_key')->label(__('Export Personal Key'))
                 ->hidden(
@@ -132,7 +138,7 @@ class ListPersonalKeys extends ListRecords
             __('No personal key yet')
         )->emptyStateDescription(
             __('Once you generate personal key, it will appear here.')
-        );
+        )->defaultSort('certificate.creation_time', 'desc');
     }
 
     private static function generateKey(
@@ -140,7 +146,7 @@ class ListPersonalKeys extends ListRecords
         string $email,
         string $passphrase,
         array $keySettings = []
-    ): string
+    ): PrivateKeyInterface
     {
         $settings = app(AppSettings::class)->fill($keySettings);
 
@@ -171,7 +177,7 @@ class ListPersonalKeys extends ListRecords
             }
         }
 
-        return $key->armor();
+        return $key;
     }
 
     private static function randomPassphrase(): string
@@ -182,13 +188,13 @@ class ListPersonalKeys extends ListRecords
     }
 
     private static function rememberPassphrase(
-        Livewire $livewire, string $passphrase
+        Livewire $livewire, string $passphrase, string $fingerprint
     )
     {
         $item = implode([
             PersonalKeyResource::PASSPHRASE_STORAGE_ITEM,
             '-',
-            hash('sha256', auth()->user()->email),
+            $fingerprint,
         ]);
         $livewire->js("localStorage.setItem('$item', '$passphrase')");
     }

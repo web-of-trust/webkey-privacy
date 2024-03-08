@@ -61,6 +61,6 @@ class ListPersonalKeys extends ListRecords
                 ->sortable()->label(__('Creation Time')),
         ])->emptyStateHeading(
             __('No personal key yet')
-        );
+        )->defaultSort('certificate.creation_time', 'desc');
     }
 }

@@ -9,7 +9,6 @@
 namespace App\Filament\User\Resources;
 
 use App\Filament\User\Resources\PersonalKeyResource\Pages;
-use App\Filament\Resources\CertificateResource;
 use App\Models\PersonalKey;
 use Filament\Resources\Resource;
 use Filament\Infolists\Components\{
