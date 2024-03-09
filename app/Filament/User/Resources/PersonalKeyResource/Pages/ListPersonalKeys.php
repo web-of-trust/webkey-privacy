@@ -133,10 +133,8 @@ class ListPersonalKeys extends ListRecords
                         sys_get_temp_dir(), $record->certificate->fingerprint
                     );
                     file_put_contents($filePath, $record->key_data);
-                    // $filePath = 'personal-keys/' . $record->certificate->fingerprint . '.pgp';
-                    // Storage::put($filePath, $record->key_data);
                     return response()->download(
-                        Storage::path($filePath), $record->user->email . '.pgp'
+                        $filePath, $record->user->email . '.pgp'
                     )->deleteFileAfterSend(true);
                 }),
         ])->modifyQueryUsing(

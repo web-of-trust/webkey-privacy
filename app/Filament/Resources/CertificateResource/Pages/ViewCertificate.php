@@ -18,7 +18,6 @@ use Filament\Infolists\Components\{
 };
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * View certificate record page
@@ -78,17 +77,13 @@ class ViewCertificate extends ViewRecord
         return [
             Action::make('export')
                 ->action(function ($record) {
-                    $filePath = 'certificates/' . $record->fingerprint . '.pgp';
-                    if (!Storage::exists($filePath)) {
-                        Storage::put(
-                            $filePath,
-                            $record->key_data
-                        );
-                    }
-                    return Storage::download(
-                        $filePath,
-                        $record->primary_user . '.pgp'
+                    $filePath = tempnam(
+                        sys_get_temp_dir(), $record->fingerprint
                     );
+                    file_put_contents($filePath, $record->key_data);
+                    return response()->download(
+                        $filePath, $record->primary_user . '.pgp'
+                    )->deleteFileAfterSend(true);
                 })
                 ->label(__('Export Certificate')),
             Action::make('back')->url(
