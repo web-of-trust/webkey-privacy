@@ -129,8 +129,12 @@ class ListPersonalKeys extends ListRecords
             Action::make('export_key')->label(__('Export'))
                 ->icon('heroicon-m-arrow-down-tray')
                 ->action(function ($record) {
-                    $filePath = 'personal-keys/' . $record->certificate->fingerprint . '.pgp';
-                    Storage::put($filePath, $record->key_data);
+                    $filePath = tempnam(
+                        sys_get_temp_dir(), $record->certificate->fingerprint
+                    );
+                    file_put_contents($filePath, $record->key_data);
+                    // $filePath = 'personal-keys/' . $record->certificate->fingerprint . '.pgp';
+                    // Storage::put($filePath, $record->key_data);
                     return response()->download(
                         Storage::path($filePath), $record->user->email . '.pgp'
                     )->deleteFileAfterSend(true);

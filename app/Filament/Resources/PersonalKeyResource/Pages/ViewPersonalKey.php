@@ -57,12 +57,6 @@ class ViewPersonalKey extends ViewRecord
 
     public function infolist(Infolist $infolist): Infolist
     {
-        $subKeys = [];
-        $publicKey = OpenPGP::readPublicKey($this->record->certificate->key_data);
-        foreach ($publicKey->getSubkeys() as $subKey) {
-            $subKeys[] = CertificateResource::subKey($subKey);
-        }
-        $this->record->subKeys = $subKeys;
         return $infolist->schema([
             Fieldset::make(__('Certificate Information'))->schema([
                 TextEntry::make('certificate.domain.name')->label(__('Domain')),
@@ -81,7 +75,7 @@ class ViewPersonalKey extends ViewRecord
                 TextEntry::make('certificate.creation_time')->label(__('Creation Time')),
                 TextEntry::make('certificate.expiration_time')->label(__('Expiration Time')),
             ]),
-            RepeatableEntry::make('subKeys')
+            RepeatableEntry::make('certificate.subKeys')
                 ->schema([
                     TextEntry::make('fingerprint')->formatStateUsing(
                         static fn (string $state): string => strtoupper($state)

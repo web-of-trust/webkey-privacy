@@ -19,7 +19,6 @@ use Filament\Infolists\Components\{
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Storage;
-use OpenPGP\OpenPGP;
 
 /**
  * View certificate record page
@@ -34,12 +33,6 @@ class ViewCertificate extends ViewRecord
 
     public function infolist(Infolist $infolist): Infolist
     {
-        $subKeys = [];
-        $publicKey = OpenPGP::readPublicKey($this->record->key_data);
-        foreach ($publicKey->getSubkeys() as $subKey) {
-            $subKeys[] = self::getResource()::subKey($subKey);
-        }
-        $this->record->subKeys = $subKeys;
         return $infolist->schema([
             Fieldset::make(__('Certificate Information'))->schema([
                 TextEntry::make('domain.name')->label(__('Domain')),

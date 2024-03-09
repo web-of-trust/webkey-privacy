@@ -15,7 +15,6 @@ use OpenPGP\Enum\{
     KeyAlgorithm,
     RevocationReasonTag,
 };
-use OpenPGP\Type\SubkeyInterface;
 
 /**
  * Certificate resource
@@ -60,19 +59,5 @@ class CertificateResource extends Resource
                 RevocationReasonTag::UserIDInvalid => __('User ID is invalid'),
             };
         }
-    }
-
-    public static function subKey(SubkeyInterface $subKey): mixed
-    {
-        return new class ($subKey) {
-            function __construct(SubkeyInterface $subKey) {
-                $this->fingerprint = $subKey->getFingerprint(true);
-                $this->key_id = $subKey->getKeyID(true);
-                $this->key_algorithm = $subKey->getKeyAlgorithm()->name;
-                $this->key_strength = $subKey->getKeyStrength();
-                $this->creation_time = $subKey->getCreationTime();
-                $this->expiration_time = $subKey->getExpirationTime();
-            }
-        };
     }
 }

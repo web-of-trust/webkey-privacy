@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\{
     HasOne,
 };
 use Illuminate\Database\Eloquent\Model;
+use OpenPGP\Type\SubkeyInterface;
+use OpenPGP\OpenPGP;
 use ParagonIE\ConstantTime\Base32;
 
 /**
@@ -60,6 +62,8 @@ class Certificate extends Model
         'is_revoked' => 'boolean',
     ];
 
+    public array $subKeys = [];
+
     /**
      * The "boot" method of the model.
      *
@@ -68,6 +72,24 @@ class Certificate extends Model
     protected static function boot(): void
     {
         parent::boot();
+
+        static::retrieved(static function (self $model) {
+            if (!empty($model->key_data)) {
+                $publicKey = OpenPGP::readPublicKey($model->key_data);
+                foreach ($publicKey->getSubkeys() as $subKey) {
+                    $model->subKeys[] = new class ($subKey) {
+                        function __construct(SubkeyInterface $subKey) {
+                            $this->fingerprint = $subKey->getFingerprint(true);
+                            $this->key_id = $subKey->getKeyID(true);
+                            $this->key_algorithm = $subKey->getKeyAlgorithm()->name;
+                            $this->key_strength = $subKey->getKeyStrength();
+                            $this->creation_time = $subKey->getCreationTime();
+                            $this->expiration_time = $subKey->getExpirationTime();
+                        }
+                    };
+                }
+            }
+        });
 
         static::creating(static function (self $model) {
             $parts = explode(
@@ -78,6 +100,10 @@ class Certificate extends Model
                     hash('sha1', $parts[0], true)
                 );
             }
+        });
+
+        static::updating(static function (self $model) {
+            unset($model->subKeys);
         });
     }
 
