@@ -85,8 +85,8 @@ class ViewPersonalKey extends ViewRecord
                     )->label(__('Key ID')),
                     TextEntry::make('key_algorithm')->label(__('Key Algorithm')),
                     TextEntry::make('key_strength')->suffix(' bits')->label(__('Key Strength')),
-                    TextEntry::make('creation_time')->dateTime()->label(__('Creation Time')),
-                    TextEntry::make('expiration_time')->dateTime()->label(__('Expiration Time')),
+                    TextEntry::make('creation_time')->dateTime('Y-m-d H:i:s')->label(__('Creation Time')),
+                    TextEntry::make('expiration_time')->dateTime('Y-m-d H:i:s')->label(__('Expiration Time')),
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
             Fieldset::make(__('Revocation'))->schema([
                 TextEntry::make('certificate.revocation.tag')->formatStateUsing(
