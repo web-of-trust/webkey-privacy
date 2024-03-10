@@ -150,6 +150,9 @@ class ViewPersonalKey extends ViewRecord
                     redirect($this->previousUrl ?? self::getResource()::getUrl());
                 })
                 ->label(__('Revoke')),
+            Action::make('back')->url(
+                url()->previous()
+            )->color('gray')->label(__('Back')),
         ];
     }
 }
