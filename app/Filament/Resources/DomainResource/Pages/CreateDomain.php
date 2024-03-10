@@ -43,7 +43,7 @@ class CreateDomain extends CreateRecord
                         function () {
                             return function (string $attribute, $value, \Closure $fail) {
                                 if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
-                                    $fail('The domain name is invalid.');
+                                    $fail(__('The domain name is invalid.'));
                                 }
                             };
                         },
@@ -53,13 +53,13 @@ class CreateDomain extends CreateRecord
                     ->rules([
                         fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
                             if (!Str::endsWith($value, $get('name'))) {
-                                $fail('The email address must match the domain name.');
+                                $fail(__('The email address must match the domain name.'));
                             }
                         },
                     ])->email()->required()->unique()->label(__('Email Address')),
                 TextInput::make('organization')->label(__('Organization')),
                 Toggle::make('generate_key')->live()
-                    ->inline(false)->label(__('Generate Domain Key')),
+                    ->inline(false)->label(__('Generate PGP Key')),
                 Textarea::make('description')
                     ->columnSpan(2)->label(__('Description')),
             ]),
