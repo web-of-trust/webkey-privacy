@@ -44,7 +44,6 @@ class Domain extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'has_key',
         'key_data',
     ];
 
