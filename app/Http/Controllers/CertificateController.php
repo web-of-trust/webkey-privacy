@@ -10,7 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CertificateResource;
 use App\Models\Certificate;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Certificate controller
@@ -24,11 +24,11 @@ class CertificateController extends Controller
     /**
      * List all certificates.
      *
-     * @return ResourceCollection
+     * @return JsonResource
      */
-    public function __invoke(): ResourceCollection
+    public function __invoke(): JsonResource
     {
-        CertificateResource::withoutWrapping();
+        JsonResource::withoutWrapping();
         return CertificateResource::collection(Certificate::all());
     }
 }
