@@ -35,7 +35,10 @@ class ListDomains extends ListRecords
             TextColumn::make('name')->label(__('Name')),
             TextColumn::make('email')->label(__('Email')),
             TextColumn::make('organization')->label(__('Organization')),
-            IconColumn::make('has_key')->boolean()->label(__('Has PGP Key')),
+            IconColumn::make('has_key')
+                ->state(
+                    static fn ($record): bool => !empty($record->key_data)
+                )->boolean()->label(__('Has PGP Key')),
         ])->actions([
             EditAction::make(),
         ]);
