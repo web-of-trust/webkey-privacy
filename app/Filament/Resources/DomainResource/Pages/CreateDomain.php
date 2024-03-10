@@ -33,6 +33,7 @@ use Illuminate\Support\Str;
 class CreateDomain extends CreateRecord
 {
     protected static string $resource = DomainResource::class;
+    protected static bool $canCreateAnother = false;
 
     public function form(Form $form): Form
     {

@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Hash;
 class CreateUser extends CreateRecord
 {
     protected static string $resource = UserResource::class;
+    protected static bool $canCreateAnother = false;
 
     public function form(Form $form): Form
     {
