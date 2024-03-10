@@ -27,6 +27,16 @@ class CertificateResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'fingerprint' => $this->fingerprint,
+            'key_id' => $this->key_id,
+            'key_algorithm' => $this->key_algorithm,
+            'key_strength' => $this->key_strength,
+            'key_version' => $this->key_version,
+            'primary_user' => $this->primary_user,
+            'creation_time' => $this->creation_time,
+            'expiration_time' => $this->expiration_time,
+            'key_data' => $this->key_data,
+        ];
     }
 }
