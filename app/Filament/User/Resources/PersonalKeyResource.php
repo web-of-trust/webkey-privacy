@@ -59,11 +59,11 @@ class PersonalKeyResource extends Resource
                     TextEntry::make('certificate.expiration_time')->label(__('Expiration Time')),
                 ]),
                 Fieldset::make(__('Revocation'))->schema([
-                TextEntry::make('certificate.revocation.tag')->formatStateUsing(
-                    static fn (int $state): string => CertificateResource::revocationReason($state)
-                )->label(__('Reason')),
+                    TextEntry::make('certificate.revocation.tag')->formatStateUsing(
+                        static fn (int $state): string => CertificateResource::revocationReason($state)
+                    )->label(__('Reason')),
                     TextEntry::make('certificate.revocation.reason')->label(__('Description')),
-                ])->hidden(static fn (?string $state): bool => !empty($state)),
+                ])->hidden(static fn ($record): bool => !$record->is_revoked),
             ]);
     }
 
