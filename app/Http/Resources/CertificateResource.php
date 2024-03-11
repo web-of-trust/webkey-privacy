@@ -28,6 +28,7 @@ class CertificateResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'domain' => $this->domain->name,
             'fingerprint' => $this->fingerprint,
             'key_id' => $this->key_id,
             'key_algorithm' => $this->key_algorithm,

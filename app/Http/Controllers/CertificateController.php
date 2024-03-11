@@ -29,6 +29,8 @@ class CertificateController extends Controller
     public function __invoke(): JsonResource
     {
         JsonResource::withoutWrapping();
-        return CertificateResource::collection(Certificate::all());
+        return CertificateResource::collection(
+            Certificate::with('domain')->get()
+        );
     }
 }

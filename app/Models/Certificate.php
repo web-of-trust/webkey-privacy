@@ -109,7 +109,7 @@ class Certificate extends Model
 
     public function domain(): BelongsTo
     {
-        return $this->belongsTo(Domain::class, 'domain_id');
+        return $this->belongsTo(Domain::class, 'domain_id')->withDefault();
     }
 
     public function revocation(): HasOne
