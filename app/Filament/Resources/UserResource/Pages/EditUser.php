@@ -42,7 +42,7 @@ class EditUser extends EditRecord
                 static::getResource()::roles()
             )->hidden(
                 $this->record->isSupperAdmin()
-            )->selectablePlaceholder(false)->label(__('Role')),
+            )->required()->label(__('Role')),
         ]);
     }
 

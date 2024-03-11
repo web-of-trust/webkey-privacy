@@ -48,7 +48,7 @@ class CreateUser extends CreateRecord
                 ->required()->label(__('Password')),
             Select::make('role')->options(
                 static::getResource()::roles()
-            )->selectablePlaceholder(false)->label(__('Role')),
+            )->required()->label(__('Role')),
         ]);
     }
 
