@@ -5,32 +5,27 @@ networks:
         driver: bridge
         ipam:
             config:
-                - subnet: 172.111.111.0/24
+                - subnet: 172.1.1.0/24
 
 services:
-    # database privacy
+    # database service
     webkey-privacy-database:
         container_name: webkey-privacy-database
         image: mariadb:${MARIADB_VERSION:-latest}
         hostname: webkey-privacy-database
         restart: ${RESTART_POLICY:-unless-stopped}
-        environment:
-            - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-rootP@ssw0rd}
-            - MARIADB_DATABASE=${DB_DATABASE:-webkey-privacy}
-            - MARIADB_USER=${DB_USERNAME:-webkey-privacy}
-            - MARIADB_PASSWORD=${DB_PASSWORD:-webkeyP@ssw0rd}
-            - TZ=${TZ:-Asia/Ho_Chi_Minh}
         volumes:
             - ./storage/database/mariadb:/var/lib/mysql
             - ./storage/database/log:/var/log/mysql
         networks:
-            - webkey-privacy-network
+            webkey-privacy-network:
+                ipv4_address: 172.1.1.2
         healthcheck:
             test: ['CMD', 'healthcheck.sh', '--connect --innodb_initialized']
             retries: 3
             timeout: 5s
 
-    # redis privacy
+    # redis service
     webkey-privacy-redis:
         container_name: webkey-privacy-redis
         image: redis:alpine
@@ -39,13 +34,14 @@ services:
         volumes:
             - ./storage/database/redis:/data
         networks:
-            - webkey-privacy-network
+            webkey-privacy-network:
+                ipv4_address: 172.1.1.3
         healthcheck:
             test: ['CMD', 'redis-cli', 'ping']
             retries: 3
             timeout: 5s
 
-    # phpmyadmin privacy
+    # phpmyadmin web app
     webkey-privacy-phpmyadmin:
         container_name: webkey-privacy-phpmyadmin
         image: phpmyadmin:latest
@@ -54,45 +50,39 @@ services:
         depends_on:
             - webkey-privacy-database
         environment:
-            - PMA_HOST=${DB_HOST:-webkey-privacy-database}
-            - PMA_PORT=${DB_PORT:-3306}
-            - PMA_USER=${DB_ROOT_USER:-root}
-            - PMA_PASSWORD=${DB_ROOT_PASSWORD:-rootP@ssw0rd}
             - TZ=${TZ:-Asia/Ho_Chi_Minh}
         networks:
             webkey-privacy-network:
-                ipv4_address: 172.111.111.11
+                ipv4_address: 172.1.1.4
 
-    # webkey privacy web
-    webkey-privacy-web:
-        container_name: webkey-privacy-web
-        image: php:webkey-privacy-web
+    # webkey privacy app
+    webkey-privacy-app:
+        container_name: webkey-privacy-app
+        image: php:webkey-privacy-app
         build: ./docker/php
-        hostname: webkey-privacy-web
+        hostname: webkey-privacy-app
         restart: ${RESTART_POLICY:-unless-stopped}
         working_dir: /var/www/html
-        command: php -d variables_order=EGPCS /var/www/html/artisan serve --host=0.0.0.0 --port=80
         depends_on:
             - webkey-privacy-database
             - webkey-privacy-redis
-        environment:
-            - APP_NAME=${APP_NAME:-Webkey Privacy}
-            - APP_ENV=${APP_ENV:-local}
-            - APP_KEY=${APP_KEY:-base64:Tu284oQOvWj4u2UAkzdT8vo6RDOAYaaGVIoTchCO5Gg=}
-            - APP_DEBUG=${APP_DEBUG:-true}
-            - APP_URL=${APP_URL:-http://172.111.111.10}
-            - DB_CONNECTION=${DB_CONNECTION:-mysql}
-            - DB_HOST=${DB_HOST:-webkey-privacy-database}
-            - DB_PORT=${DB_PORT:-3306}
-            - DB_DATABASE=${DB_DATABASE:-webkey-privacy}
-            - DB_USERNAME=${DB_USERNAME:-webkey-privacy}
-            - DB_PASSWORD=${DB_PASSWORD:-webkeyP@ssw0rd}
-            - CACHE_DRIVER=${CACHE_DRIVER:-redis}
-            - REDIS_HOST=${REDIS_HOST:-webkey-privacy-redis}
-            - SESSION_DRIVER=${SESSION_DRIVER:-redis}
-            - TZ=${TZ:-Asia/Ho_Chi_Minh}
         volumes:
             - .:/var/www/html
         networks:
             webkey-privacy-network:
-                ipv4_address: 172.111.111.10
+                ipv4_address: 172.1.1.5
+
+    # webkey privacy web
+    webkey-privacy-web:
+        container_name: webkey-privacy-web
+        image: nginx:alpine
+        hostname: webkey-privacy-web
+        restart: ${RESTART_POLICY:-unless-stopped}
+        depends_on:
+            - webkey-privacy-app
+        volumes:
+            - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./:/var/www/html
+        networks:
+            webkey-privacy-network:
+                ipv4_address: 172.1.1.10
