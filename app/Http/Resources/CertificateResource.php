@@ -28,16 +28,17 @@ class CertificateResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'domain' => $this->domain->name,
-            'fingerprint' => $this->fingerprint,
-            'key_id' => $this->key_id,
-            'key_algorithm' => $this->key_algorithm,
-            'key_strength' => $this->key_strength,
-            'key_version' => $this->key_version,
-            'primary_user' => $this->primary_user,
-            'creation_time' => $this->creation_time,
+            'domain'          => $this->domain->name,
+            'primary_user'    => $this->primary_user,
+            'wkd_hash'        => $this->wkd_hash,
+            'fingerprint'     => $this->fingerprint,
+            'key_id'          => $this->key_id,
+            'key_algorithm'   => $this->key_algorithm,
+            'key_strength'    => $this->key_strength,
+            'key_version'     => $this->key_version,
+            'creation_time'   => $this->creation_time,
             'expiration_time' => $this->expiration_time,
-            'key_data' => $this->key_data,
+            'key_data'        => $this->key_data,
         ];
     }
 }
