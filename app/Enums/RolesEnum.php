@@ -23,7 +23,7 @@ enum RolesEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::AUTHENTICATED_USER => __('Authenticated User'),
+            self::AuthenticatedUser => __('Authenticated User'),
             self::Administrator      => __('Administrator'),
         };
     }
