@@ -128,7 +128,7 @@ class ListPersonalKeys extends ListRecords
                 }),
         ])->actions([
             ViewAction::make(),
-            Action::make('export_key')->label(__('Export'))
+            Action::make('export')->label(__('Export'))
                 ->icon('heroicon-m-arrow-down-tray')
                 ->action(function ($record) {
                     $filePath = tempnam(
