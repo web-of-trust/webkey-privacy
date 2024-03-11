@@ -15,7 +15,7 @@ use Filament\Forms\Components\{
     Toggle,
 };
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\{
     IconColumn,
     TextColumn,
@@ -83,6 +83,12 @@ class ListCertificates extends ListRecords
                 ->options(
                     Domain::all()->pluck('name', 'id')
                 )->label(__('Domain')),
+        ])->actions([
+            Action::make('export')->label(__('Export Key'))
+                ->icon('heroicon-m-arrow-down-tray')
+                ->action(function ($record) {
+                    return self::getResource()::exportKey($record);
+                }),
         ])->defaultSort('creation_time', 'desc');
     }
 }

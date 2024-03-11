@@ -77,18 +77,10 @@ class ViewCertificate extends ViewRecord
         return [
             Action::make('export')
                 ->action(function ($record) {
-                    $filePath = tempnam(
-                        sys_get_temp_dir(), $record->fingerprint
-                    );
-                    file_put_contents($filePath, $record->key_data);
-                    return response()->download(
-                        $filePath, $record->primary_user . '.asc', [
-                            'Content-Type' => 'application/pgp-keys',
-                        ]
-                    )->deleteFileAfterSend(true);
+                    return self::getResource()::exportKey($record);
                 })
                 ->icon('heroicon-m-arrow-down-tray')
-                ->label(__('Export')),
+                ->label(__('Export Key')),
             Action::make('back')->url(
                 url()->previous()
             )->color('gray')->label(__('Back')),

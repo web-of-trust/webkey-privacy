@@ -25,8 +25,10 @@ use Filament\Forms\Components\{
     Toggle,
 };
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Actions\{
+    Action,
+    ViewAction,
+};
 use Filament\Tables\Columns\{
     IconColumn,
     TextColumn,

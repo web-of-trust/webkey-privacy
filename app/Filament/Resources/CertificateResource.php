@@ -42,6 +42,19 @@ class CertificateResource extends Resource
         ];
     }
 
+    public static function exportKey(Certificate $model)
+    {
+        $filePath = tempnam(
+            sys_get_temp_dir(), $model->fingerprint
+        );
+        file_put_contents($filePath, $model->key_data);
+        return response()->download(
+            $filePath, $model->fingerprint . '.asc', [
+                'Content-Type' => 'application/pgp-keys',
+            ]
+        )->deleteFileAfterSend(true);
+    }
+
     public static function keyAlgorithm(int $algo): string
     {
         return KeyAlgorithm::tryFrom($algo)?->name ?? '';
