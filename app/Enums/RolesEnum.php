@@ -18,13 +18,13 @@ namespace App\Enums;
 enum RolesEnum: string
 {
     case AuthenticatedUser = 'authenticated-user';
-    case Administrator      = 'administrator';
+    case Administrator     = 'administrator';
 
     public function label(): string
     {
         return match ($this) {
             self::AuthenticatedUser => __('Authenticated User'),
-            self::Administrator      => __('Administrator'),
+            self::Administrator     => __('Administrator'),
         };
     }
 }
