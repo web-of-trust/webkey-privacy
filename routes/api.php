@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/certificate', CertificateController::class);
+Route::get('/v1/certificate', CertificateController::class);

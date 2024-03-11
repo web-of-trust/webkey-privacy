@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PanelsEnum;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect(env('USER_PANEL_PATH', 'user'));
+    return redirect(env('USER_PANEL_PATH', PanelsEnum::User->path()));
 });
