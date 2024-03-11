@@ -34,7 +34,7 @@ class PersonalKeyResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Personal Key');
+        return __('Personal Keys');
     }
 
     public static function infolist(Infolist $infolist): Infolist

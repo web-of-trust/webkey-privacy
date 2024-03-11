@@ -56,7 +56,7 @@ class ListPersonalKeys extends ListRecords
 
     public function getTitle(): string
     {
-        return __('Personal Key');
+        return __('Personal Keys');
     }
 
     public function table(Table $table): Table
