@@ -66,19 +66,19 @@ class ListCertificates extends ListRecords
             Filter::make('filter')->form([
                 TextInput::make('user')->label(__('User ID')),
                 Toggle::make('revoked')->label(__('Is Revoked')),
-            ])->query(static function (Builder $query, array $data) {
-                return $query->when(
+            ])->query(
+                fn (Builder $query, array $data) => $query->when(
                     $data['user'],
-                    fn (Builder $query, string $user): Builder => $query->where(
+                    fn (Builder $query, string $user) => $query->where(
                         'primary_user', 'like', '%' . trim($user) . '%'
                     )
                 )->when(
                     $data['revoked'],
-                    fn (Builder $query, int $revoked): Builder => $query->where(
+                    fn (Builder $query, int $revoked) => $query->where(
                         'is_revoked', $revoked
                     )
-                );
-            }),
+                )
+            ),
             SelectFilter::make('domain_id')
                 ->options(
                     Domain::all()->pluck('name', 'id')

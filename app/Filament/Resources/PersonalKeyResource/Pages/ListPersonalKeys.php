@@ -70,24 +70,22 @@ class ListPersonalKeys extends ListRecords
                 TextInput::make('user')->label(__('User ID')),
                 Toggle::make('revoked')->label(__('Is Revoked')),
             ])->baseQuery(
-                function (Builder $query) {
-                    return $query->select('personal_keys.*')->leftJoin(
-                        'certificates', 'certificates.id', '=', 'personal_keys.certificate_id'
-                    );
-                }
-            )->query(function (Builder $query, array $data) {
-                return $query->when(
+                fn (Builder $query) => $query->select('personal_keys.*')->leftJoin(
+                    'certificates', 'certificates.id', '=', 'personal_keys.certificate_id'
+                )
+            )->query(
+                fn (Builder $query, array $data) => $query->when(
                     $data['user'],
-                    fn (Builder $query, string $user): Builder => $query->where(
+                    fn (Builder $query, string $user) => $query->where(
                         'certificates.primary_user', 'like', '%' . trim($user) . '%'
                     )
                 )->when(
                     $data['revoked'],
-                    fn (Builder $query, int $revoked): Builder => $query->where(
+                    fn (Builder $query, int $revoked) => $query->where(
                         'is_revoked', $revoked
                     )
-                );
-            }),
+                )
+            ),
         ])->emptyStateHeading(
             __('No personal key yet')
         )->defaultSort('certificate.creation_time', 'desc');
