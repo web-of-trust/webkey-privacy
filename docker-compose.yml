@@ -11,15 +11,14 @@ services:
     # database service
     webkey-privacy-database:
         container_name: webkey-privacy-database
-        image: mariadb:${MARIADB_VERSION:-latest}
+        image: mariadb:latest
         hostname: webkey-privacy-database
-        restart: ${RESTART_POLICY:-unless-stopped}
+        restart: unless-stopped
         volumes:
             - ./storage/database/mariadb:/var/lib/mysql
             - ./storage/database/log:/var/log/mysql
         networks:
-            webkey-privacy-network:
-                ipv4_address: 172.1.1.2
+            - webkey-privacy-network
         healthcheck:
             test: ['CMD', 'healthcheck.sh', '--connect --innodb_initialized']
             retries: 3
@@ -30,30 +29,16 @@ services:
         container_name: webkey-privacy-redis
         image: redis:alpine
         hostname: webkey-privacy-redis
-        restart: ${RESTART_POLICY:-unless-stopped}
+        restart: unless-stopped
         volumes:
             - ./storage/database/redis:/data
         networks:
-            webkey-privacy-network:
-                ipv4_address: 172.1.1.3
+            - webkey-privacy-network
         healthcheck:
             test: ['CMD', 'redis-cli', 'ping']
             retries: 3
             timeout: 5s
 
-    # phpmyadmin web app
-    webkey-privacy-phpmyadmin:
-        container_name: webkey-privacy-phpmyadmin
-        image: phpmyadmin:latest
-        hostname: webkey-privacy-phpmyadmin
-        restart: ${RESTART_POLICY:-unless-stopped}
-        depends_on:
-            - webkey-privacy-database
-        environment:
-            - TZ=${TZ:-Asia/Ho_Chi_Minh}
-        networks:
-            webkey-privacy-network:
-                ipv4_address: 172.1.1.4
 
     # webkey privacy app
     webkey-privacy-app:
@@ -61,7 +46,7 @@ services:
         image: php:webkey-privacy-app
         build: ./docker/php
         hostname: webkey-privacy-app
-        restart: ${RESTART_POLICY:-unless-stopped}
+        restart: unless-stopped
         working_dir: /var/www/html
         depends_on:
             - webkey-privacy-database
@@ -69,15 +54,14 @@ services:
         volumes:
             - .:/var/www/html
         networks:
-            webkey-privacy-network:
-                ipv4_address: 172.1.1.5
+            - webkey-privacy-network
 
     # webkey privacy web
     webkey-privacy-web:
         container_name: webkey-privacy-web
         image: nginx:alpine
         hostname: webkey-privacy-web
-        restart: ${RESTART_POLICY:-unless-stopped}
+        restart: unless-stopped
         depends_on:
             - webkey-privacy-app
         volumes:
