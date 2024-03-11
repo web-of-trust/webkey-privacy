@@ -85,7 +85,8 @@ class ViewCertificate extends ViewRecord
                         $filePath, $record->primary_user . '.pgp'
                     )->deleteFileAfterSend(true);
                 })
-                ->label(__('Export Certificate')),
+                ->icon('heroicon-m-arrow-down-tray')
+                ->label(__('Export')),
             Action::make('back')->url(
                 url()->previous()
             )->color('gray')->label(__('Back')),
