@@ -13,6 +13,10 @@ use App\Filament\Resources\{
     PersonalKeyResource,
 };
 use Filament\Actions;
+use Filament\Forms\Components\{
+    TextInput,
+    Toggle,
+};
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\{
     Action,
@@ -22,7 +26,9 @@ use Filament\Tables\Columns\{
     IconColumn,
     TextColumn,
 };
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * List personal key record page
@@ -59,6 +65,29 @@ class ListPersonalKeys extends ListRecords
                 })->label(__('Is Revoked')),
             TextColumn::make('certificate.creation_time')
                 ->sortable()->label(__('Creation Time')),
+        ])->filters([
+            Filter::make('filter')->form([
+                TextInput::make('user')->label(__('User ID')),
+                Toggle::make('revoked')->label(__('Is Revoked')),
+            ])->baseQuery(
+                function (Builder $query) {
+                    return $query->select('personal_keys.*')->leftJoin(
+                        'certificates', 'certificates.id', '=', 'personal_keys.certificate_id'
+                    );
+                }
+            )->query(function (Builder $query, array $data) {
+                return $query->when(
+                    $data['user'],
+                    fn (Builder $query, string $user): Builder => $query->where(
+                        'certificates.primary_user', 'like', '%' . trim($user) . '%'
+                    )
+                )->when(
+                    $data['revoked'],
+                    fn (Builder $query, int $revoked): Builder => $query->where(
+                        'is_revoked', $revoked
+                    )
+                );
+            }),
         ])->emptyStateHeading(
             __('No personal key yet')
         )->defaultSort('certificate.creation_time', 'desc');
