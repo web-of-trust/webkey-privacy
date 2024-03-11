@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('domain_id');
             $table->string('fingerprint', 64)->unique();
             $table->string('key_id', 16)->index();
-            $table->string('wkd_hash', 32);
+            $table->string('wkd_hash', 32)->index();
             $table->tinyInteger('key_algorithm');
             $table->mediumInteger('key_strength');
             $table->tinyInteger('key_version');
@@ -26,7 +26,6 @@ return new class extends Migration
             $table->timestamp('creation_time')->nullable();
             $table->timestamp('expiration_time')->nullable();
             $table->timestamps();
-            $table->index(['domain_id', 'wkd_hash']);
         });
     }
 
