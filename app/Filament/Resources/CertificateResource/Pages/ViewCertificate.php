@@ -82,7 +82,9 @@ class ViewCertificate extends ViewRecord
                     );
                     file_put_contents($filePath, $record->key_data);
                     return response()->download(
-                        $filePath, $record->primary_user . '.pgp'
+                        $filePath, $record->primary_user . '.asc', [
+                            'Content-Type' => 'application/pgp-keys',
+                        ]
                     )->deleteFileAfterSend(true);
                 })
                 ->icon('heroicon-m-arrow-down-tray')

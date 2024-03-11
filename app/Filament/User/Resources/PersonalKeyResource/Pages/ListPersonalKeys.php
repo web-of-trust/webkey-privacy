@@ -134,7 +134,9 @@ class ListPersonalKeys extends ListRecords
                     );
                     file_put_contents($filePath, $record->key_data);
                     return response()->download(
-                        $filePath, $record->user->email . '.pgp'
+                        $filePath, $record->user->email . '.asc', [
+                            'Content-Type' => 'application/pgp-keys',
+                        ]
                     )->deleteFileAfterSend(true);
                 }),
         ])->modifyQueryUsing(
