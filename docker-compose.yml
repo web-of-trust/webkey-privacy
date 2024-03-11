@@ -39,7 +39,6 @@ services:
             retries: 3
             timeout: 5s
 
-
     # webkey privacy app
     webkey-privacy-app:
         container_name: webkey-privacy-app
