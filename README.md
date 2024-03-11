@@ -3,11 +3,9 @@ The Webkey Privacy
 The Webkey Privacy is an application for managing OpenPGP keys within organizations
 
 ## Features
-- Centrally creating new user keys
-- Importing user keys
-- Certifing user keys
-- Revoking user key
-- Publish keys as a Web Key Directory
+- Centrally creating & certifing new personal keys
+- Revoking personal key
+- Publish certificates as a REST API
 
 ## Licensing
 [GNU Affero General Public License v3.0](LICENSE)
