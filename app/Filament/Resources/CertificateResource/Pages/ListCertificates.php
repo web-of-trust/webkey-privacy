@@ -41,7 +41,7 @@ class ListCertificates extends ListRecords
     public function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('primary_user')->label(__('User ID')),
+            TextColumn::make('primary_user')->wrap()->label(__('User ID')),
             TextColumn::make('key_id')
                 ->formatStateUsing(
                     static fn (string $state): string => strtoupper($state)
