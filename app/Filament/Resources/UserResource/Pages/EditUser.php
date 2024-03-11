@@ -38,11 +38,11 @@ class EditUser extends EditRecord
                 ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                 ->dehydrated(fn ($state) => filled($state))
                 ->required(false)->label(__('Password')),
-            Select::make('role')->required()->options(
+            Select::make('role')->options(
                 static::getResource()::roles()
             )->hidden(
                 $this->record->isSupperAdmin()
-            )->label(__('Role')),
+            )->selectablePlaceholder(false)->label(__('Role')),
         ]);
     }
 

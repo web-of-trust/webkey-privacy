@@ -8,6 +8,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Enums\PanelsEnum;
 use App\Filament\User\Pages\EditUserProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -38,8 +39,8 @@ class UserPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('user_pane')
-            ->path(env('USER_PANEL_PATH', 'user'))
+            ->id(PanelsEnum::User->value)
+            ->path(env('USER_PANEL_PATH', PanelsEnum::User->path()))
             ->login()
             ->profile(EditUserProfile::class, isSimple: false)
             ->colors([
@@ -56,9 +57,9 @@ class UserPanelProvider extends PanelProvider
             ])
             ->navigationItems([
                 NavigationItem::make('Edit Profile')->url(
-                    fn (): string => EditUserProfile::getUrl()
+                    static fn (): string => EditUserProfile::getUrl()
                 )->icon('heroicon-o-user')->isActiveWhen(
-                    fn () => request()->routeIs(EditUserProfile::getRouteName())
+                    static fn () => request()->routeIs(EditUserProfile::getRouteName())
                 ),
             ])
             ->middleware([

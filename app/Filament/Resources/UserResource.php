@@ -36,11 +36,9 @@ class UserResource extends Resource
 
     public static function roles(): array
     {
-        $roles = [];
-        foreach (RolesEnum::cases() as $role) {
-            $roles[$role->value] = $role->label();
-        }
-        return $roles;
+        return collect(
+            RolesEnum::cases()
+        )->pluck('name', 'value')->toArray();
     }
 
     public static function domainNames(): array

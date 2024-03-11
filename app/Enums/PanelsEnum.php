@@ -9,22 +9,22 @@
 namespace App\Enums;
 
 /**
- * Roles enum
+ * Panels enum
  *
  * @package  App
  * @category Enum
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-enum RolesEnum: string
+enum PanelsEnum: string
 {
-    case AuthenticatedUser = 'authenticated-user';
-    case Administrator      = 'administrator';
+    case Admin = 'admin';
+    case User  = 'user';
 
-    public function label(): string
+    public function path(): string
     {
         return match ($this) {
-            self::AUTHENTICATED_USER => __('Authenticated User'),
-            self::Administrator      => __('Administrator'),
+            self::Admin => 'admin',
+            self::User  => 'user',
         };
     }
 }

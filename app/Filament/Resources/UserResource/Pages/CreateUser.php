@@ -46,9 +46,9 @@ class CreateUser extends CreateRecord
                 ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                 ->dehydrated(fn ($state) => filled($state))
                 ->required()->label(__('Password')),
-            Select::make('role')->required()->options(
+            Select::make('role')->options(
                 static::getResource()::roles()
-            )->label(__('Role')),
+            )->selectablePlaceholder(false)->label(__('Role')),
         ]);
     }
 

@@ -8,6 +8,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Enums\PanelsEnum;
 use Filament\Http\Middleware\{
     Authenticate,
     DisableBladeIconComponents,
@@ -44,8 +45,8 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('admin_panel')
-            ->path(env('ADMIN_PANEL_PATH', 'admin'))
+            ->id(PanelsEnum::Admin->value)
+            ->path(env('ADMIN_PANEL_PATH', PanelsEnum::Admin->path()))
             ->login()
             ->colors([
                 'primary' => Color::Amber,
