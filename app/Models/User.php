@@ -70,10 +70,13 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        if (PanelsEnum::tryFrom($panel->getId()) === PanelsEnum::Admin) {
-            return $this->isAdministrator();
+        if ($this->isAdministrator()) {
+            return true;
         }
-        return $this->hasRole(RolesEnum::AuthenticatedUser);
+        if ($panel->getId() === PanelsEnum::User->value) {
+            return $this->hasRole(RolesEnum::AuthenticatedUser);
+        }
+        return false;
     }
 
     /**
