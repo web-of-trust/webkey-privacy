@@ -30,7 +30,7 @@ class CertificateController extends Controller
     {
         JsonResource::withoutWrapping();
         return CertificateResource::collection(
-            Certificate::with('domain')->get()
+            Certificate::with('domain')->orderBy('creation_time', 'desc')->get()
         );
     }
 }
