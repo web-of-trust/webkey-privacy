@@ -201,7 +201,7 @@ class ListPersonalKeys extends ListRecords
     )
     {
         $item = implode([
-            PersonalKeyResource::PASSPHRASE_STORAGE_ITEM,
+            static::getResource()::PASSPHRASE_STORAGE_ITEM,
             '-',
             $fingerprint,
         ]);
