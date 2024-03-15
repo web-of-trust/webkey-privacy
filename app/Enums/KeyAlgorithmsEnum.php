@@ -18,8 +18,8 @@ namespace App\Enums;
 enum KeyAlgorithmsEnum: int
 {
     case Rsa = 1;
-    case EcP256 = 3;
-    case EcP384 = 4;
-    case EcP521 = 5;
-    case Ed25519 = 6;
+    case NistP256 = 2;
+    case NistP384 = 3;
+    case NistP521 = 4;
+    case Ed25519 = 5;
 }

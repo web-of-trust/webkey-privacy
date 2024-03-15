@@ -22,6 +22,7 @@ use Filament\Resources\Resource;
 class PersonalKeyResource extends Resource
 {
     protected static ?string $model = PersonalKey::class;
+    protected static ?string $navigationGroup = 'OpenPGP';
     protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $slug = 'personal-key';
 

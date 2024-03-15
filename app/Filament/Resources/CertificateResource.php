@@ -26,6 +26,7 @@ use OpenPGP\Enum\{
 class CertificateResource extends Resource
 {
     protected static ?string $model = Certificate::class;
+    protected static ?string $navigationGroup = 'OpenPGP';
     protected static ?string $navigationIcon = 'heroicon-o-identification';
     protected static ?string $slug = 'certificate';
 

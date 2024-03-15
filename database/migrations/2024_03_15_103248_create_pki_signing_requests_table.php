@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('domain_id')->index();
             $table->string('common_name');
-            $table->string('country_name');
-            $table->string('province_name');
-            $table->string('locality_name');
-            $table->string('organization_name');
-            $table->string('organization_unit_name');
+            $table->string('country_name')->nullable();
+            $table->string('province_name')->nullable();
+            $table->string('locality_name')->nullable();
+            $table->string('organization_name')->nullable();
+            $table->string('organization_unit_name')->nullable();
             $table->mediumInteger('key_algorithm');
             $table->mediumInteger('key_strength');
             $table->text('key_data')->nullable();
