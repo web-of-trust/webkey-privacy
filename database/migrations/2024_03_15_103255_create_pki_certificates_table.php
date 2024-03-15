@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pki_certificates', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('domain_id');
-            $table->unsignedInteger('pki_csr_id');
+            $table->unsignedInteger('domain_id')->index();
+            $table->unsignedInteger('signing_request_id')->index();
             $table->string('subject_common_name');
             $table->string('issuer_common_name');
             $table->timestamp('not_before')->nullable();
@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('fingerprint');
             $table->text('certificate_data')->nullable();
             $table->timestamps();
-            $table->index(['domain_id', 'pki_csr_id']);
         });
     }
 
