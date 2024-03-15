@@ -23,7 +23,7 @@ class PkiSigningRequest extends Model
 {
     use HasFactory;
 
-    protected $table = 'pki_signing_request';
+    protected $table = 'pki_signing_requests';
 
     /**
      * The attributes that are mass assignable.
