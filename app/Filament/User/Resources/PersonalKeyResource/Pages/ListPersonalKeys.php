@@ -40,7 +40,6 @@ use Illuminate\Support\Facades\{
     Log,
     Storage,
 };
-use Illuminate\Support\Str;
 use Livewire\Component as Livewire;
 use OpenPGP\Type\PrivateKeyInterface;
 use OpenPGP\OpenPGP;
@@ -191,9 +190,7 @@ class ListPersonalKeys extends ListRecords
 
     private static function randomPassphrase(): string
     {
-        return Str::password(
-            app(AppSettings::class)->passphraseLength()
-        );
+        return app(AppSettings::class)->randomPassphrase();
     }
 
     private static function rememberPassphrase(

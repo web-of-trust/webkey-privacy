@@ -9,6 +9,7 @@
 namespace App\Settings;
 
 use Filament\Forms\Components\Select;
+use Illuminate\Support\Str;
 use OpenPGP\Enum\{
     CurveOid,
     DHKeySize,
@@ -87,6 +88,13 @@ final class AppSettings extends Settings
                 $settings->dh_key_size
             )->selectablePlaceholder(false)->label(__('DSA-ElGamal Key Size')),
         ];
+    }
+
+    public function randomPassphrase(): string
+    {
+        return Str::password(
+            $this->passphraseLength()
+        );
     }
 
     public function passphraseStore(): string
