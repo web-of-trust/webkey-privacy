@@ -122,6 +122,15 @@ class CreatePkiSigningRequest extends CreateRecord
         $password = false;
         if (!empty($data['with_password'])) {
             $password = $data['password'];
+            $storePath = implode([
+                static::getResource()::PASSPHRASE_STORAGE,
+                DIRECTORY_SEPARATOR,
+                hash('sha256', $data['common_name']),
+            ]);
+            Storage::disk(app(AppSettings::class)->passphraseStore())->put(
+                $storePath,
+                Crypt::encryptString($password)
+            );
         }
         $keyAlgo = KeyAlgorithmsEnum::from($data['key_algorithm']);
         $privateKey = self::createKey(
@@ -137,16 +146,6 @@ class CreatePkiSigningRequest extends CreateRecord
             'o' => $data['organization_name'],
             'ou' => $data['organization_unit_name'],
         ]);
-
-        $storePath = implode([
-            static::getResource()::PASSPHRASE_STORAGE,
-            DIRECTORY_SEPARATOR,
-            hash('sha256', $data['common_name']),
-        ]);
-        Storage::disk(app(AppSettings::class)->passphraseStore())->put(
-            $storePath,
-            Crypt::encryptString($data['passphrase'])
-        );
 
         return $data;
     }
