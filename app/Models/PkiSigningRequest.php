@@ -9,7 +9,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\{
+    BelongsTo,
+    HasMany,
+};
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -47,5 +50,10 @@ class PkiSigningRequest extends Model
     public function domain(): BelongsTo
     {
         return $this->belongsTo(Domain::class, 'domain_id')->withDefault();
+    }
+
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(PkiCertificate::class);
     }
 }
