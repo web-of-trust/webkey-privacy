@@ -19,7 +19,6 @@
         "filament/filament": "^3.2",
         "filament/spatie-laravel-settings-plugin": "^3.2",
         "laravel/framework": "^10.45",
-        "laravel/sanctum": "^3.3",
         "php-privacy/openpgp": "^1.1",
         "spatie/laravel-permission": "^6.4"
     },
