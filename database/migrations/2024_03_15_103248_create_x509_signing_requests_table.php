@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pki_signing_requests', function (Blueprint $table) {
+        Schema::create('x509_signing_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('domain_id')->index();
             $table->string('cn');
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pki_signing_requests');
+        Schema::dropIfExists('x509_signing_requests');
     }
 };

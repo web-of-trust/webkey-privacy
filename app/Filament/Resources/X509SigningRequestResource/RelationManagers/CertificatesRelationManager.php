@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\PkiSigningRequestResource\RelationManagers;
+namespace App\Filament\Resources\X509SigningRequestResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;

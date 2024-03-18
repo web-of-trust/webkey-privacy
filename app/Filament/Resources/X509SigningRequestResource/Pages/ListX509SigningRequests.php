@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\PkiSigningRequestResource\Pages;
+namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
-use App\Filament\Resources\PkiSigningRequestResource;
+use App\Filament\Resources\X509SigningRequestResource;
 use App\Enums\KeyAlgorithmsEnum;
 use App\Models\Domain;
 use Filament\Actions;
@@ -20,9 +20,9 @@ use Filament\Tables\Filters\{
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class ListPkiSigningRequests extends ListRecords
+class ListX509SigningRequests extends ListRecords
 {
-    protected static string $resource = PkiSigningRequestResource::class;
+    protected static string $resource = X509SigningRequestResource::class;
 
     public function getTitle(): string
     {

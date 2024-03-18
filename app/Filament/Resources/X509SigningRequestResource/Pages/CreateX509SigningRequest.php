@@ -6,9 +6,9 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Filament\Resources\PkiSigningRequestResource\Pages;
+namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
-use App\Filament\Resources\PkiSigningRequestResource;
+use App\Filament\Resources\X509SigningRequestResource;
 use App\Enums\KeyAlgorithmsEnum;
 use App\Models\Domain;
 use App\Settings\AppSettings;
@@ -38,15 +38,15 @@ use phpseclib3\Crypt\{
 use phpseclib3\File\X509;
 
 /**
- * Create pki signing request record page
+ * Create x509 signing request record page
  *
  * @package  App
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class CreatePkiSigningRequest extends CreateRecord
+class CreateX509SigningRequest extends CreateRecord
 {
-    protected static string $resource = PkiSigningRequestResource::class;
+    protected static string $resource = X509SigningRequestResource::class;
     protected static bool $canCreateAnother = false;
 
     public function getTitle(): string

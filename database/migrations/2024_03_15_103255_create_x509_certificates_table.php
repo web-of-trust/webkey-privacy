@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pki_certificates', function (Blueprint $table) {
+        Schema::create('x509_certificates', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('domain_id')->index();
             $table->unsignedInteger('signing_request_id')->index();
-            $table->string('subject_common_name');
-            $table->string('issuer_common_name');
+            $table->string('subject_cn');
+            $table->string('issuer_cn');
             $table->timestamp('not_before')->nullable();
             $table->timestamp('not_after')->nullable();
             $table->string('fingerprint');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pki_certificates');
+        Schema::dropIfExists('x509_certificates');
     }
 };

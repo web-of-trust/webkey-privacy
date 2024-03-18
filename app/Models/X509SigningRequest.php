@@ -9,21 +9,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\{
+    BelongsTo,
+    HasMany,
+};
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Pki certificate model
+ * X509 signing request model
  *
  * @package  App
  * @category Models
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class PkiCertificate extends Model
+class X509SigningRequest extends Model
 {
     use HasFactory;
 
-    protected $table = 'pki_certificates';
+    protected $table = 'x509_signing_requests';
 
     /**
      * The attributes that are mass assignable.
@@ -32,13 +35,16 @@ class PkiCertificate extends Model
      */
     protected $fillable = [
         'domain_id',
-        'signing_request_id',
-        'subject_common_name',
-        'issuer_common_name',
-        'not_before',
-        'not_after',
-        'fingerprint',
-        'certificate_data',
+        'cn',
+        'country',
+        'province',
+        'locality',
+        'organization',
+        'organization_unit',
+        'key_algorithm',
+        'key_strength',
+        'key_data',
+        'csr_data',
     ];
 
     public function domain(): BelongsTo
@@ -46,8 +52,8 @@ class PkiCertificate extends Model
         return $this->belongsTo(Domain::class, 'domain_id')->withDefault();
     }
 
-    public function csr(): BelongsTo
+    public function certificates(): HasMany
     {
-        return $this->belongsTo(PkiSigningRequest::class, 'signing_request_id')->withDefault();
+        return $this->hasMany(X509Certificate::class, 'signing_request_id');
     }
 }

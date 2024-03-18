@@ -6,9 +6,9 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Filament\Resources\PkiSigningRequestResource\Pages;
+namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
-use App\Filament\Resources\PkiSigningRequestResource;
+use App\Filament\Resources\X509SigningRequestResource;
 use App\Enums\KeyAlgorithmsEnum;
 use Filament\Actions;
 use Filament\Infolists\Components\{
@@ -20,15 +20,15 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 
 /**
- * View pki signing request record page
+ * View x509 signing request record page
  *
  * @package  App
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class ViewPkiSigningRequest extends ViewRecord
+class ViewX509SigningRequest extends ViewRecord
 {
-    protected static string $resource = PkiSigningRequestResource::class;
+    protected static string $resource = X509SigningRequestResource::class;
 
     public function getTitle(): string
     {

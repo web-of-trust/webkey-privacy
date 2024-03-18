@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PkiCertificateResource\Pages;
-use App\Filament\Resources\PkiCertificateResource\RelationManagers;
-use App\Models\PkiCertificate;
+use App\Filament\Resources\X509CertificateResource\Pages;
+use App\Filament\Resources\X509CertificateResource\RelationManagers;
+use App\Models\X509Certificate;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PkiCertificateResource extends Resource
+class X509CertificateResource extends Resource
 {
-    protected static ?string $model = PkiCertificate::class;
+    protected static ?string $model = X509Certificate::class;
     protected static ?string $navigationGroup = 'X509';
     protected static ?string $navigationIcon = 'heroicon-o-identification';
     protected static ?string $slug = 'pki/certificate';
@@ -48,9 +48,9 @@ class PkiCertificateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPkiCertificates::route('/'),
-            'create' => Pages\CreatePkiCertificate::route('/create'),
-            'view' => Pages\ViewPkiCertificate::route('/{record}'),
+            'index' => Pages\ListX509Certificates::route('/'),
+            'create' => Pages\CreateX509Certificate::route('/create'),
+            'view' => Pages\ViewX509Certificate::route('/{record}'),
         ];
     }
 }

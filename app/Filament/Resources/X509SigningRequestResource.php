@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PkiSigningRequestResource\Pages;
-use App\Filament\Resources\PkiSigningRequestResource\RelationManagers;
-use App\Models\PkiSigningRequest;
+use App\Filament\Resources\X509SigningRequestResource\Pages;
+use App\Filament\Resources\X509SigningRequestResource\RelationManagers;
+use App\Models\X509SigningRequest;
 use Filament\Resources\Resource;
 
-class PkiSigningRequestResource extends Resource
+class X509SigningRequestResource extends Resource
 {
-    const PASSPHRASE_STORAGE = 'pki-private';
+    const PASSPHRASE_STORAGE = 'x509-private';
 
-    protected static ?string $model = PkiSigningRequest::class;
+    protected static ?string $model = X509SigningRequest::class;
     protected static ?string $navigationGroup = 'X509';
     protected static ?string $navigationIcon = 'heroicon-o-key';
-    protected static ?string $slug = 'pki/signing-request';
+    protected static ?string $slug = 'x509/signing-request';
 
     public static function getNavigationLabel(): string
     {
@@ -24,9 +24,9 @@ class PkiSigningRequestResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPkiSigningRequests::route('/'),
-            'create' => Pages\CreatePkiSigningRequest::route('/create'),
-            'view' => Pages\ViewPkiSigningRequest::route('/{record}'),
+            'index' => Pages\ListX509SigningRequests::route('/'),
+            'create' => Pages\CreateX509SigningRequest::route('/create'),
+            'view' => Pages\ViewX509SigningRequest::route('/{record}'),
         ];
     }
 
@@ -37,7 +37,7 @@ class PkiSigningRequestResource extends Resource
         ];
     }
 
-    public static function exportKey(PkiSigningRequest $model)
+    public static function exportKey(X509SigningRequest $model)
     {
         $filePath = tempnam(
             sys_get_temp_dir(), $model->common_name
@@ -50,7 +50,7 @@ class PkiSigningRequestResource extends Resource
         )->deleteFileAfterSend(true);
     }
 
-    public static function exportCsr(PkiSigningRequest $model)
+    public static function exportCsr(X509SigningRequest $model)
     {
         $filePath = tempnam(
             sys_get_temp_dir(), $model->common_name
