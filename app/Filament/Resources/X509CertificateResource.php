@@ -18,7 +18,7 @@ class X509CertificateResource extends Resource
     protected static ?string $model = X509Certificate::class;
     protected static ?string $navigationGroup = 'X509';
     protected static ?string $navigationIcon = 'heroicon-o-identification';
-    protected static ?string $slug = 'pki/certificate';
+    protected static ?string $slug = 'x509/certificate';
 
 
     public static function getNavigationLabel(): string
