@@ -82,7 +82,7 @@ class ListPersonalKeys extends ListRecords
                 )->when(
                     $data['revoked'],
                     fn (Builder $query, int $revoked) => $query->where(
-                        'is_revoked', $revoked
+                        'personal_keys.is_revoked', $revoked
                     )
                 )
             ),

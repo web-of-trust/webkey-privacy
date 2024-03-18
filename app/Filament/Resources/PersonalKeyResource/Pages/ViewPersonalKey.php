@@ -130,7 +130,9 @@ class ViewPersonalKey extends ViewRecord
                                 )
                             );
                             $personalKey = $domainKey->revokeKey(
-                                OpenPGP::readPrivateKey($this->record->key_data)
+                                OpenPGP::readPrivateKey($this->record->key_data),
+                                $data['reason'],
+                                RevocationReasonTag::from((int) $data['tag'])
                             );
                             Revocation::create([
                                 'certificate_id' => $this->record->certificate_id,
