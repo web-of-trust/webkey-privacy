@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PkiSigningRequestResource\Pages;
+use App\Filament\Resources\PkiSigningRequestResource\RelationManagers;
 use App\Models\PkiSigningRequest;
 use Filament\Resources\Resource;
 
@@ -26,6 +27,13 @@ class PkiSigningRequestResource extends Resource
             'index' => Pages\ListPkiSigningRequests::route('/'),
             'create' => Pages\CreatePkiSigningRequest::route('/create'),
             'view' => Pages\ViewPkiSigningRequest::route('/{record}'),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\CertificatesRelationManager::class,
         ];
     }
 

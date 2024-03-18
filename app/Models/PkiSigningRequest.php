@@ -54,6 +54,6 @@ class PkiSigningRequest extends Model
 
     public function certificates(): HasMany
     {
-        return $this->hasMany(PkiCertificate::class);
+        return $this->hasMany(PkiCertificate::class, 'signing_request_id');
     }
 }
