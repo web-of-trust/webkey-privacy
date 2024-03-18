@@ -62,7 +62,7 @@ class CreatePkiSigningRequest extends CreateRecord
                     ->options(
                         Domain::all()->pluck('name', 'id')
                     )->required()->label(__('Domain')),
-                TextInput::make('common_name')
+                TextInput::make('cn')
                     ->rules([
                         function () {
                             return function (string $attribute, $value, \Closure $fail) {
@@ -79,11 +79,11 @@ class CreatePkiSigningRequest extends CreateRecord
                         },
                     ])
                     ->required()->unique()->label(__('Common Name')),
-                TextInput::make('country_name')->label(__('Country')),
-                TextInput::make('province_name')->label(__('Province / State')),
-                TextInput::make('locality_name')->label(__('Locality')),
-                TextInput::make('organization_name')->label(__('Organization')),
-                TextInput::make('organization_unit_name')->label(__('Organization Unit')),
+                TextInput::make('country')->label(__('Country')),
+                TextInput::make('province')->label(__('Province / State')),
+                TextInput::make('locality')->label(__('Locality')),
+                TextInput::make('organization')->label(__('Organization')),
+                TextInput::make('organization_unit')->label(__('Organization Unit')),
             ]),
             Fieldset::make(__('Key Settings'))->schema([
                 Select::make('key_algorithm')->options(
@@ -125,7 +125,7 @@ class CreatePkiSigningRequest extends CreateRecord
             $storePath = implode([
                 static::getResource()::PASSPHRASE_STORAGE,
                 DIRECTORY_SEPARATOR,
-                hash('sha256', $data['common_name']),
+                hash('sha256', $data['cn']),
             ]);
             Storage::disk(app(AppSettings::class)->passphraseStore())->put(
                 $storePath,
@@ -139,12 +139,12 @@ class CreatePkiSigningRequest extends CreateRecord
         $data['key_strength'] = $privateKey->getLength();
         $data['key_data'] = $privateKey->toString('PKCS8');
         $data['csr_data'] = self::createCsr($privateKey, [
-            'cn' => $data['common_name'],
-            'c' => $data['country_name'],
-            'st' => $data['province_name'],
-            'l' => $data['locality_name'],
-            'o' => $data['organization_name'],
-            'ou' => $data['organization_unit_name'],
+            'cn' => $data['cn'],
+            'c' => $data['country'],
+            'st' => $data['province'],
+            'l' => $data['locality'],
+            'o' => $data['organization'],
+            'ou' => $data['organization_unit'],
         ]);
 
         return $data;

@@ -35,12 +35,12 @@ class PkiSigningRequest extends Model
      */
     protected $fillable = [
         'domain_id',
-        'common_name',
-        'country_name',
-        'province_name',
-        'locality_name',
-        'organization_name',
-        'organization_unit_name',
+        'cn',
+        'country',
+        'province',
+        'locality',
+        'organization',
+        'organization_unit',
         'key_algorithm',
         'key_strength',
         'key_data',

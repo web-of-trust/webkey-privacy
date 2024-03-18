@@ -39,12 +39,12 @@ class ViewPkiSigningRequest extends ViewRecord
     {
         return $infolist->schema([
             Fieldset::make(__('Certificate Information'))->schema([
-                TextEntry::make('common_name')->label(__('Common Name')),
-                TextEntry::make('country_name')->label(__('Country')),
-                TextEntry::make('province_name')->label(__('Province / State')),
-                TextEntry::make('locality_name')->label(__('Locality')),
-                TextEntry::make('organization_name')->label(__('Organization')),
-                TextEntry::make('organization_unit_name')->label(__('Organization Unit')),
+                TextEntry::make('cn')->label(__('Common Name')),
+                TextEntry::make('country')->label(__('Country')),
+                TextEntry::make('province')->label(__('Province / State')),
+                TextEntry::make('locality')->label(__('Locality')),
+                TextEntry::make('organization')->label(__('Organization')),
+                TextEntry::make('organization_unit')->label(__('Organization Unit')),
             ]),
             Fieldset::make(__('Key Information'))->schema([
                 TextEntry::make('key_algorithm')->formatStateUsing(

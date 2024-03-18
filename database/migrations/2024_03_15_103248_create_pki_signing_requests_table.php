@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('pki_signing_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('domain_id')->index();
-            $table->string('common_name');
-            $table->string('country_name')->nullable();
-            $table->string('province_name')->nullable();
-            $table->string('locality_name')->nullable();
-            $table->string('organization_name')->nullable();
-            $table->string('organization_unit_name')->nullable();
+            $table->string('cn');
+            $table->string('country')->nullable();
+            $table->string('province')->nullable();
+            $table->string('locality')->nullable();
+            $table->string('organization')->nullable();
+            $table->string('organization_unit')->nullable();
             $table->mediumInteger('key_algorithm');
             $table->mediumInteger('key_strength');
             $table->text('key_data')->nullable();

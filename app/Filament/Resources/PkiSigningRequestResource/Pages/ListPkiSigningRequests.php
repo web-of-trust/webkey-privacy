@@ -33,7 +33,7 @@ class ListPkiSigningRequests extends ListRecords
     {
         return $table->columns([
             TextColumn::make('domain.name')->label(__('Domain')),
-            TextColumn::make('common_name')->label(__('Common Name')),
+            TextColumn::make('cn')->label(__('Common Name')),
             TextColumn::make('key_algorithm')
                 ->formatStateUsing(
                     static fn (int $state): string => KeyAlgorithmsEnum::tryFrom($state)?->name
@@ -43,12 +43,12 @@ class ListPkiSigningRequests extends ListRecords
             TextColumn::make('created_at')->dateTime()->sortable()->label(__('Created At')),
         ])->filters([
             Filter::make('filter')->form([
-                TextInput::make('common_name')->label(__('Common Name')),
+                TextInput::make('cn')->label(__('Common Name')),
             ])->query(
                 fn (Builder $query, array $data) => $query->when(
-                    $data['common_name'],
+                    $data['cn'],
                     fn (Builder $query, string $name) => $query->where(
-                        'common_name', 'like', '%' . trim($name) . '%'
+                        'cn', 'like', '%' . trim($name) . '%'
                     )
                 )
             ),
