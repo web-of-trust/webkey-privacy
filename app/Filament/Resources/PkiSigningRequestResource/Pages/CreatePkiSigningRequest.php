@@ -132,7 +132,7 @@ class CreatePkiSigningRequest extends CreateRecord
                 Crypt::encryptString($password)
             );
         }
-        $keyAlgo = KeyAlgorithmsEnum::from($data['key_algorithm']);
+        $keyAlgo = KeyAlgorithmsEnum::from((int) $data['key_algorithm']);
         $privateKey = self::createKey(
             $keyAlgo, $password, $data['rsa_key_size']
         );
