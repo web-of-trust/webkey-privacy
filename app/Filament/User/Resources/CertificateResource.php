@@ -19,4 +19,5 @@ use App\Filament\Resources\CertificateResource as BaseResource;
  */
 class CertificateResource extends BaseResource
 {
+    protected static ?string $navigationGroup = null;
 }
