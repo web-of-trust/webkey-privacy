@@ -62,24 +62,32 @@ class CreateX509SigningRequest extends CreateRecord
                     ->options(
                         Domain::all()->pluck('name', 'id')
                     )->required()->label(__('Domain')),
-                TextInput::make('cn')
-                    ->rules([
-                        function () {
-                            return function (string $attribute, $value, \Closure $fail) {
-                                if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
-                                    $fail(__('The common name is invalid.'));
-                                }
-                            };
-                        },
-                        fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
-                            $domain = Domain::find($get('domain_id'));
-                            if (!Str::endsWith($value, $domain->name)) {
-                                $fail(__('The common name must match the domain name.'));
+                TextInput::make('cn')->rules([
+                    function () {
+                        return function (string $attribute, mixed $value, \Closure $fail) {
+                            if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
+                                $fail(__('The common name is invalid.'));
                             }
-                        },
-                    ])
-                    ->required()->unique()->label(__('Common Name')),
-                TextInput::make('country')->label(__('Country')),
+                        };
+                    },
+                    fn (Get $get): \Closure => function (
+                        string $attribute, mixed $value, \Closure $fail
+                    ) use ($get) {
+                        $domain = Domain::find($get('domain_id'));
+                        if (!Str::endsWith($value, $domain->name)) {
+                            $fail(__('The common name must match the domain name.'));
+                        }
+                    },
+                ])->required()->unique()->label(__('Common Name')),
+                TextInput::make('country')->rules([
+                    function () {
+                        return function (string $attribute, mixed $value, \Closure $fail) {
+                            if (strtoupper($value) !== $value) {
+                                $fail(__('The country must be uppercase.'));
+                            }
+                        };
+                    },
+                ])->label(__('Country')),
                 TextInput::make('province')->label(__('Province / State')),
                 TextInput::make('locality')->label(__('Locality')),
                 TextInput::make('organization')->label(__('Organization')),
