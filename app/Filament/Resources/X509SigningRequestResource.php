@@ -1,4 +1,10 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Filament\Resources;
 
@@ -7,6 +13,13 @@ use App\Filament\Resources\X509SigningRequestResource\RelationManagers;
 use App\Models\X509SigningRequest;
 use Filament\Resources\Resource;
 
+/**
+ * X509 signing request resource
+ *
+ * @package  App
+ * @category Filament
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class X509SigningRequestResource extends Resource
 {
     const PASSWORD_STORAGE = 'domain-x509-password';

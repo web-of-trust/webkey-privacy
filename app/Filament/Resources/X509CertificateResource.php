@@ -13,7 +13,7 @@ use App\Models\X509Certificate;
 use Filament\Resources\Resource;
 
 /**
- * View x509 signing request record page
+ * X509 certificate resource
  *
  * @package  App
  * @category Filament
