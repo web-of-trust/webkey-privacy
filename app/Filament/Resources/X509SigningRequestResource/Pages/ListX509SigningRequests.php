@@ -1,11 +1,17 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Webkey Privacy project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
 use App\Filament\Resources\X509SigningRequestResource;
 use App\Enums\KeyAlgorithmsEnum;
 use App\Models\Domain;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
@@ -20,6 +26,13 @@ use Filament\Tables\Filters\{
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * List x509 signing request record page
+ *
+ * @package  App
+ * @category Filament
+ * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
+ */
 class ListX509SigningRequests extends ListRecords
 {
     protected static string $resource = X509SigningRequestResource::class;
@@ -73,7 +86,7 @@ class ListX509SigningRequests extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label(__('New Signing Request')),
+            CreateAction::make()->label(__('New Signing Request')),
         ];
     }
 }
