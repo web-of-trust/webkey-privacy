@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('domain_id')->index();
             $table->string('cn');
             $table->string('country')->nullable();
-            $table->string('province')->nullable();
+            $table->string('state')->nullable();
             $table->string('locality')->nullable();
             $table->string('organization')->nullable();
             $table->string('organization_unit')->nullable();

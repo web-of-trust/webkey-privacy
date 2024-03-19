@@ -88,7 +88,7 @@ class CreateX509SigningRequest extends CreateRecord
                         };
                     },
                 ])->label(__('Country')),
-                TextInput::make('province')->label(__('Province / State')),
+                TextInput::make('state')->label(__('State / Province')),
                 TextInput::make('locality')->label(__('Locality')),
                 TextInput::make('organization')->label(__('Organization')),
                 TextInput::make('organization_unit')->label(__('Organization Unit')),

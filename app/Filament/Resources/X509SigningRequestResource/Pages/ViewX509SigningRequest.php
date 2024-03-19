@@ -48,7 +48,7 @@ class ViewX509SigningRequest extends ViewRecord
             Fieldset::make(__('Certificate Information'))->schema([
                 TextEntry::make('cn')->label(__('Common Name')),
                 TextEntry::make('country')->label(__('Country')),
-                TextEntry::make('province')->label(__('Province / State')),
+                TextEntry::make('state')->label(__('State / Province')),
                 TextEntry::make('locality')->label(__('Locality')),
                 TextEntry::make('organization')->label(__('Organization')),
                 TextEntry::make('organization_unit')->label(__('Organization Unit')),

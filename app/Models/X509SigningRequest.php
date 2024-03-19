@@ -37,7 +37,7 @@ class X509SigningRequest extends Model
         'domain_id',
         'cn',
         'country',
-        'province',
+        'state',
         'locality',
         'organization',
         'organization_unit',

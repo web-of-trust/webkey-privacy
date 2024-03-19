@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('domain_id')->index();
             $table->unsignedInteger('signing_request_id')->index();
-            $table->string('serial_number')->unique();
-            $table->string('subject_cn');
-            $table->string('issuer_cn');
+            $table->string('serial_number', 64)->unique();
+            $table->string('subject_dn', 256);
+            $table->string('issuer_dn', 256);
             $table->timestamp('not_before')->nullable();
             $table->timestamp('not_after')->nullable();
             $table->text('certificate_data')->nullable();

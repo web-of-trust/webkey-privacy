@@ -77,8 +77,8 @@ class CertificatesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('subject_cn')->label(__('Subject Common Name')),
-            TextColumn::make('issuer_cn')->label(__('Issuer Common Name')),
+            TextColumn::make('subject_dn')->label(__('Subject DN')),
+            TextColumn::make('issuer_dn')->label(__('Issuer DN')),
             TextColumn::make('serial_number')->label(__('Serial Number')),
             TextColumn::make('not_before')->label(__('Not Before')),
             TextColumn::make('not_after')->label(__('Not After')),
@@ -105,9 +105,8 @@ class CertificatesRelationManager extends RelationManager
                     $serialNumber = $certInfo['tbsCertificate']['serialNumber'];
                     $data['serial_number'] = $serialNumber->toHex();
 
-                    $data['subject_cn'] = $cert->getSubjectDNProp('cn')[0];
-                    $data['issuer_cn'] = $cert->getIssuerDNProp('cn')[0];
-                    $data['fingerprint'] = $cert->getPublicKey()->getFingerprint();
+                    $data['subject_dn'] = $cert->getSubjectDN(X509::DN_STRING);
+                    $data['issuer_dn'] = $cert->getIssuerDN(X509::DN_STRING);
                     $data['certificate_data'] = $certData;
                     return $data;
                 })
