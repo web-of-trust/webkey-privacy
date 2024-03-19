@@ -37,27 +37,27 @@ class X509SigningRequestResource extends Resource
         ];
     }
 
-    public static function exportKey(X509SigningRequest $model)
+    public static function exportKey(X509SigningRequest $record)
     {
         $filePath = tempnam(
-            sys_get_temp_dir(), $model->cn
+            sys_get_temp_dir(), $record->cn
         );
-        file_put_contents($filePath, $model->key_data);
+        file_put_contents($filePath, $record->key_data);
         return response()->download(
-            $filePath, $model->cn . '.key', [
+            $filePath, $record->cn . '.key', [
                 'Content-Type' => 'application/pkcs8',
             ]
         )->deleteFileAfterSend(true);
     }
 
-    public static function exportCsr(X509SigningRequest $model)
+    public static function exportCsr(X509SigningRequest $record)
     {
         $filePath = tempnam(
-            sys_get_temp_dir(), $model->cn
+            sys_get_temp_dir(), $record->cn
         );
-        file_put_contents($filePath, $model->csr_data);
+        file_put_contents($filePath, $record->csr_data);
         return response()->download(
-            $filePath, $model->cn . '.csr', [
+            $filePath, $record->cn . '.csr', [
                 'Content-Type' => 'application/pkcs8',
             ]
         )->deleteFileAfterSend(true);

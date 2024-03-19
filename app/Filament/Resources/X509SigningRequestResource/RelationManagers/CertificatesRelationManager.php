@@ -80,9 +80,11 @@ class CertificatesRelationManager extends RelationManager
         return $table->columns([
             TextColumn::make('subject_dn')->wrap()->label(__('Subject DN')),
             TextColumn::make('issuer_dn')->wrap()->label(__('Issuer DN')),
-            TextColumn::make('serial_number')->label(__('Serial Number')),
-            TextColumn::make('not_before')->label(__('Not Before')),
-            TextColumn::make('not_after')->label(__('Not After')),
+            TextColumn::make('serial_number')->formatStateUsing(
+                static fn (string $state): string => strtoupper($state)
+            )->label(__('Serial Number')),
+            TextColumn::make('not_before')->wrap()->label(__('Not Before')),
+            TextColumn::make('not_after')->wrap()->label(__('Not After')),
         ])
         ->headerActions([
             CreateAction::make()

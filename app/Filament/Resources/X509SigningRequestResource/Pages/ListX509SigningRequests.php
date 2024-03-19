@@ -15,10 +15,7 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Columns\{
-    IconColumn,
-    TextColumn,
-};
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\{
     Filter,
     SelectFilter,
