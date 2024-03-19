@@ -28,6 +28,8 @@ use OpenPGP\OpenPGP;
  */
 class DomainResource extends Resource
 {
+    const PASSWORD_STORAGE = 'domain-openpgp-password';
+
     protected static ?string $model = Domain::class;
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
     protected static ?string $slug = 'domain';
@@ -52,15 +54,20 @@ class DomainResource extends Resource
     {
         $settings = app(AppSettings::class);
         $settings->fill($keySettings);
-        $passphrase = Str::password($settings->passphraseLength());
+        $password = Str::password($settings->passwordLength());
 
-        Storage::disk($settings->passphraseStore())->put(
+        $storePath = implode([
+            self::PASSWORD_STORAGE,
+            DIRECTORY_SEPARATOR,
             hash('sha256', $domain),
-            Crypt::encryptString($passphrase)
+        ]);
+        Storage::disk($settings->passwordStore())->put(
+            $storePath,
+            Crypt::encryptString($password)
         );
         return OpenPGP::generateKey(
             [$email],
-            $passphrase,
+            $password,
             $settings->keyType(),
             curve: $settings->ellipticCurve(),
             rsaKeySize: $settings->rsaKeySize(),

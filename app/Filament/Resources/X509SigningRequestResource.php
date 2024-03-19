@@ -9,7 +9,7 @@ use Filament\Resources\Resource;
 
 class X509SigningRequestResource extends Resource
 {
-    const PASSPHRASE_STORAGE = 'x509-private';
+    const PASSWORD_STORAGE = 'domain-x509-password';
 
     protected static ?string $model = X509SigningRequest::class;
     protected static ?string $navigationGroup = 'X509';

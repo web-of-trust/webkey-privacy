@@ -27,11 +27,11 @@ use Spatie\LaravelSettings\Settings;
  */
 final class AppSettings extends Settings
 {
-    const PASSPHRASE_STORE  = 'key_vault';
-    const PASSPHRASE_LENGTH = 32;
+    const PASSWORD_STORE  = 'key_vault';
+    const PASSWORD_LENGTH = 32;
 
-    public string $passphrase_store;
-    public int $passphrase_length;
+    public string $password_store;
+    public int $password_length;
     public string $key_type;
     public string $elliptic_curve;
     public string $rsa_key_size;
@@ -93,18 +93,18 @@ final class AppSettings extends Settings
     public function randomPassphrase(): string
     {
         return Str::password(
-            $this->passphraseLength()
+            $this->passwordLength()
         );
     }
 
-    public function passphraseStore(): string
+    public function passwordStore(): string
     {
-        return $this->passphrase_store ?: self::PASSPHRASE_STORE;
+        return $this->password_store ?: self::PASSWORD_STORE;
     }
 
-    public function passphraseLength(): int
+    public function passwordLength(): int
     {
-        return $this->passphrase_length ?: self::PASSPHASE_LENGTH;
+        return $this->password_length ?: self::PASSWORD_LENGTH;
     }
 
     public function keyType(): KeyType

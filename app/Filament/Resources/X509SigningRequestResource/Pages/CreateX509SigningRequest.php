@@ -131,7 +131,7 @@ class CreateX509SigningRequest extends CreateRecord
         if (!empty($data['with_password'])) {
             $password = $data['password'];
             $storePath = implode([
-                static::getResource()::PASSPHRASE_STORAGE,
+                static::getResource()::PASSWORD_STORAGE,
                 DIRECTORY_SEPARATOR,
                 hash('sha256', $data['cn']),
             ]);
