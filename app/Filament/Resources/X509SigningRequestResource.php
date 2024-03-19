@@ -40,11 +40,11 @@ class X509SigningRequestResource extends Resource
     public static function exportKey(X509SigningRequest $model)
     {
         $filePath = tempnam(
-            sys_get_temp_dir(), $model->common_name
+            sys_get_temp_dir(), $model->cn
         );
         file_put_contents($filePath, $model->key_data);
         return response()->download(
-            $filePath, $model->common_name . '.key', [
+            $filePath, $model->cn . '.key', [
                 'Content-Type' => 'application/pkcs8',
             ]
         )->deleteFileAfterSend(true);
@@ -53,11 +53,11 @@ class X509SigningRequestResource extends Resource
     public static function exportCsr(X509SigningRequest $model)
     {
         $filePath = tempnam(
-            sys_get_temp_dir(), $model->common_name
+            sys_get_temp_dir(), $model->cn
         );
         file_put_contents($filePath, $model->csr_data);
         return response()->download(
-            $filePath, $model->common_name . '.csr', [
+            $filePath, $model->cn . '.csr', [
                 'Content-Type' => 'application/pkcs8',
             ]
         )->deleteFileAfterSend(true);

@@ -10,7 +10,7 @@ namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
 use App\Filament\Resources\X509SigningRequestResource;
 use App\Enums\KeyAlgorithmsEnum;
-use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Infolists\Components\{
     Fieldset,
     RepeatableEntry,
@@ -29,10 +29,17 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewX509SigningRequest extends ViewRecord
 {
     protected static string $resource = X509SigningRequestResource::class;
+    protected ?string $previousUrl = null;
 
     public function getTitle(): string
     {
         return __('View Signing Request');
+    }
+
+    public function mount(int | string $record): void
+    {
+        parent::mount($record);
+        $this->previousUrl = url()->previous();
     }
 
     public function infolist(Infolist $infolist): Infolist
@@ -59,6 +66,19 @@ class ViewX509SigningRequest extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('export_key')->label(__('Export Key'))
+                ->icon('heroicon-m-arrow-down-tray')
+                ->action(function ($record) {
+                    return self::getResource()::exportKey($record);
+                }),
+            Action::make('export_csr')->label(__('Export Csr'))
+                ->icon('heroicon-m-arrow-down-tray')
+                ->action(function ($record) {
+                    return self::getResource()::exportCsr($record);
+                }),
+            Action::make('back')->url(
+                $this->previousUrl ?? self::getResource()::getUrl('index')
+            )->color('gray')->label(__('Back')),
         ];
     }
 }
