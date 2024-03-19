@@ -91,28 +91,28 @@ class ListPersonalKeys extends ListRecords
                 ->form([
                     Fieldset::make(__('Key Settings'))->schema([
                         ...AppSettings::keySettings(),
-                        TextInput::make('passphrase')
+                        TextInput::make('password')
                             ->readonly()->password()
                             ->revealable(filament()->arePasswordsRevealable())
                             ->default(self::randomPassphrase())
-                            ->helperText('You must remember and/or save the passphrase.')
+                            ->helperText('You must remember and/or save the password.')
                             ->hintActions([
                                 FormAction::make('change')
                                     ->label(__('Change'))
                                     ->action(function (Set $set) {
                                         $set(
-                                            'passphrase', self::randomPassphrase()
+                                            'password', self::randomPassphrase()
                                         );
                                     }),
                             ])->label(__('Passphrase')),
                         Toggle::make('remember')->live()->default(true)->inline(false)
-                            ->label(__('Save passphrase into browser storage')),
+                            ->label(__('Save password into browser storage')),
                     ]),
                 ])->action(function (Livewire $livewire, array $data) {
-                    $passphrase = $data['passphrase'];
+                    $password = $data['password'];
                     $user = auth()->user();
                     $pgpKey = self::generateKey(
-                        $user->name, $user->email, $passphrase, $data
+                        $user->name, $user->email, $password, $data
                     );
                     static::$resource::getModel()::create([
                         'user_id' => $user->id,
@@ -120,7 +120,7 @@ class ListPersonalKeys extends ListRecords
                     ]);
                     if (!empty($data['remember'])) {
                         self::rememberPassphrase(
-                            $livewire, $passphrase, $pgpKey->getFingerprint(true)
+                            $livewire, $password, $pgpKey->getFingerprint(true)
                         );
                     }
                     redirect(static::getResource()::getUrl('index'));
@@ -152,7 +152,7 @@ class ListPersonalKeys extends ListRecords
     private static function generateKey(
         string $name,
         string $email,
-        string $passphrase,
+        string $password,
         array $keySettings = []
     ): PrivateKeyInterface
     {
@@ -160,7 +160,7 @@ class ListPersonalKeys extends ListRecords
 
         $key = OpenPGP::generateKey(
             [$name . " <$email>"],
-            $passphrase,
+            $password,
             $settings->keyType(),
             curve: $settings->ellipticCurve(),
             rsaKeySize: $settings->rsaKeySize(),
@@ -174,7 +174,7 @@ class ListPersonalKeys extends ListRecords
                 $key = OpenPGP::decryptPrivateKey(
                     $domain->key_data,
                     Crypt::decryptString(
-                        Storage::disk($settings->passphraseStore())->get(
+                        Storage::disk($settings->passwordStore())->get(
                             hash('sha256', $domain->name),
                         )
                     )
@@ -194,14 +194,14 @@ class ListPersonalKeys extends ListRecords
     }
 
     private static function rememberPassphrase(
-        Livewire $livewire, string $passphrase, string $fingerprint
+        Livewire $livewire, string $password, string $fingerprint
     )
     {
         $item = implode([
-            static::getResource()::PASSPHRASE_STORAGE_ITEM,
+            static::getResource()::PASSWORD_STORAGE_ITEM,
             '-',
             $fingerprint,
         ]);
-        $livewire->js("localStorage.setItem('$item', '$passphrase')");
+        $livewire->js("localStorage.setItem('$item', '$password')");
     }
 }

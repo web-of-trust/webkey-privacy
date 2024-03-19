@@ -26,7 +26,7 @@ use Filament\Infolists\Infolist;
  */
 class PersonalKeyResource extends Resource
 {
-    const PASSPHRASE_STORAGE_ITEM = 'wkp-passphrase';
+    const PASSWORD_STORAGE_ITEM = 'wkp-password';
 
     protected static ?string $model = PersonalKey::class;
     protected static ?string $navigationIcon = 'heroicon-o-key';
