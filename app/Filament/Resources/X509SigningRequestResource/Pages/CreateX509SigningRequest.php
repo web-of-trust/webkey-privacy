@@ -78,7 +78,7 @@ class CreateX509SigningRequest extends CreateRecord
                             $fail(__('The common name must match the domain name.'));
                         }
                     },
-                ])->required()->unique()->label(__('Common Name')),
+                ])->required()->label(__('Common Name')),
                 TextInput::make('country')->rules([
                     function () {
                         return function (string $attribute, mixed $value, \Closure $fail) {
@@ -127,19 +127,7 @@ class CreateX509SigningRequest extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $password = false;
-        if (!empty($data['with_password'])) {
-            $password = $data['password'];
-            $storePath = implode([
-                static::getResource()::PASSWORD_STORAGE,
-                DIRECTORY_SEPARATOR,
-                hash('sha256', $data['cn']),
-            ]);
-            Storage::disk(app(AppSettings::class)->passphraseStore())->put(
-                $storePath,
-                Crypt::encryptString($password)
-            );
-        }
+        $password = !empty($data['with_password']) ? $data['password'] : false;
         $keyAlgo = KeyAlgorithmsEnum::from((int) $data['key_algorithm']);
         $privateKey = self::createKey(
             $keyAlgo, $password, $data['rsa_key_size']
@@ -154,6 +142,18 @@ class CreateX509SigningRequest extends CreateRecord
             'o' => $data['organization'],
             'ou' => $data['organization_unit'],
         ]);
+
+        if (!empty($password)) {
+            $storePath = implode([
+                static::getResource()::PASSWORD_STORAGE,
+                DIRECTORY_SEPARATOR,
+                $privateKey->getPublickey()->getFingerprint('sha256'),
+            ]);
+            Storage::disk(app(AppSettings::class)->passphraseStore())->put(
+                $storePath,
+                Crypt::encryptString($password)
+            );
+        }
 
         return $data;
     }

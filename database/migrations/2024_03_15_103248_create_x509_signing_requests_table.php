@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('x509_signing_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('domain_id')->index();
-            $table->string('cn');
+            $table->string('cn')->index();
             $table->string('country')->nullable();
             $table->string('state')->nullable();
             $table->string('locality')->nullable();
