@@ -30,9 +30,9 @@ return [
 
     'disks' => [
 
-        'key_vault' => [
+        'password_vault' => [
             'driver' => 'local',
-            'root' => env('KEY_VAULT_ROOT', storage_path('app/key_vault')),
+            'root' => env('PASSWORD_VAULT_ROOT', storage_path('app/password_vault')),
             'throw' => false,
         ],
 
