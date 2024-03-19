@@ -137,7 +137,7 @@ class CreateX509SigningRequest extends CreateRecord
         $data['csr_data'] = self::createCsr($privateKey, [
             'cn' => $data['cn'],
             'c' => $data['country'],
-            'st' => $data['province'],
+            'st' => $data['state'],
             'l' => $data['locality'],
             'o' => $data['organization'],
             'ou' => $data['organization_unit'],

@@ -47,11 +47,12 @@ class CertificatesRelationManager extends RelationManager
                     $certInfo = $cert->loadX509($value->get());
 
                     $serialNumber = $certInfo['tbsCertificate']['serialNumber'];
-                    X509Certificate::where(
+                    $count = X509Certificate::where(
                         'serial_number', $serialNumber->toHex()
-                    )->firstOr(function () use ($fail) {
+                    )->count();
+                    if ($count) {
                         $fail(__('Certificate already exists.'));
-                    });
+                    }
 
                     $csr = new X509();
                     $csr->loadCSR($this->ownerRecord->csr_data);
@@ -77,8 +78,8 @@ class CertificatesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('subject_dn')->label(__('Subject DN')),
-            TextColumn::make('issuer_dn')->label(__('Issuer DN')),
+            TextColumn::make('subject_dn')->wrap()->label(__('Subject DN')),
+            TextColumn::make('issuer_dn')->wrap()->label(__('Issuer DN')),
             TextColumn::make('serial_number')->label(__('Serial Number')),
             TextColumn::make('not_before')->label(__('Not Before')),
             TextColumn::make('not_after')->label(__('Not After')),
