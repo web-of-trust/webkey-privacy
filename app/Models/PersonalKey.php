@@ -8,12 +8,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{
-    BelongsTo,
-    HasOne,
+use Illuminate\Database\Eloquent\{
+    Factories\HasFactory,
+    Relations\BelongsTo,
+    Relations\HasOne,
+    Model,
 };
-use Illuminate\Database\Eloquent\Model;
 use OpenPGP\OpenPGP;
 
 /**

@@ -8,12 +8,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{
-    BelongsTo,
-    HasMany,
+use Illuminate\Database\Eloquent\{
+    Factories\HasFactory,
+    Relations\BelongsTo,
+    Relations\HasMany,
+    Model,
 };
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * X509 signing request model

@@ -8,16 +8,20 @@
 
 namespace App\Filament\Resources\X509SigningRequestResource\RelationManagers;
 
+use App\Filament\Resources\X509CertificateResource;
 use App\Models\X509Certificate;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Form;
+use Filament\Forms\{
+    Components\FileUpload,
+    Components\Hidden,
+    Form,
+};
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\CreateAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\{
+    Actions\Action,
+    Actions\CreateAction,
+    Columns\TextColumn,
+    Table,
+};
 use phpseclib3\File\X509;
 
 /**
@@ -117,6 +121,11 @@ class CertificatesRelationManager extends RelationManager
                 ->label(__('New Certificate')),
         ])
         ->actions([
+            Action::make('export_cert')->label(__('Export'))
+                ->icon('heroicon-m-arrow-down-tray')
+                ->action(function ($record) {
+                    return X509CertificateResource::exportCertificate($record);
+                }),
         ])->recordTitleAttribute('Certificates');
     }
 }
