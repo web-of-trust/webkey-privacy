@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('domain_id')->index();
             $table->unsignedInteger('signing_request_id')->index();
+            $table->string('serial_number')->unique();
             $table->string('subject_cn');
             $table->string('issuer_cn');
             $table->timestamp('not_before')->nullable();
             $table->timestamp('not_after')->nullable();
-            $table->string('fingerprint');
             $table->text('certificate_data')->nullable();
             $table->timestamps();
         });

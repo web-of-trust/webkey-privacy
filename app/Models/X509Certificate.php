@@ -33,11 +33,11 @@ class X509Certificate extends Model
     protected $fillable = [
         'domain_id',
         'signing_request_id',
+        'serial_number',
         'subject_cn',
         'issuer_cn',
         'not_before',
         'not_after',
-        'fingerprint',
         'certificate_data',
     ];
 

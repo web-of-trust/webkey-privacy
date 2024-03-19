@@ -111,7 +111,7 @@ class CreateX509SigningRequest extends CreateRecord
                 TextInput::make('password')->readonly()
                     ->default(self::randomPassphrase())
                     ->helperText('You must remember and/or save the password.')
-                    ->hidden(fn (Get $get): bool => ! $get('with_password'))
+                    ->hidden(fn (Get $get): bool => !$get('with_password'))
                     ->hintActions([
                         Action::make('change')
                             ->label(__('Change'))
