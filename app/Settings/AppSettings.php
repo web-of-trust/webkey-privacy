@@ -80,22 +80,22 @@ final class AppSettings extends Settings
         return [
             Select::make('key_type')->options(self::$keyTypeOptions)->default(
                 $settings->key_type
-            )->live()->required()->selectablePlaceholder(false)->label(__('Key Type')),
+            )->live()->required()->label(__('Key Type')),
             Select::make('elliptic_curve')->options(self::$eccOptions)->default(
                 $settings->elliptic_curve
             )->hidden(
                 fn (Get $get) => $get('key_type') !== KeyType::Ecc->name
-            )->required()->selectablePlaceholder(false)->label(__('Elliptic Curve')),
+            )->required()->label(__('Elliptic Curve')),
             Select::make('rsa_key_size')->options(self::$rsaSizeOptions)->default(
                 $settings->rsa_key_size
             )->hidden(
                 fn (Get $get) => $get('key_type') !== KeyType::Rsa->name
-            )->required()->selectablePlaceholder(false)->label(__('RSA Key Size')),
+            )->required()->label(__('RSA Key Size')),
             Select::make('dh_key_size')->options(self::$dhSizeOptions)->default(
                 $settings->dh_key_size
             )->hidden(
                 fn (Get $get) => $get('key_type') !== KeyType::Dsa->name
-            )->required()->selectablePlaceholder(false)->label(__('DSA-ElGamal Key Size')),
+            )->required()->label(__('DSA-ElGamal Key Size')),
         ];
     }
 

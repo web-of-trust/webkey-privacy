@@ -76,7 +76,7 @@ class Domain extends Model
                 $model->key_data
             )->toPublic();
 
-            Certificate::create([
+            OpenPGPCertificate::create([
                 'domain_id' => $model->id,
                 'fingerprint' => $publicKey->getFingerprint(true),
                 'key_id' => $publicKey->getKeyID(true),
