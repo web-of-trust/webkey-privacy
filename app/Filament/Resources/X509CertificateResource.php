@@ -50,7 +50,7 @@ class X509CertificateResource extends Resource
         );
         file_put_contents($filePath, $record->certificate_data);
         return response()->download(
-            $filePath, $record->serial_number . '.cert', [
+            $filePath, $record->csr->cn . '.cert', [
                 'Content-Type' => 'application/pkcs',
             ]
         )->deleteFileAfterSend(true);
