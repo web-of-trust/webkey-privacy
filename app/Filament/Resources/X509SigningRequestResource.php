@@ -76,7 +76,7 @@ class X509SigningRequestResource extends Resource
         file_put_contents($filePath, $record->csr_data);
         return response()->download(
             $filePath, $record->cn . '.csr', [
-                'Content-Type' => 'application/pkcs8',
+                'Content-Type' => 'application/pkcs',
             ]
         )->deleteFileAfterSend(true);
     }
