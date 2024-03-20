@@ -95,7 +95,14 @@ class CreateX509SigningRequest extends CreateRecord
             ]),
             Fieldset::make(__('Key Settings'))->schema([
                 Select::make('key_algorithm')->options(
-                    collect(KeyAlgorithmsEnum::cases())->pluck('name', 'value')
+                    collect(
+                        array_map(function ($keyAlgo) {
+                            return [
+                                'label' => $keyAlgo->label(),
+                                'value' => $keyAlgo->value,
+                            ];
+                        }, KeyAlgorithmsEnum::cases())
+                    )->pluck('label', 'value')
                 )->default(
                     KeyAlgorithmsEnum::Rsa->value
                 )->selectablePlaceholder(false)->label(__('Key Algorithm')),

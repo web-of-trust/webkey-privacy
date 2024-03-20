@@ -22,4 +22,15 @@ enum KeyAlgorithmsEnum: int
     case NistP384 = 3;
     case NistP521 = 4;
     case Ed25519 = 5;
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::Rsa => 'Rsa',
+            self::NistP256  => 'NIST Curve P-256',
+            self::NistP384  => 'NIST Curve P-384',
+            self::NistP521  => 'NIST Curve P-521',
+            self::Ed25519  => 'Edwards Curve 25519',
+        };
+    }
 }
