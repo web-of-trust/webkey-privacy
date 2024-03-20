@@ -133,7 +133,7 @@ final class AppSettings extends Settings
                 return $curve;
             }
         }
-        return CurveOid::Ed25519;
+        return CurveOid::Secp521r1;
     }
 
     public function rsaKeySize(): RSAKeySize
@@ -143,7 +143,7 @@ final class AppSettings extends Settings
                 return $keySize;
             }
         }
-        return RSAKeySize::S3072;
+        return RSAKeySize::S2048;
     }
 
     public function dhKeySize(): DHKeySize
