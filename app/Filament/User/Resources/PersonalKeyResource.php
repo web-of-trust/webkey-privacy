@@ -9,7 +9,7 @@
 namespace App\Filament\User\Resources;
 
 use App\Filament\User\Resources\PersonalKeyResource\Pages;
-use App\Models\PersonalKey;
+use App\Models\OpenPGPPersonalKey;
 use Filament\Resources\Resource;
 use Filament\Infolists\Components\{
     Fieldset,
@@ -28,7 +28,7 @@ class PersonalKeyResource extends Resource
 {
     const PASSWORD_STORAGE_ITEM = 'wkp-password';
 
-    protected static ?string $model = PersonalKey::class;
+    protected static ?string $model = OpenPGPPersonalKey::class;
     protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $slug = 'personal-key';
 
