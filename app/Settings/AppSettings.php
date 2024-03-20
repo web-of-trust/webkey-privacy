@@ -8,7 +8,10 @@
 
 namespace App\Settings;
 
-use Filament\Forms\Components\Select;
+use Filament\Forms\{
+    Components\Select,
+    Get,
+};
 use Illuminate\Support\Str;
 use OpenPGP\Enum\{
     CurveOid,
@@ -53,11 +56,11 @@ final class AppSettings extends Settings
         CurveOid::Ed25519->name => 'Edwards Curve 25519',
     ];
     private static array $rsaSizeOptions = [
-        RSAKeySize::S2048->name => RSAKeySize::S2048->value . ' bits',
-        RSAKeySize::S2560->name => RSAKeySize::S2560->value . ' bits',
-        RSAKeySize::S3072->name => RSAKeySize::S3072->value . ' bits',
-        RSAKeySize::S3584->name => RSAKeySize::S3584->value . ' bits',
-        RSAKeySize::S4096->name => RSAKeySize::S4096->value . ' bits',
+        RSAKeySize::S2048->name => '2048 bits',
+        RSAKeySize::S2560->name => '2560 bits',
+        RSAKeySize::S3072->name => '3072 bits',
+        RSAKeySize::S3584->name => '3584 bits',
+        RSAKeySize::S4096->name => '4096 bits',
     ];
     private static array $dhSizeOptions = [
         DHKeySize::L1024_N160->name => '1024 bits',
@@ -77,15 +80,21 @@ final class AppSettings extends Settings
         return [
             Select::make('key_type')->options(self::$keyTypeOptions)->default(
                 $settings->key_type
-            )->required()->selectablePlaceholder(false)->label(__('Key Type')),
+            )->live()->required()->selectablePlaceholder(false)->label(__('Key Type')),
             Select::make('elliptic_curve')->options(self::$eccOptions)->default(
                 $settings->elliptic_curve
+            )->hidden(
+                fn (Get $get) => $get('key_type') !== KeyType::Ecc->name
             )->required()->selectablePlaceholder(false)->label(__('Elliptic Curve')),
             Select::make('rsa_key_size')->options(self::$rsaSizeOptions)->default(
                 $settings->rsa_key_size
+            )->hidden(
+                fn (Get $get) => $get('key_type') !== KeyType::Rsa->name
             )->required()->selectablePlaceholder(false)->label(__('RSA Key Size')),
             Select::make('dh_key_size')->options(self::$dhSizeOptions)->default(
                 $settings->dh_key_size
+            )->hidden(
+                fn (Get $get) => $get('key_type') !== KeyType::Dsa->name
             )->required()->selectablePlaceholder(false)->label(__('DSA-ElGamal Key Size')),
         ];
     }
