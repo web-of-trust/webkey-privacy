@@ -103,10 +103,10 @@ class CertificatesRelationManager extends RelationManager
                     $notAfter = isset($notAfter['generalTime']) ? $notAfter['generalTime'] : $notAfter['utcTime'];
 
                     $data['not_before'] = new \DateTimeImmutable(
-                        $notBefore, new \DateTimeZone(@date_default_timezone_get())
+                        $notBefore, new \DateTimeZone('GMT')
                     );
                     $data['not_after'] = new \DateTimeImmutable(
-                        $notAfter, new \DateTimeZone(@date_default_timezone_get())
+                        $notAfter, new \DateTimeZone('GMT')
                     );
 
                     $serialNumber = $certInfo['tbsCertificate']['serialNumber'];
