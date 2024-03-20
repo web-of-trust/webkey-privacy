@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Builder;
 class ListOpenPGPCertificates extends ListRecords
 {
     protected static string $resource = OpenPGPCertificateResource::class;
+    protected static ?string $title = 'Certificates';
 
     public function table(Table $table): Table
     {
@@ -89,6 +90,8 @@ class ListOpenPGPCertificates extends ListRecords
                 ->action(function ($record) {
                     return self::getResource()::exportKey($record);
                 }),
-        ])->defaultSort('creation_time', 'desc');
+        ])->emptyStateHeading(
+            __('No certificate yet')
+        )->defaultSort('creation_time', 'desc');
     }
 }
