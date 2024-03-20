@@ -95,13 +95,11 @@ class CreateX509SigningRequest extends CreateRecord
             ]),
             Fieldset::make(__('Key Settings'))->schema([
                 Select::make('key_algorithm')->options(
-                    collect(
-                        array_map(function ($keyAlgo) {
-                            return [
-                                'label' => $keyAlgo->label(),
-                                'value' => $keyAlgo->value,
-                            ];
-                        }, KeyAlgorithmsEnum::cases())
+                    collect(KeyAlgorithmsEnum::cases())->map(
+                        fn ($algo) => [
+                            'label' => $algo->label(),
+                            'value' => $algo->value,
+                        ]
                     )->pluck('label', 'value')
                 )->default(
                     KeyAlgorithmsEnum::Rsa->value
@@ -118,7 +116,7 @@ class CreateX509SigningRequest extends CreateRecord
                 TextInput::make('password')->readonly()
                     ->default(self::randomPassphrase())
                     ->helperText('You must remember and/or save the password.')
-                    ->hidden(fn (Get $get): bool => !$get('with_password'))
+                    ->hidden(fn (Get $get) => !$get('with_password'))
                     ->hintActions([
                         Action::make('change')
                             ->label(__('Change'))
