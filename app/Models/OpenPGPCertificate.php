@@ -116,7 +116,7 @@ class OpenPGPCertificate extends Model
 
     public function revocation(): HasOne
     {
-        return $this->hasOne(Revocation::class, 'certificate_id', 'id');
+        return $this->hasOne(OpenPGPRevocation::class, 'certificate_id', 'id');
     }
 
     private static function extractEmail(string $userId): string

@@ -105,7 +105,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function hasActivePersonalKey(): bool
     {
-        return PersonalKey::where([
+        return OpenPGPPersonalKey::where([
             'user_id' => $this->id,
             'is_revoked' => false,
         ])->count() > 0;

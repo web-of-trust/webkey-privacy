@@ -77,7 +77,7 @@ class OpenPGPPersonalKey extends Model
                 $parts = explode('@', User::find($model->user_id)->email);
                 $domain = Domain::firstWhere('name', $parts[1] ?? '');
 
-                $model->certificate_id = Certificate::create([
+                $model->certificate_id = OpenPGPCertificate::create([
                     'domain_id' => $domain->id,
                     'fingerprint' => $publicKey->getFingerprint(true),
                     'key_id' => $publicKey->getKeyID(true),
