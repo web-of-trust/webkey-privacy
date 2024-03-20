@@ -55,7 +55,7 @@ class ViewX509SigningRequest extends ViewRecord
             ]),
             Fieldset::make(__('Key Information'))->schema([
                 TextEntry::make('key_algorithm')->formatStateUsing(
-                    static fn (int $state): string => KeyAlgorithmsEnum::tryFrom($state)->name
+                    static fn (int $state): ?string => KeyAlgorithmsEnum::tryFrom($state)?->label()
                 )->label(__('Key Algorithm')),
                 TextEntry::make('key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),

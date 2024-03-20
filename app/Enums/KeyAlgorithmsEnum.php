@@ -26,7 +26,7 @@ enum KeyAlgorithmsEnum: int
     public function label(): string
     {
         return match ($this) {
-            self::Rsa => 'Rsa',
+            self::Rsa => 'RSA',
             self::NistP256  => 'NIST Curve P-256',
             self::NistP384  => 'NIST Curve P-384',
             self::NistP521  => 'NIST Curve P-521',
