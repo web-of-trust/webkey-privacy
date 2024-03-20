@@ -43,14 +43,14 @@ final class AppSettings extends Settings
         KeyType::Ecc->name => 'Elliptic Curve',
     ];
     private static array $eccOptions = [
-        CurveOid::Secp256k1->name => 'SECP 256k1 Curve',
-        CurveOid::Prime256v1->name => 'NIST P-256 Curve',
-        CurveOid::Secp384r1->name => 'NIST P-384 Curve',
-        CurveOid::Secp521r1->name => 'NIST P-521 Curve',
-        CurveOid::BrainpoolP256r1->name => 'BrainpoolP256r1 Curve',
-        CurveOid::BrainpoolP384r1->name => 'BrainpoolP384r1 Curve',
-        CurveOid::BrainpoolP512r1->name => 'BrainpoolP512r1 Curve',
-        CurveOid::Ed25519->name => 'Curve 25519',
+        CurveOid::Secp256k1->name => 'SECP Curve 256k1',
+        CurveOid::Prime256v1->name => 'NIST Curve P-256',
+        CurveOid::Secp384r1->name => 'NIST Curve P-384',
+        CurveOid::Secp521r1->name => 'NIST Curve P-521',
+        CurveOid::BrainpoolP256r1->name => 'Brainpool Curve P-256r1 ',
+        CurveOid::BrainpoolP384r1->name => 'Brainpool Curve P-384r1 ',
+        CurveOid::BrainpoolP512r1->name => 'Brainpool Curve P-512r1 ',
+        CurveOid::Ed25519->name => 'Edwards Curve 25519',
     ];
     private static array $rsaSizeOptions = [
         RSAKeySize::S2048->name => RSAKeySize::S2048->value . ' bits',
