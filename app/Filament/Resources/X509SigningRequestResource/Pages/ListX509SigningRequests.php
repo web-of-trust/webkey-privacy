@@ -10,9 +10,14 @@ namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
 use App\Filament\Resources\X509SigningRequestResource;
 use App\Enums\KeyAlgorithmsEnum;
-use App\Models\Domain;
+use App\Models\{
+    Domain,
+    X509SigningRequest,
+};
+use App\Settings\AppSettings;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
@@ -21,6 +26,10 @@ use Filament\Tables\Filters\{
     SelectFilter,
 };
 use Filament\Tables\Table;
+use Illuminate\Support\{
+    Facades\Crypt,
+    Facades\Storage,
+};
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -67,6 +76,17 @@ class ListX509SigningRequests extends ListRecords
                     Domain::all()->pluck('name', 'id')
                 )->label(__('Domain')),
         ])->actions([
+            Action::make('view_password')
+                ->hidden(
+                    fn ($record) => !$record->with_password
+                )
+                ->infolist([
+                    TextEntry::make('key_password')
+                        ->state(fn ($record) => self::viewPassword($record))
+                        ->label(__('Key Password')),
+                ])
+                ->modalSubmitAction(false)
+                ->icon('heroicon-m-eye')->iconButton()->label(__('View Password')),
             Action::make('export_key')->label(__('Export Key'))
                 ->icon('heroicon-m-arrow-down-tray')
                 ->action(
@@ -85,5 +105,19 @@ class ListX509SigningRequests extends ListRecords
         return [
             CreateAction::make()->label(__('New Signing Request')),
         ];
+    }
+
+    private static function viewPassword(X509SigningRequest $record): string
+    {
+        $storePath = implode([
+            self::getResource()::PASSWORD_STORAGE,
+            DIRECTORY_SEPARATOR,
+            $record->fingerprint,
+        ]);
+        return Crypt::decryptString(
+            Storage::disk(
+                app(AppSettings::class)->passwordStore()
+            )->get($storePath)
+        );
     }
 }

@@ -41,6 +41,7 @@ class X509SigningRequest extends Model
         'locality',
         'organization',
         'organization_unit',
+        'fingerprint',
         'key_algorithm',
         'key_strength',
         'with_password',

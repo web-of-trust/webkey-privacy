@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('locality')->nullable();
             $table->string('organization')->nullable();
             $table->string('organization_unit')->nullable();
+            $table->string('fingerprint');
             $table->mediumInteger('key_algorithm');
             $table->mediumInteger('key_strength');
             $table->boolean('with_password')->default(false);

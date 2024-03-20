@@ -148,11 +148,14 @@ class CreateX509SigningRequest extends CreateRecord
             'ou' => $data['organization_unit'],
         ]);
 
+        $fingerprint = $privateKey->getPublickey()->getFingerprint('sha256');
+        $data['fingerprint'] = $fingerprint;
+
         if (!empty($password)) {
             $storePath = implode([
-                static::getResource()::PASSWORD_STORAGE,
+                self::getResource()::PASSWORD_STORAGE,
                 DIRECTORY_SEPARATOR,
-                $privateKey->getPublickey()->getFingerprint('sha256'),
+                $fingerprint,
             ]);
             Storage::disk(app(AppSettings::class)->passwordStore())->put(
                 $storePath,
