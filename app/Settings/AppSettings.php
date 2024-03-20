@@ -108,12 +108,14 @@ final class AppSettings extends Settings
 
     public function passwordStore(): string
     {
-        return $this->password_store ?: self::PASSWORD_STORE;
+        return empty($this->password_store) ?
+               self::PASSWORD_STORE : $this->password_store;
     }
 
     public function passwordLength(): int
     {
-        return $this->password_length ?: self::PASSWORD_LENGTH;
+        return $this->password_length < self::PASSWORD_LENGTH ?
+               self::PASSWORD_LENGTH : $this->password_length;
     }
 
     public function keyType(): KeyType
