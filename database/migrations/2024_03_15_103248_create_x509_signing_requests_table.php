@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('organization_unit')->nullable();
             $table->mediumInteger('key_algorithm');
             $table->mediumInteger('key_strength');
+            $table->boolean('with_password')->default(false);
             $table->text('key_data')->nullable();
             $table->text('csr_data')->nullable();
             $table->timestamps();

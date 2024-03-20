@@ -134,7 +134,7 @@ class CreateX509SigningRequest extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $password = !empty($data['with_password']) ? $data['password'] : false;
+        $password = $data['password'] ?? null;
         $keyAlgo = KeyAlgorithmsEnum::from((int) $data['key_algorithm']);
         $privateKey = self::createKey(
             $keyAlgo, $password, $data['rsa_key_size']
@@ -176,7 +176,9 @@ class CreateX509SigningRequest extends CreateRecord
     }
 
     private static function createKey(
-        KeyAlgorithmsEnum $keyAlgo, $password = false, int $rsaKeySize = 2048
+        KeyAlgorithmsEnum $keyAlgo,
+        ?string $password = null,
+        int $rsaKeySize = 2048
     ): PrivateKey
     {
         return match ($keyAlgo) {

@@ -43,8 +43,18 @@ class X509SigningRequest extends Model
         'organization_unit',
         'key_algorithm',
         'key_strength',
+        'with_password',
         'key_data',
         'csr_data',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'with_password' => 'boolean',
     ];
 
     public function domain(): BelongsTo
