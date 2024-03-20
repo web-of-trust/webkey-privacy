@@ -44,7 +44,7 @@ class CertificatesRelationManager extends RelationManager
     {
         return $form->schema([
             FileUpload::make('cert_file')->required()->rules([
-                fn (): \Closure => function (
+                fn (): => function (
                     string $attribute, mixed $value, \Closure $fail
                 ) {
                     $cert = new X509();
@@ -58,17 +58,14 @@ class CertificatesRelationManager extends RelationManager
                         $fail(__('Certificate already exists.'));
                     }
 
-                    $csr = new X509();
-                    $csr->loadCSR($this->ownerRecord->csr_data);
+                    $fingerprint = $cert->getPublicKey()->getFingerprint('sha256');
+                    if ($fingerprint !== $this->ownerRecord->fingerprint) {
+                        $fail(__('Public key fingerprint does not match.'));
+                    }
 
-                    $certFp = $cert->getPublicKey()->getFingerprint();
-                    $certCn = $cert->getSubjectDNProp('cn')[0];
-                    $csrFp = $csr->getPublicKey()->getFingerprint();
-                    $csrCn = $csr->getDNProp('cn')[0];
-
-                    $invalid = ($certFp !== $csrFp) || ($certCn !== $csrCn);
-                    if ($invalid) {
-                        $fail(__('Certificate file is invalid.'));
+                    $cn = $cert->getSubjectDNProp('cn')[0];
+                    if ($cn !== $this->ownerRecord->cn) {
+                        $fail(__('Subject common name does not match.'));
                     }
                 },
             ])->storeFiles(false)->label(__('Certificate File')),
@@ -85,7 +82,7 @@ class CertificatesRelationManager extends RelationManager
             TextColumn::make('subject_dn')->wrap()->label(__('Subject DN')),
             TextColumn::make('issuer_dn')->wrap()->label(__('Issuer DN')),
             TextColumn::make('serial_number')->formatStateUsing(
-                static fn (string $state): string => strtoupper($state)
+                fn (string $state): string => strtoupper($state)
             )->label(__('Serial Number')),
             TextColumn::make('not_before')->wrap()->label(__('Not Before')),
             TextColumn::make('not_after')->wrap()->label(__('Not After')),
@@ -123,9 +120,9 @@ class CertificatesRelationManager extends RelationManager
         ->actions([
             Action::make('export_cert')->label(__('Export'))
                 ->icon('heroicon-m-arrow-down-tray')
-                ->action(function ($record) {
-                    return X509CertificateResource::exportCertificate($record);
-                }),
+                ->action(
+                    fn ($record) => X509CertificateResource::exportCertificate($record)
+                ),
         ])->recordTitleAttribute('Certificates');
     }
 }
