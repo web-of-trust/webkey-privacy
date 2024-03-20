@@ -51,11 +51,11 @@ class OpenPGPCertificateResource extends Resource
     public static function exportKey(OpenPGPCertificate $model)
     {
         $filePath = tempnam(
-            sys_get_temp_dir(), $model->fingerprint
+            sys_get_temp_dir(), $model->key_id
         );
         file_put_contents($filePath, $model->key_data);
         return response()->download(
-            $filePath, $model->fingerprint . '.asc', [
+            $filePath, $model->key_id . '.asc', [
                 'Content-Type' => 'application/pgp-keys',
             ]
         )->deleteFileAfterSend(true);
@@ -66,17 +66,15 @@ class OpenPGPCertificateResource extends Resource
         return KeyAlgorithm::tryFrom($algo)?->name ?? '';
     }
 
-    public static function revocationReason(int $tag): ?string
+    public static function revocationReason(int $tag): string
     {
-        $reason = RevocationReasonTag::tryFrom($tag);
-        if ($reason) {
-            return match ($reason) {
-                RevocationReasonTag::NoReason => __('No reason'),
-                RevocationReasonTag::KeySuperseded => __('Key is superseded'),
-                RevocationReasonTag::KeyCompromised => __('Key has been compromised'),
-                RevocationReasonTag::KeyRetired => __('Key is retired'),
-                RevocationReasonTag::UserIDInvalid => __('User ID is invalid'),
-            };
-        }
+        return match (RevocationReasonTag::tryFrom($tag)) {
+            RevocationReasonTag::NoReason => __('No reason'),
+            RevocationReasonTag::KeySuperseded => __('Key is superseded'),
+            RevocationReasonTag::KeyCompromised => __('Key has been compromised'),
+            RevocationReasonTag::KeyRetired => __('Key is retired'),
+            RevocationReasonTag::UserIDInvalid => __('User ID is invalid'),
+            default => '',
+        };
     }
 }
