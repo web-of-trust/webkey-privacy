@@ -6,10 +6,9 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Filament\Resources\CertificateResource\Pages;
+namespace App\Filament\Resources\OpenPGPCertificateResource\Pages;
 
-use App\Filament\Resources\CertificateResource;
-use App\Infolists\Components\CertificateKey;
+use App\Filament\Resources\OpenPGPCertificateResource;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\{
     Fieldset,
@@ -20,15 +19,15 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 
 /**
- * View certificate record page
+ * View OpenPGP certificate record page
  *
  * @package  App
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class ViewCertificate extends ViewRecord
+class ViewOpenPGPCertificate extends ViewRecord
 {
-    protected static string $resource = CertificateResource::class;
+    protected static string $resource = OpenPGPCertificateResource::class;
 
     public function infolist(Infolist $infolist): Infolist
     {

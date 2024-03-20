@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('certificates', function (Blueprint $table) {
+        Schema::create('openpgp_certificates', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('domain_id')->index();
             $table->string('fingerprint', 64)->unique();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('certificates');
+        Schema::dropIfExists('openpgp_certificates');
     }
 };

@@ -21,19 +21,19 @@ use OpenPGP\{
 use ParagonIE\ConstantTime\Base32;
 
 /**
- * Certificate model
+ * OpenPGP certificate model
  *
  * @package  App
  * @category Models
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class Certificate extends Model
+class OpenPGPCertificate extends Model
 {
     use HasFactory;
 
-    const EMAIL_PATTERN = '/[\w\.-]+@[\w\.-]+\.\w{2,4}/';
+    const EMAIL_PATTERN = '/([A-Z0-9._%+-])+@[A-Z0-9.-]+\.[A-Z]{2,}/i';
 
-    protected $table = 'certificates';
+    protected $table = 'openpgp_certificates';
 
     /**
      * The attributes that are mass assignable.

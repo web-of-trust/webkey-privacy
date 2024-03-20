@@ -8,18 +8,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CertificateResource;
-use App\Models\Certificate;
+use App\Http\Resources\OpenPGPCertificateResource;
+use App\Models\OpenPGPCertificate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Certificate controller
+ * OpenPGP Certificate controller
  *
  * @package  App
  * @category Http
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class CertificateController extends Controller
+class OpenPGPCertificateController extends Controller
 {
     /**
      * List all certificates.
@@ -29,8 +29,8 @@ class CertificateController extends Controller
     public function __invoke(): JsonResource
     {
         JsonResource::withoutWrapping();
-        return CertificateResource::collection(
-            Certificate::with('domain')->orderBy('creation_time', 'desc')->get()
+        return OpenPGPCertificateResource::collection(
+            OpenPGPCertificate::with('domain')->orderBy('creation_time', 'desc')->get()
         );
     }
 }

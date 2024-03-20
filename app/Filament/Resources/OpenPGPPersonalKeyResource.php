@@ -8,34 +8,34 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PersonalKeyResource\Pages;
-use App\Models\PersonalKey;
+use App\Filament\Resources\OpenPGPPersonalKeyResource\Pages;
+use App\Models\OpenPGPPersonalKey;
 use Filament\Resources\Resource;
 
 /**
- * Personal key resource
+ * OpenPGP personal key resource
  *
  * @package  App
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class PersonalKeyResource extends Resource
+class OpenPGPPersonalKeyResource extends Resource
 {
-    protected static ?string $model = PersonalKey::class;
+    protected static ?string $model = OpenPGPPersonalKey::class;
     protected static ?string $navigationGroup = 'OpenPGP';
     protected static ?string $navigationIcon = 'heroicon-o-key';
-    protected static ?string $slug = 'personal-key';
+    protected static ?string $slug = 'openpgp/personal-key';
 
     public static function getNavigationLabel(): string
     {
-        return __('Personal Keys');
+        return __('OpenPGP Personal Keys');
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPersonalKeys::route('/'),
-            'view' => Pages\ViewPersonalKey::route('/{record}'),
+            'index' => Pages\ListOpenPGPPersonalKeys::route('/'),
+            'view' => Pages\ViewOpenPGPPersonalKey::route('/{record}'),
         ];
     }
 }

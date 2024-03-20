@@ -15,17 +15,17 @@ use Illuminate\Database\Eloquent\{
 };
 
 /**
- * Revocation model
+ * OpenPGP revocation model
  *
  * @package  App
  * @category Models
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class Revocation extends Model
+class OpenPGPRevocation extends Model
 {
     use HasFactory;
 
-    protected $table = 'revocations';
+    protected $table = 'openpgp_revocations';
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +41,6 @@ class Revocation extends Model
 
     public function certificate(): HasOne
     {
-        return $this->hasOne(Certificate::class, 'certificate_id');
+        return $this->hasOne(OpenPGPCertificate::class, 'certificate_id');
     }
 }

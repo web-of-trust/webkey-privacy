@@ -12,13 +12,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Certificate resource
+ * OpenPGP certificate resource
  *
  * @package  App
  * @category Http
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class CertificateResource extends JsonResource
+class OpenPGPCertificateResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

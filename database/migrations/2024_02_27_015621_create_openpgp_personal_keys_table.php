@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personal_keys', function (Blueprint $table) {
+        Schema::create('openpgp_personal_keys', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('certificate_id');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personal_keys');
+        Schema::dropIfExists('openpgp_personal_keys');
     }
 };

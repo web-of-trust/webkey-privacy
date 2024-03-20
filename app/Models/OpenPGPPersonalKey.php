@@ -17,17 +17,17 @@ use Illuminate\Database\Eloquent\{
 use OpenPGP\OpenPGP;
 
 /**
- * Personal key model
+ * OpenPGP personal key model
  *
  * @package  App
  * @category Models
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class PersonalKey extends Model
+class OpenPGPPersonalKey extends Model
 {
     use HasFactory;
 
-    protected $table = 'personal_keys';
+    protected $table = 'openpgp_personal_keys';
 
     /**
      * The attributes that are mass assignable.
@@ -116,7 +116,7 @@ class PersonalKey extends Model
 
     public function certificate(): HasOne
     {
-        return $this->hasOne(Certificate::class, 'id', 'certificate_id');
+        return $this->hasOne(OpenPGPCertificate::class, 'id', 'certificate_id');
     }
 
     public function user(): BelongsTo

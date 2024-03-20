@@ -8,8 +8,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CertificateResource\Pages;
-use App\Models\Certificate;
+use App\Filament\Resources\OpenPGPCertificateResource\Pages;
+use App\Models\OpenPGPCertificate;
 use Filament\Resources\Resource;
 use OpenPGP\Enum\{
     KeyAlgorithm,
@@ -17,33 +17,33 @@ use OpenPGP\Enum\{
 };
 
 /**
- * Certificate resource
+ * OpenPGP certificate resource
  *
  * @package  App
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class CertificateResource extends Resource
+class OpenPGPCertificateResource extends Resource
 {
-    protected static ?string $model = Certificate::class;
+    protected static ?string $model = OpenPGPCertificate::class;
     protected static ?string $navigationGroup = 'OpenPGP';
     protected static ?string $navigationIcon = 'heroicon-o-identification';
-    protected static ?string $slug = 'certificate';
+    protected static ?string $slug = 'openpgp/certificate';
 
     public static function getNavigationLabel(): string
     {
-        return __('Certificates');
+        return __('OpenPGP Certificates');
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCertificates::route('/'),
-            'view' => Pages\ViewCertificate::route('/{record}'),
+            'index' => Pages\ListOpenPGPCertificates::route('/'),
+            'view' => Pages\ViewOpenPGPCertificate::route('/{record}'),
         ];
     }
 
-    public static function exportKey(Certificate $model)
+    public static function exportKey(OpenPGPCertificate $model)
     {
         $filePath = tempnam(
             sys_get_temp_dir(), $model->fingerprint

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\OpenPGPCertificateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/v1/certificate', CertificateController::class);
+Route::get('/openpgp/certificate', OpenPGPCertificateController::class);

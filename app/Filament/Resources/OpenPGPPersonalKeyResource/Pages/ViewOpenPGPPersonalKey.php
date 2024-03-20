@@ -6,15 +6,15 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Filament\Resources\PersonalKeyResource\Pages;
+namespace App\Filament\Resources\OpenPGPPersonalKeyResource\Pages;
 
 use App\Filament\Resources\{
-    CertificateResource,
-    PersonalKeyResource,
+    OpenPGPCertificateResource,
+    OpenPGPPersonalKeyResource,
 };
 use App\Models\{
     Domain,
-    Revocation,
+    OpenPGPRevocation,
 };
 use App\Settings\AppSettings;
 use Filament\Actions\Action;
@@ -38,15 +38,15 @@ use OpenPGP\Enum\RevocationReasonTag;
 use OpenPGP\OpenPGP;
 
 /**
- * View personal key record page
+ * View OpenPGP personal key record page
  *
  * @package  App
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class ViewPersonalKey extends ViewRecord
+class ViewOpenPGPPersonalKey extends ViewRecord
 {
-    protected static string $resource = PersonalKeyResource::class;
+    protected static string $resource = OpenPGPPersonalKeyResource::class;
     protected ?string $previousUrl = null;
 
     public function mount(int | string $record): void
@@ -68,7 +68,7 @@ class ViewPersonalKey extends ViewRecord
                     static fn (string $state): string => strtoupper($state)
                 )->label(__('Key ID')),
                 TextEntry::make('certificate.key_algorithm')->formatStateUsing(
-                    static fn (int $state): string => CertificateResource::keyAlgorithm($state)
+                    static fn (int $state): string => OpenPGPCertificateResource::keyAlgorithm($state)
                 )->label(__('Key Algorithm')),
                 TextEntry::make('certificate.key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),
@@ -90,7 +90,7 @@ class ViewPersonalKey extends ViewRecord
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
             Fieldset::make(__('Revocation'))->schema([
                 TextEntry::make('certificate.revocation.tag')->formatStateUsing(
-                    static fn (int $state): string => CertificateResource::revocationReason($state)
+                    static fn (int $state): string => OpenPGPCertificateResource::revocationReason($state)
                 )->label(__('Reason')),
                 TextEntry::make('certificate.revocation.reason')->label(__('Description')),
             ])->hidden(!$this->record->is_revoked),
@@ -134,7 +134,7 @@ class ViewPersonalKey extends ViewRecord
                                 $data['reason'],
                                 RevocationReasonTag::from((int) $data['tag'])
                             );
-                            Revocation::create([
+                            OpenPGPRevocation::create([
                                 'certificate_id' => $this->record->certificate_id,
                                 'revoke_by' => $domainKey->getFingerprint(true),
                                 'tag' => $data['tag'],
