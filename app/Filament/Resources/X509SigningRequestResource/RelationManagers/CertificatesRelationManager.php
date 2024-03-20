@@ -48,24 +48,27 @@ class CertificatesRelationManager extends RelationManager
                     string $attribute, mixed $value, \Closure $fail
                 ) {
                     $cert = new X509();
-                    $certInfo = $cert->loadX509($value->get());
+                    if ($certInfo = $cert->loadX509($value->get())) {
+                        $serialNumber = $certInfo['tbsCertificate']['serialNumber'];
+                        $count = X509Certificate::where(
+                            'serial_number', $serialNumber->toHex()
+                        )->count();
+                        if ($count) {
+                            $fail(__('Certificate already exists.'));
+                        }
 
-                    $serialNumber = $certInfo['tbsCertificate']['serialNumber'];
-                    $count = X509Certificate::where(
-                        'serial_number', $serialNumber->toHex()
-                    )->count();
-                    if ($count) {
-                        $fail(__('Certificate already exists.'));
+                        $fingerprint = $cert->getPublicKey()->getFingerprint('sha256');
+                        if ($fingerprint !== $this->ownerRecord->fingerprint) {
+                            $fail(__('Public key fingerprint does not match.'));
+                        }
+
+                        $cn = $cert->getSubjectDNProp('cn')[0];
+                        if ($cn !== $this->ownerRecord->cn) {
+                            $fail(__('Subject common name does not match.'));
+                        }
                     }
-
-                    $fingerprint = $cert->getPublicKey()->getFingerprint('sha256');
-                    if ($fingerprint !== $this->ownerRecord->fingerprint) {
-                        $fail(__('Public key fingerprint does not match.'));
-                    }
-
-                    $cn = $cert->getSubjectDNProp('cn')[0];
-                    if ($cn !== $this->ownerRecord->cn) {
-                        $fail(__('Subject common name does not match.'));
+                    else {
+                        $fail(__('Certificate is invalid.'));
                     }
                 },
             ])->storeFiles(false)->label(__('Certificate File')),
