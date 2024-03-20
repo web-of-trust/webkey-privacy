@@ -44,7 +44,7 @@ class CertificatesRelationManager extends RelationManager
     {
         return $form->schema([
             FileUpload::make('cert_file')->required()->rules([
-                fn (): => function (
+                fn () => function (
                     string $attribute, mixed $value, \Closure $fail
                 ) {
                     $cert = new X509();
