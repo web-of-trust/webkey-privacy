@@ -11,14 +11,12 @@ namespace App\Filament\Resources\DomainResource\Pages;
 use App\Filament\Resources\DomainResource;
 use App\Settings\AppSettings;
 use Filament\Forms\{
+    Components\Fieldset,
+    Components\Textarea,
+    Components\TextInput,
+    Components\Toggle,
     Form,
     Get,
-};
-use Filament\Forms\Components\{
-    Fieldset,
-    Textarea,
-    TextInput,
-    Toggle,
 };
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Str;
@@ -41,18 +39,18 @@ class CreateDomain extends CreateRecord
             Fieldset::make(__('Domain Information'))->schema([
                 TextInput::make('name')
                     ->rules([
-                        function () {
-                            return function (string $attribute, $value, \Closure $fail) {
-                                if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
-                                    $fail(__('The domain name is invalid.'));
-                                }
-                            };
+                        fn () => function (string $attribute, $value, \Closure $fail) {
+                            if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
+                                $fail(__('The domain name is invalid.'));
+                            }
                         },
                     ])
                     ->required()->unique()->label(__('Name')),
                 TextInput::make('email')
                     ->rules([
-                        fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
+                        fn (Get $get) => function (
+                            string $attribute, $value, \Closure $fail
+                        ) use ($get) {
                             if (!Str::endsWith($value, $get('name'))) {
                                 $fail(__('The email address must match the domain name.'));
                             }
@@ -66,7 +64,7 @@ class CreateDomain extends CreateRecord
             ]),
             Fieldset::make(__('Key Settings'))->schema(
                 AppSettings::keySettings()
-            )->hidden(fn (Get $get): bool => ! $get('generate_key')),
+            )->hidden(fn (Get $get) => ! $get('generate_key')),
         ]);
     }
 

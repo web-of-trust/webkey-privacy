@@ -63,29 +63,31 @@ class CreateX509SigningRequest extends CreateRecord
                         Domain::all()->pluck('name', 'id')
                     )->required()->label(__('Domain')),
                 TextInput::make('cn')->rules([
-                    function () {
-                        return function (string $attribute, mixed $value, \Closure $fail) {
-                            if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
-                                $fail(__('The common name is invalid.'));
-                            }
-                        };
+                    fn () => function (
+                        string $attribute, mixed $value, \Closure $fail
+                    ) {
+                        if (!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
+                            $fail(__('The common name is invalid.'));
+                        }
                     },
-                    fn (Get $get): \Closure => function (
+                    fn (Get $get) => function (
                         string $attribute, mixed $value, \Closure $fail
                     ) use ($get) {
                         $domain = Domain::find($get('domain_id'));
                         if (!Str::endsWith($value, $domain->name)) {
-                            $fail(__('The common name must match the domain name.'));
+                            $fail(__(
+                                'The common name must match the domain name.'
+                            ));
                         }
                     },
                 ])->required()->label(__('Common Name')),
                 TextInput::make('country')->rules([
-                    function () {
-                        return function (string $attribute, mixed $value, \Closure $fail) {
-                            if (strtoupper($value) !== $value) {
-                                $fail(__('The country must be uppercase.'));
-                            }
-                        };
+                    fn () => function (
+                        string $attribute, mixed $value, \Closure $fail
+                    ) {
+                        if (strtoupper($value) !== $value) {
+                            $fail(__('The country must be uppercase.'));
+                        }
                     },
                 ])->label(__('Country')),
                 TextInput::make('state')->label(__('State / Province')),
@@ -120,11 +122,9 @@ class CreateX509SigningRequest extends CreateRecord
                     ->hintActions([
                         Action::make('change')
                             ->label(__('Change'))
-                            ->action(function (Set $set) {
-                                $set(
-                                    'password', self::randomPassphrase()
-                                );
-                            }),
+                            ->action(fn (Set $set) => $set(
+                                'password', self::randomPassphrase()
+                            )),
                     ])->label(__('Password')),
             ]),
         ]);

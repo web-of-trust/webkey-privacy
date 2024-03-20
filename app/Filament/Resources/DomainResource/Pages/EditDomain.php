@@ -12,14 +12,12 @@ use App\Filament\Resources\DomainResource;
 use App\Settings\AppSettings;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\{
+    Components\Fieldset,
+    Components\Textarea,
+    Components\TextInput,
+    Components\Toggle,
     Form,
     Get,
-};
-use Filament\Forms\Components\{
-    Fieldset,
-    Textarea,
-    TextInput,
-    Toggle,
 };
 use Filament\Resources\Pages\EditRecord;
 
@@ -49,7 +47,7 @@ class EditDomain extends EditRecord
             ]),
             Fieldset::make(__('Key Settings'))->schema(
                 AppSettings::keySettings()
-            )->hidden(fn (Get $get): bool => ! $get('generate_key')),
+            )->hidden(fn (Get $get) => ! $get('generate_key')),
         ]);
     }
 

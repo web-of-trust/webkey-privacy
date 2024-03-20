@@ -49,19 +49,19 @@ class ListOpenPGPCertificates extends ListRecords
             TextColumn::make('primary_user')->wrap()->label(__('User ID')),
             TextColumn::make('key_id')
                 ->formatStateUsing(
-                    static fn (string $state): string => strtoupper($state)
+                    fn (string $state) => strtoupper($state)
                 )->label(__('Key ID')),
             TextColumn::make('key_algorithm')
                 ->formatStateUsing(
-                    static fn (int $state): string => self::getResource()::keyAlgorithm($state)
+                    fn (int $state) => self::getResource()::keyAlgorithm($state)
                 )->label(__('Key Algorithm ')),
             TextColumn::make('key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
             IconColumn::make('is_revoked')
-                ->icon(fn (bool $state): string => match ($state) {
+                ->icon(fn (bool $state) => match ($state) {
                     false => 'heroicon-o-x-circle',
                     true => 'heroicon-o-check-circle',
-                })->color(fn (bool $state): string => match ($state) {
+                })->color(fn (bool $state) => match ($state) {
                     false => 'success',
                     true => 'danger',
                 })->label(__('Is Revoked')),
@@ -91,9 +91,9 @@ class ListOpenPGPCertificates extends ListRecords
         ])->actions([
             Action::make('export')->label(__('Export Key'))
                 ->icon('heroicon-m-arrow-down-tray')
-                ->action(function ($record) {
-                    return self::getResource()::exportKey($record);
-                }),
+                ->action(
+                    fn ($record) => self::getResource()::exportKey($record)
+                ),
         ])->emptyStateHeading(
             __('No certificate yet')
         )->defaultSort('creation_time', 'desc');

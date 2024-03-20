@@ -55,7 +55,7 @@ class ViewX509SigningRequest extends ViewRecord
             ]),
             Fieldset::make(__('Key Information'))->schema([
                 TextEntry::make('key_algorithm')->formatStateUsing(
-                    static fn (int $state): ?string => KeyAlgorithmsEnum::tryFrom($state)?->label()
+                    fn (int $state) => KeyAlgorithmsEnum::tryFrom($state)?->label()
                 )->label(__('Key Algorithm')),
                 TextEntry::make('key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),
@@ -68,14 +68,14 @@ class ViewX509SigningRequest extends ViewRecord
         return [
             Action::make('export_key')->label(__('Export Key'))
                 ->icon('heroicon-m-arrow-down-tray')
-                ->action(function ($record) {
-                    return self::getResource()::exportKey($record);
-                }),
+                ->action(
+                    fn ($record) => self::getResource()::exportKey($record)
+                ),
             Action::make('export_csr')->label(__('Export Csr'))
                 ->icon('heroicon-m-arrow-down-tray')
-                ->action(function ($record) {
-                    return self::getResource()::exportCsr($record);
-                }),
+                ->action(
+                    fn ($record) => self::getResource()::exportCsr($record)
+                ),
             Action::make('back')->url(
                 $this->previousUrl ?? self::getResource()::getUrl('index')
             )->color('gray')->label(__('Back')),

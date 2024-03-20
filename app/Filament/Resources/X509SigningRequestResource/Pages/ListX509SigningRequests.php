@@ -46,7 +46,7 @@ class ListX509SigningRequests extends ListRecords
             TextColumn::make('cn')->label(__('Common Name')),
             TextColumn::make('key_algorithm')
                 ->formatStateUsing(
-                    static fn (int $state): ?string => KeyAlgorithmsEnum::tryFrom($state)?->label()
+                    fn (int $state) => KeyAlgorithmsEnum::tryFrom($state)?->label()
                 )->label(__('Key Algorithm ')),
             TextColumn::make('key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
@@ -69,14 +69,14 @@ class ListX509SigningRequests extends ListRecords
         ])->actions([
             Action::make('export_key')->label(__('Export Key'))
                 ->icon('heroicon-m-arrow-down-tray')
-                ->action(function ($record) {
-                    return self::getResource()::exportKey($record);
-                }),
+                ->action(
+                    fn ($record) => self::getResource()::exportKey($record)
+                ),
             Action::make('export_csr')->label(__('Export Csr'))
                 ->icon('heroicon-m-arrow-down-tray')
-                ->action(function ($record) {
-                    return self::getResource()::exportCsr($record);
-                }),
+                ->action(
+                    fn ($record) => self::getResource()::exportCsr($record)
+                ),
         ])->defaultSort('created_at', 'desc');
     }
 

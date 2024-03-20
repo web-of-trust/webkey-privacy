@@ -10,12 +10,12 @@ namespace App\Filament\Resources\OpenPGPCertificateResource\Pages;
 
 use App\Filament\Resources\OpenPGPCertificateResource;
 use Filament\Actions\Action;
-use Filament\Infolists\Components\{
-    Fieldset,
-    RepeatableEntry,
-    TextEntry,
+use Filament\Infolists\{
+    Components\Fieldset,
+    Components\RepeatableEntry,
+    Components\TextEntry,
+    Infolist,
 };
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 
 /**
@@ -41,13 +41,13 @@ class ViewOpenPGPCertificate extends ViewRecord
                 TextEntry::make('domain.name')->label(__('Domain')),
                 TextEntry::make('primary_user')->label(__('User ID')),
                 TextEntry::make('fingerprint')->formatStateUsing(
-                    static fn (string $state): string => strtoupper($state)
+                    fn (string $state) => strtoupper($state)
                 )->label(__('Fingerprint')),
                 TextEntry::make('key_id')->formatStateUsing(
-                    static fn (string $state): string => strtoupper($state)
+                    fn (string $state) => strtoupper($state)
                 )->label(__('Key ID')),
                 TextEntry::make('key_algorithm')->formatStateUsing(
-                    static fn (int $state): string => self::getResource()::keyAlgorithm($state)
+                    fn (int $state) => self::getResource()::keyAlgorithm($state)
                 )->label(__('Key Algorithm')),
                 TextEntry::make('key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),
@@ -57,10 +57,10 @@ class ViewOpenPGPCertificate extends ViewRecord
             RepeatableEntry::make('subKeys')
                 ->schema([
                     TextEntry::make('fingerprint')->formatStateUsing(
-                        static fn (string $state): string => strtoupper($state)
+                        fn (string $state) => strtoupper($state)
                     )->label(__('Fingerprint')),
                     TextEntry::make('key_id')->formatStateUsing(
-                        static fn (string $state): string => strtoupper($state)
+                        fn (string $state) => strtoupper($state)
                     )->label(__('Key ID')),
                     TextEntry::make('key_algorithm')->label(__('Key Algorithm')),
                     TextEntry::make('key_strength')->suffix(' bits')->label(__('Key Strength')),
@@ -69,7 +69,7 @@ class ViewOpenPGPCertificate extends ViewRecord
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
             Fieldset::make(__('Revocation'))->schema([
                 TextEntry::make('revocation.tag')->formatStateUsing(
-                    static fn (int $state): string => self::getResource()::revocationReason($state)
+                    fn (int $state) => self::getResource()::revocationReason($state)
                 )->label(__('Reason')),
                 TextEntry::make('revocation.reason')->label(__('Description')),
             ])->hidden(!$this->record->is_revoked),
@@ -80,9 +80,9 @@ class ViewOpenPGPCertificate extends ViewRecord
     {
         return [
             Action::make('export')
-                ->action(function ($record) {
-                    return self::getResource()::exportKey($record);
-                })
+                ->action(
+                    fn ($record) => self::getResource()::exportKey($record)
+                )
                 ->icon('heroicon-m-arrow-down-tray')
                 ->label(__('Export Key')),
             Action::make('back')->url(

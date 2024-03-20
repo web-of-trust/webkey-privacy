@@ -52,19 +52,19 @@ class ListOpenPGPPersonalKeys extends ListRecords
             TextColumn::make('certificate.primary_user')->label(__('User ID')),
             TextColumn::make('certificate.key_id')
                 ->formatStateUsing(
-                    static fn (string $state): string => strtoupper($state)
+                    fn (string $state) => strtoupper($state)
                 )->label(__('Key ID')),
             TextColumn::make('certificate.key_algorithm')
                 ->formatStateUsing(
-                    static fn (int $state): string => OpenPGPCertificateResource::keyAlgorithm($state)
+                    fn (int $state) => OpenPGPCertificateResource::keyAlgorithm($state)
                 )->label(__('Key Algorithm ')),
             TextColumn::make('certificate.key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
             IconColumn::make('is_revoked')
-                ->icon(fn (bool $state): string => match ($state) {
+                ->icon(fn (bool $state) => match ($state) {
                     false => 'heroicon-o-x-circle',
                     true => 'heroicon-o-check-circle',
-                })->color(fn (bool $state): string => match ($state) {
+                })->color(fn (bool $state) => match ($state) {
                     false => 'success',
                     true => 'danger',
                 })->label(__('Is Revoked')),

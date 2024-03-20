@@ -67,13 +67,13 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                 TextEntry::make('certificate.domain.name')->label(__('Domain')),
                 TextEntry::make('certificate.primary_user')->label(__('User ID')),
                 TextEntry::make('certificate.fingerprint')->formatStateUsing(
-                    static fn (string $state): string => strtoupper($state)
+                    fn (string $state) => strtoupper($state)
                 )->label(__('Fingerprint')),
                 TextEntry::make('certificate.key_id')->formatStateUsing(
-                    static fn (string $state): string => strtoupper($state)
+                    fn (string $state) => strtoupper($state)
                 )->label(__('Key ID')),
                 TextEntry::make('certificate.key_algorithm')->formatStateUsing(
-                    static fn (int $state): string => OpenPGPCertificateResource::keyAlgorithm($state)
+                    fn (int $state) => OpenPGPCertificateResource::keyAlgorithm($state)
                 )->label(__('Key Algorithm')),
                 TextEntry::make('certificate.key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),
@@ -83,10 +83,10 @@ class ViewOpenPGPPersonalKey extends ViewRecord
             RepeatableEntry::make('certificate.subKeys')
                 ->schema([
                     TextEntry::make('fingerprint')->formatStateUsing(
-                        static fn (string $state): string => strtoupper($state)
+                        fn (string $state) => strtoupper($state)
                     )->label(__('Fingerprint')),
                     TextEntry::make('key_id')->formatStateUsing(
-                        static fn (string $state): string => strtoupper($state)
+                        fn (string $state) => strtoupper($state)
                     )->label(__('Key ID')),
                     TextEntry::make('key_algorithm')->label(__('Key Algorithm')),
                     TextEntry::make('key_strength')->suffix(' bits')->label(__('Key Strength')),
@@ -95,7 +95,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
             Fieldset::make(__('Revocation'))->schema([
                 TextEntry::make('certificate.revocation.tag')->formatStateUsing(
-                    static fn (int $state): string => OpenPGPCertificateResource::revocationReason($state)
+                    fn (int $state) => OpenPGPCertificateResource::revocationReason($state)
                 )->label(__('Reason')),
                 TextEntry::make('certificate.revocation.reason')->label(__('Description')),
             ])->hidden(!$this->record->is_revoked),
