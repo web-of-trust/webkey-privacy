@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('revocations', function (Blueprint $table) {
+        Schema::create('openpgp_revocations', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('certificate_id');
             $table->string('revoke_by', 64);
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('revocations');
+        Schema::dropIfExists('openpgp_revocations');
     }
 };
