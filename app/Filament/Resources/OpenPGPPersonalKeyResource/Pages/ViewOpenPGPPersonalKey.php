@@ -131,7 +131,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                                 $domain->key_data,
                                 Crypt::decryptString(
                                     Storage::disk(
-                                        $settings->passphraseStore()
+                                        $settings->passwordStore()
                                     )->get(implode([
                                         DomainResource::PASSWORD_STORAGE,
                                         DIRECTORY_SEPARATOR,

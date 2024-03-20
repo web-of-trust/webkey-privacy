@@ -94,17 +94,17 @@ class ListPersonalKeys extends ListRecords
                         TextInput::make('password')
                             ->readonly()->password()
                             ->revealable(filament()->arePasswordsRevealable())
-                            ->default(self::randomPassphrase())
+                            ->default(self::randomPassword())
                             ->helperText('You must remember and/or save the password.')
                             ->hintActions([
                                 FormAction::make('change')
                                     ->label(__('Change'))
                                     ->action(function (Set $set) {
                                         $set(
-                                            'password', self::randomPassphrase()
+                                            'password', self::randomPassword()
                                         );
                                     }),
-                            ])->label(__('Passphrase')),
+                            ])->label(__('Password')),
                         Toggle::make('remember')->live()->default(true)->inline(false)
                             ->label(__('Save password into browser storage')),
                     ]),
@@ -119,7 +119,7 @@ class ListPersonalKeys extends ListRecords
                         'key_data' => $pgpKey->armor(),
                     ]);
                     if (!empty($data['remember'])) {
-                        self::rememberPassphrase(
+                        self::rememberPassword(
                             $livewire, $password, $pgpKey->getFingerprint(true)
                         );
                     }
@@ -188,12 +188,12 @@ class ListPersonalKeys extends ListRecords
         return $key;
     }
 
-    private static function randomPassphrase(): string
+    private static function randomPassword(): string
     {
-        return app(AppSettings::class)->randomPassphrase();
+        return app(AppSettings::class)->randomPassword();
     }
 
-    private static function rememberPassphrase(
+    private static function rememberPassword(
         Livewire $livewire, string $password, string $fingerprint
     )
     {

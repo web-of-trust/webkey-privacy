@@ -99,7 +99,7 @@ final class AppSettings extends Settings
         ];
     }
 
-    public function randomPassphrase(): string
+    public function randomPassword(): string
     {
         return Str::password(
             $this->passwordLength()

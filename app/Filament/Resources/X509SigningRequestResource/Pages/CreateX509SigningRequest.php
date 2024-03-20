@@ -116,14 +116,14 @@ class CreateX509SigningRequest extends CreateRecord
                 Toggle::make('with_password')->default(false)->inline(false)
                     ->live()->label(__('With Password')),
                 TextInput::make('password')->readonly()
-                    ->default(self::randomPassphrase())
+                    ->default(self::randomPassword())
                     ->helperText('You must remember and/or save the password.')
                     ->hidden(fn (Get $get) => !$get('with_password'))
                     ->hintActions([
                         Action::make('change')
                             ->label(__('Change'))
                             ->action(fn (Set $set) => $set(
-                                'password', self::randomPassphrase()
+                                'password', self::randomPassword()
                             )),
                     ])->label(__('Password')),
             ]),
@@ -199,8 +199,8 @@ class CreateX509SigningRequest extends CreateRecord
         return $x509->saveCSR($x509->signCSR());
     }
 
-    private static function randomPassphrase(): string
+    private static function randomPassword(): string
     {
-        return app(AppSettings::class)->randomPassphrase();
+        return app(AppSettings::class)->randomPassword();
     }
 }
