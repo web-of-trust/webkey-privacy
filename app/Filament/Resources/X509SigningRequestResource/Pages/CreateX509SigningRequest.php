@@ -154,7 +154,7 @@ class CreateX509SigningRequest extends CreateRecord
                 DIRECTORY_SEPARATOR,
                 $privateKey->getPublickey()->getFingerprint('sha256'),
             ]);
-            Storage::disk(app(AppSettings::class)->passphraseStore())->put(
+            Storage::disk(app(AppSettings::class)->passwordStore())->put(
                 $storePath,
                 Crypt::encryptString($password)
             );
