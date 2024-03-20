@@ -102,12 +102,12 @@ class CertificatesRelationManager extends RelationManager
                     $notAfter = $certInfo['tbsCertificate']['validity']['notAfter'];
                     $notAfter = isset($notAfter['generalTime']) ? $notAfter['generalTime'] : $notAfter['utcTime'];
 
-                    $data['not_before'] = new \DateTimeImmutable(
-                        $notBefore, new \DateTimeZone('GMT')
-                    );
-                    $data['not_after'] = new \DateTimeImmutable(
-                        $notAfter, new \DateTimeZone('GMT')
-                    );
+                    $data['not_before'] = (new \DateTimeImmutable(
+                        $notBefore, new \DateTimeZone('UTC')
+                    ))->setTimezone(new \DateTimeZone(config('app.timezone')));
+                    $data['not_after'] = (new \DateTimeImmutable(
+                        $notAfter, new \DateTimeZone('UTC')
+                    ))->setTimezone(new \DateTimeZone(config('app.timezone')));
 
                     $serialNumber = $certInfo['tbsCertificate']['serialNumber'];
                     $data['serial_number'] = $serialNumber->toHex();
