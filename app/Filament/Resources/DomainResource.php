@@ -56,13 +56,12 @@ class DomainResource extends Resource
         $settings->fill($keySettings);
         $password = Str::password($settings->passwordLength());
 
-        $storePath = implode([
-            self::PASSWORD_STORAGE,
-            DIRECTORY_SEPARATOR,
-            hash('sha256', $domain),
-        ]);
         Storage::disk($settings->passwordStore())->put(
-            $storePath,
+            implode([
+                self::PASSWORD_STORAGE,
+                DIRECTORY_SEPARATOR,
+                hash('sha256', $domain),
+            ]),
             Crypt::encryptString($password)
         );
         return OpenPGP::generateKey(

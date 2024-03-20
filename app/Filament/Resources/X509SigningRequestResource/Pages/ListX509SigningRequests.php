@@ -109,15 +109,14 @@ class ListX509SigningRequests extends ListRecords
 
     private static function viewPassword(X509SigningRequest $record): string
     {
-        $storePath = implode([
-            self::getResource()::PASSWORD_STORAGE,
-            DIRECTORY_SEPARATOR,
-            $record->fingerprint,
-        ]);
         return Crypt::decryptString(
             Storage::disk(
                 app(AppSettings::class)->passwordStore()
-            )->get($storePath)
+            )->get(implode([
+                self::getResource()::PASSWORD_STORAGE,
+                DIRECTORY_SEPARATOR,
+                $record->fingerprint,
+            ]))
         );
     }
 }

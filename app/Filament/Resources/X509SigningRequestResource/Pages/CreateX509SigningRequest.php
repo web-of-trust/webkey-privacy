@@ -152,13 +152,12 @@ class CreateX509SigningRequest extends CreateRecord
         $data['fingerprint'] = $fingerprint;
 
         if (!empty($password)) {
-            $storePath = implode([
-                self::getResource()::PASSWORD_STORAGE,
-                DIRECTORY_SEPARATOR,
-                $fingerprint,
-            ]);
             Storage::disk(app(AppSettings::class)->passwordStore())->put(
-                $storePath,
+                implode([
+                    self::getResource()::PASSWORD_STORAGE,
+                    DIRECTORY_SEPARATOR,
+                    $fingerprint,
+                ]),
                 Crypt::encryptString($password)
             );
         }

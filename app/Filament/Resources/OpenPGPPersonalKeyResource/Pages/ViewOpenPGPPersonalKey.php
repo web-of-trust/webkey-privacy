@@ -9,6 +9,7 @@
 namespace App\Filament\Resources\OpenPGPPersonalKeyResource\Pages;
 
 use App\Filament\Resources\{
+    DomainResource,
     OpenPGPCertificateResource,
     OpenPGPPersonalKeyResource,
 };
@@ -129,9 +130,13 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                             $domainKey = OpenPGP::decryptPrivateKey(
                                 $domain->key_data,
                                 Crypt::decryptString(
-                                    Storage::disk($settings->passphraseStore())->get(
+                                    Storage::disk(
+                                        $settings->passphraseStore()
+                                    )->get(implode([
+                                        DomainResource::PASSWORD_STORAGE,
+                                        DIRECTORY_SEPARATOR,
                                         hash('sha256', $domain->name),
-                                    )
+                                    ]))
                                 )
                             );
                             $personalKey = $domainKey->revokeKey(
