@@ -19,7 +19,10 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\{
+    Action,
+    ActionGroup,
+};
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\{
     Filter,
@@ -76,27 +79,29 @@ class ListX509SigningRequests extends ListRecords
                     Domain::all()->pluck('name', 'id')
                 )->label(__('Domain')),
         ])->actions([
-            Action::make('view_password')
-                ->hidden(
-                    fn ($record) => !$record->with_password
-                )
-                ->infolist([
-                    TextEntry::make('key_password')
-                        ->state(fn ($record) => self::viewPassword($record))
-                        ->label(__('Key Password')),
-                ])
-                ->modalSubmitAction(false)
-                ->icon('heroicon-m-eye')->iconButton()->label(__('View Password')),
-            Action::make('export_key')->label(__('Export Key'))
-                ->icon('heroicon-m-arrow-down-tray')
-                ->action(
-                    fn ($record) => self::getResource()::exportKey($record)
-                ),
-            Action::make('export_csr')->label(__('Export Csr'))
-                ->icon('heroicon-m-arrow-down-tray')
-                ->action(
-                    fn ($record) => self::getResource()::exportCsr($record)
-                ),
+            ActionGroup::make([
+                Action::make('view_password')
+                    ->hidden(
+                        fn ($record) => !$record->with_password
+                    )
+                    ->infolist([
+                        TextEntry::make('key_password')
+                            ->state(fn ($record) => self::viewPassword($record))
+                            ->label(__('Key Password')),
+                    ])
+                    ->modalSubmitAction(false)
+                    ->icon('heroicon-m-eye')->label(__('View Password')),
+                Action::make('export_key')->label(__('Export Key'))
+                    ->icon('heroicon-m-arrow-down-tray')
+                    ->action(
+                        fn ($record) => self::getResource()::exportKey($record)
+                    ),
+                Action::make('export_csr')->label(__('Export Csr'))
+                    ->icon('heroicon-m-arrow-down-tray')
+                    ->action(
+                        fn ($record) => self::getResource()::exportCsr($record)
+                    ),
+            ])->tooltip('Actions'),
         ])->defaultSort('created_at', 'desc');
     }
 
