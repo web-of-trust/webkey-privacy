@@ -46,7 +46,7 @@ class ManageAppSettings extends SettingsPage
             Select::make('password_store')->required()->options(
                 array_combine($disks, $disks)
             )->label(__('Password Store')),
-            TextInput::make('password_length')
+            TextInput::make('password_length')->default(32)
                 ->numeric()->minValue(32)->maxValue(64)
                 ->required()->label(__('Password Length')),
             ...static::$settings::keySettings(),

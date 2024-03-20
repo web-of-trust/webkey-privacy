@@ -30,7 +30,7 @@ use Spatie\LaravelSettings\Settings;
  */
 final class AppSettings extends Settings
 {
-    const PASSWORD_STORE  = 'key_vault';
+    const PASSWORD_STORE  = 'password_vault';
     const PASSWORD_LENGTH = 32;
 
     public string $password_store;
