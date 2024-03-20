@@ -29,7 +29,11 @@ class OpenPGPCertificateResource extends Resource
     protected static ?string $navigationGroup = 'OpenPGP';
     protected static ?string $navigationIcon = 'heroicon-o-identification';
     protected static ?string $slug = 'openpgp/certificate';
-    protected static ?string $modelLabel = 'OpenPGP Certificates';
+
+    public static function getModelLabel(): string
+    {
+        return __('Certificates');
+    }
 
     public static function getNavigationLabel(): string
     {

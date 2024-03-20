@@ -29,6 +29,11 @@ class ViewOpenPGPCertificate extends ViewRecord
 {
     protected static string $resource = OpenPGPCertificateResource::class;
 
+    public function getTitle(): string
+    {
+        return __('View Certificate');
+    }
+
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([

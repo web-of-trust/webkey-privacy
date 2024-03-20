@@ -25,7 +25,11 @@ class OpenPGPPersonalKeyResource extends Resource
     protected static ?string $navigationGroup = 'OpenPGP';
     protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $slug = 'openpgp/personal-key';
-    protected static ?string $modelLabel = 'OpenPGP Personal Keys';
+
+    public static function getModelLabel(): string
+    {
+        return __('Personal Keys');
+    }
 
     public static function getNavigationLabel(): string
     {

@@ -49,6 +49,11 @@ class ViewOpenPGPPersonalKey extends ViewRecord
     protected static string $resource = OpenPGPPersonalKeyResource::class;
     protected ?string $previousUrl = null;
 
+    public function getTitle(): string
+    {
+        return __('View Personal Key');
+    }
+
     public function mount(int | string $record): void
     {
         parent::mount($record);

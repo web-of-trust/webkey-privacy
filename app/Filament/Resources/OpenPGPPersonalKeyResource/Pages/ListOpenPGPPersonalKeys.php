@@ -40,7 +40,11 @@ use Illuminate\Database\Eloquent\Builder;
 class ListOpenPGPPersonalKeys extends ListRecords
 {
     protected static string $resource = OpenPGPPersonalKeyResource::class;
-    protected static ?string $title = 'Personal Keys';
+
+    public function getTitle(): string
+    {
+        return __('Personal Keys');
+    }
 
     public function table(Table $table): Table
     {

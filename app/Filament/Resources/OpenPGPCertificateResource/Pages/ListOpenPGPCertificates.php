@@ -37,7 +37,11 @@ use Illuminate\Database\Eloquent\Builder;
 class ListOpenPGPCertificates extends ListRecords
 {
     protected static string $resource = OpenPGPCertificateResource::class;
-    protected static ?string $title = 'Certificates';
+
+    public function getTitle(): string
+    {
+        return __('Certificates');
+    }
 
     public function table(Table $table): Table
     {

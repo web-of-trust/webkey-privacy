@@ -26,6 +26,11 @@ class X509CertificateResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-identification';
     protected static ?string $slug = 'x509/certificate';
 
+    public static function getModelLabel(): string
+    {
+        return __('Certificates');
+    }
+
     public static function getNavigationLabel(): string
     {
         return __('Certificates');

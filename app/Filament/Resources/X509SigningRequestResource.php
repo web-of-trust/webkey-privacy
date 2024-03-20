@@ -29,6 +29,11 @@ class X509SigningRequestResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $slug = 'x509/signing-request';
 
+    public static function getModelLabel(): string
+    {
+        return __('Signing Requests');
+    }
+
     public static function getNavigationLabel(): string
     {
         return __('Signing Requests');
