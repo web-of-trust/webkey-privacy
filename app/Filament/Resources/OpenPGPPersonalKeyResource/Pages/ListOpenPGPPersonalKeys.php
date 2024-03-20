@@ -70,19 +70,19 @@ class ListOpenPGPPersonalKeys extends ListRecords
                 TextInput::make('user')->label(__('User ID')),
                 Toggle::make('revoked')->label(__('Is Revoked')),
             ])->baseQuery(
-                fn (Builder $query) => $query->select('personal_keys.*')->leftJoin(
-                    'certificates', 'certificates.id', '=', 'personal_keys.certificate_id'
+                fn (Builder $query) => $query->select('openpgp_personal_keys.*')->leftJoin(
+                    'openpgp_certificates', 'openpgp_certificates.id', '=', 'openpgp_personal_keys.certificate_id'
                 )
             )->query(
                 fn (Builder $query, array $data) => $query->when(
                     $data['user'],
                     fn (Builder $query, string $user) => $query->where(
-                        'certificates.primary_user', 'like', '%' . trim($user) . '%'
+                        'openpgp_certificates.primary_user', 'like', '%' . trim($user) . '%'
                     )
                 )->when(
                     $data['revoked'],
                     fn (Builder $query, int $revoked) => $query->where(
-                        'personal_keys.is_revoked', $revoked
+                        'openpgp_personal_keys.is_revoked', $revoked
                     )
                 )
             ),

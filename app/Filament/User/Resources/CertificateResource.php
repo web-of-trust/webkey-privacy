@@ -8,7 +8,7 @@
 
 namespace App\Filament\User\Resources;
 
-use App\Filament\Resources\CertificateResource as BaseResource;
+use App\Filament\Resources\OpenPGPCertificateResource as BaseResource;
 
 /**
  * Certificate resource

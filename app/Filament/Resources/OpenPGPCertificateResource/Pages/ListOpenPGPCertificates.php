@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class ListCertificates extends ListRecords
+class ListOpenPGPCertificates extends ListRecords
 {
     protected static string $resource = OpenPGPCertificateResource::class;
 
