@@ -29,6 +29,7 @@ use Filament\Forms\Components\{
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\{
     Action,
+    ActionGroup,
     ViewAction,
 };
 use Filament\Tables\Columns\{
@@ -81,7 +82,7 @@ class ListPersonalKeys extends ListRecords
                     true => 'danger',
                 })->label(__('Is Revoked')),
             TextColumn::make('certificate.creation_time')
-                ->sortable()->label(__('Creation Time')),
+                ->wrap()->sortable()->label(__('Creation Time')),
         ])->headerActions([
             Action::make('generate_key')
                 ->label(__('Generate Personal Key'))
@@ -122,32 +123,34 @@ class ListPersonalKeys extends ListRecords
                     redirect(static::getResource()::getUrl('index'));
                 }),
         ])->actions([
-            Action::make('view_password')
-                ->infolist([
-                    PersistPasswordViwer::make('key_password')
-                        ->state(fn ($record) => implode([
-                            static::getResource()::PERSIST_PASSWORD_ITEM,
-                            '-',
-                            $record->certificate->fingerprint,
-                        ]))
-                        ->label(__('Key Password')),
-                ])
-                ->modalSubmitAction(false)
-                ->label(__('View Password'))
-                ->icon('heroicon-m-eye'),
-            Action::make('export')->label(__('Export'))
-                ->icon('heroicon-m-arrow-down-tray')
-                ->action(function ($record) {
-                    $filePath = tempnam(
-                        sys_get_temp_dir(), $record->certificate->fingerprint
-                    );
-                    file_put_contents($filePath, $record->key_data);
-                    return response()->download(
-                        $filePath, $record->user->email . '.asc', [
-                            'Content-Type' => 'application/pgp-keys',
-                        ]
-                    )->deleteFileAfterSend(true);
-                }),
+            ActionGroup::make([
+                ViewAction::make(),
+                Action::make('view_password')->label(__('View Password'))
+                    ->modalSubmitAction(false)->icon('heroicon-m-eye')
+                    ->infolist([
+                        PersistPasswordViwer::make('key_password')
+                            ->state(fn ($record) => implode([
+                                static::getResource()::PERSIST_PASSWORD_ITEM,
+                                '-',
+                                $record->certificate->fingerprint,
+                            ]))
+                            ->copyable()->copyMessage(__('Key Password Copied!'))
+                            ->label(__('Key Password')),
+                    ]),
+                Action::make('export')->label(__('Export'))
+                    ->icon('heroicon-m-arrow-down-tray')
+                    ->action(function ($record) {
+                        $filePath = tempnam(
+                            sys_get_temp_dir(), $record->certificate->fingerprint
+                        );
+                        file_put_contents($filePath, $record->key_data);
+                        return response()->download(
+                            $filePath, $record->user->email . '.asc', [
+                                'Content-Type' => 'application/pgp-keys',
+                            ]
+                        )->deleteFileAfterSend(true);
+                    }),
+            ]),
         ])->modifyQueryUsing(
             fn (Builder $query) => $query->where('user_id', auth()->user()->id)
         )->emptyStateHeading(
