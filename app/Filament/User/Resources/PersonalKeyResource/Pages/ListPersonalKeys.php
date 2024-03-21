@@ -125,17 +125,18 @@ class ListPersonalKeys extends ListRecords
         ])->actions([
             ActionGroup::make([
                 ViewAction::make(),
-                Action::make('view_password')->label(__('View Password'))
+                Action::make('view_password')->label(__('Password'))
                     ->modalSubmitAction(false)->icon('heroicon-m-eye')
+                    ->modalHeading(__('View Remembered Key Password'))
                     ->infolist([
-                        PersistPasswordViwer::make('key_password')
+                        PersistPasswordViwer::make('password')
                             ->state(fn ($record) => implode([
                                 static::getResource()::PERSIST_PASSWORD_ITEM,
                                 '-',
                                 $record->certificate->fingerprint,
                             ]))
-                            ->copyable()->copyMessage(__('Key Password Copied!'))
-                            ->label(__('Key Password')),
+                            ->copyable()->copyMessage(__('Password Copied!'))
+                            ->label(__('Password')),
                     ]),
                 Action::make('export')->label(__('Export'))
                     ->icon('heroicon-m-arrow-down-tray')

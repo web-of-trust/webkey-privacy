@@ -32,6 +32,11 @@ class PersonalKeyResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $slug = 'personal-key';
 
+    public static function getModelLabel(): string
+    {
+        return __('Personal Key');
+    }
+
     public static function getNavigationLabel(): string
     {
         return __('Personal Keys');

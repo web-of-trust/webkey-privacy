@@ -31,7 +31,7 @@ class X509SigningRequestResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('Signing Requests');
+        return __('Signing Request');
     }
 
     public static function getNavigationLabel(): string
