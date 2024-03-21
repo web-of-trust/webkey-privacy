@@ -12,10 +12,9 @@ use App\Filament\Resources\DomainResource\Pages;
 use App\Models\Domain;
 use App\Settings\AppSettings;
 use Filament\Resources\Resource;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\{
-    Crypt,
-    Storage,
+use Illuminate\Support\{
+    Facades\Storage,
+    Str,
 };
 use OpenPGP\OpenPGP;
 
@@ -62,7 +61,7 @@ class DomainResource extends Resource
                 DIRECTORY_SEPARATOR,
                 hash('sha256', $domain),
             ]),
-            Crypt::encryptString($password)
+            encrypt($password)
         );
         return OpenPGP::generateKey(
             [$email],

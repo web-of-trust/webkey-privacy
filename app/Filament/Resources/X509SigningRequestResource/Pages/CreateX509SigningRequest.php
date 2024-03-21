@@ -26,7 +26,6 @@ use Filament\Forms\Components\{
 };
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\{
-    Facades\Crypt,
     Facades\Storage,
     Str,
 };
@@ -158,7 +157,7 @@ class CreateX509SigningRequest extends CreateRecord
                     DIRECTORY_SEPARATOR,
                     $fingerprint,
                 ]),
-                Crypt::encryptString($password)
+                encrypt($password)
             );
         }
 

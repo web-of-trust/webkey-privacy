@@ -29,10 +29,7 @@ use Filament\Tables\Filters\{
     SelectFilter,
 };
 use Filament\Tables\Table;
-use Illuminate\Support\{
-    Facades\Crypt,
-    Facades\Storage,
-};
+use Illuminate\Support\Storage;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -114,7 +111,7 @@ class ListX509SigningRequests extends ListRecords
 
     private static function viewPassword(X509SigningRequest $record): string
     {
-        return Crypt::decryptString(
+        return decrypt(
             Storage::disk(
                 app(AppSettings::class)->passwordStore()
             )->get(implode([

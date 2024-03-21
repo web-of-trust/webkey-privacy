@@ -35,11 +35,7 @@ use Filament\Tables\Columns\{
 };
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\{
-    Crypt,
-    Log,
-    Storage,
-};
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component as Livewire;
 use OpenPGP\Type\PrivateKeyInterface;
 use OpenPGP\OpenPGP;
@@ -173,7 +169,7 @@ class ListPersonalKeys extends ListRecords
             try {
                 $key = OpenPGP::decryptPrivateKey(
                     $domain->key_data,
-                    Crypt::decryptString(
+                    decrypt(
                         Storage::disk($settings->passwordStore())->get(
                             hash('sha256', $domain->name),
                         )
@@ -181,7 +177,7 @@ class ListPersonalKeys extends ListRecords
                 )->certifyKey($key);
             }
             catch (\Throwable $e) {
-                Log::error($e);
+                logger()->error($e);
             }
         }
 

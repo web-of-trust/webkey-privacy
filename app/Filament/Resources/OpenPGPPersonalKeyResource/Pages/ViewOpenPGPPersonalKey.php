@@ -30,11 +30,7 @@ use Filament\Infolists\Components\{
 };
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Support\Facades\{
-    Crypt,
-    Log,
-    Storage,
-};
+use Illuminate\Support\Facades\Storage;
 use OpenPGP\Enum\RevocationReasonTag;
 use OpenPGP\OpenPGP;
 
@@ -129,7 +125,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                             $settings = app(AppSettings::class);
                             $domainKey = OpenPGP::decryptPrivateKey(
                                 $domain->key_data,
-                                Crypt::decryptString(
+                                decrypt(
                                     Storage::disk(
                                         $settings->passwordStore()
                                     )->get(implode([
@@ -156,7 +152,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                             ]);
                         }
                         catch (\Throwable $e) {
-                            Log::error($e);
+                            logger()->error($e);
                         }
                     }
                     redirect($this->previousUrl ?? self::getResource()::getUrl());
