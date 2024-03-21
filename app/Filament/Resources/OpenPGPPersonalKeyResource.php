@@ -28,7 +28,7 @@ class OpenPGPPersonalKeyResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('Personal Keys');
+        return __('Personal Key');
     }
 
     public static function getNavigationLabel(): string

@@ -28,7 +28,7 @@ class X509CertificateResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('Certificates');
+        return __('Certificate');
     }
 
     public static function getNavigationLabel(): string
