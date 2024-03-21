@@ -92,18 +92,16 @@ class ListPersonalKeys extends ListRecords
                             ->readonly()->password()
                             ->revealable(filament()->arePasswordsRevealable())
                             ->default(self::randomPassword())
-                            ->helperText('You must remember and/or save the password.')
+                            ->helperText(__('You must remember and/or save the password.'))
                             ->hintActions([
                                 FormAction::make('change')
                                     ->label(__('Change'))
-                                    ->action(function (Set $set) {
-                                        $set(
-                                            'password', self::randomPassword()
-                                        );
-                                    }),
+                                    ->action(fn (Set $set) => $set(
+                                        'password', self::randomPassword()
+                                    )),
                             ])->label(__('Password')),
-                        Toggle::make('remember')->live()->default(true)->inline(false)
-                            ->label(__('Save password into browser storage')),
+                        Toggle::make('remember')->default(true)->inline(false)
+                            ->label(__('Remember password into browser storage')),
                     ]),
                 ])->action(function (Livewire $livewire, array $data) {
                     $password = $data['password'];
