@@ -135,7 +135,6 @@ class ListPersonalKeys extends ListRecords
                                 '-',
                                 $record->certificate->fingerprint,
                             ]))
-                            ->copyable()->copyMessage(__('Password Copied!'))
                             ->label(__('Password')),
                     ]),
                 Action::make('export')->label(__('Export'))

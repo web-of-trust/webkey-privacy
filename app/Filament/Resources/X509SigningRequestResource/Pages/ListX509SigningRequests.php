@@ -84,9 +84,9 @@ class ListX509SigningRequests extends ListRecords
                     ->infolist([
                         TextEntry::make('key_password')
                             ->state(fn ($record) => self::viewPassword($record))
-                            ->copyable()->copyMessage(__('Key Password Copied!'))
-                            ->label(__('Key Password')),
+                            ->label(__('Password')),
                     ])
+                    ->modalHeading(__('View Private Key Password'))
                     ->modalSubmitAction(false)
                     ->icon('heroicon-m-eye')->label(__('View Password')),
                 Action::make('export_key')->label(__('Export Key'))

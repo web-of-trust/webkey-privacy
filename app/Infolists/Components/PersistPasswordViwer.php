@@ -9,7 +9,6 @@
 namespace App\Infolists\Components;
 
 use Filament\Infolists\Components\Entry;
-use Filament\Support\Concerns\CanBeCopied;
 
 /**
  * Infolists persist password viwer Entry
@@ -20,7 +19,5 @@ use Filament\Support\Concerns\CanBeCopied;
  */
 class PersistPasswordViwer extends Entry
 {
-    use CanBeCopied;
-
     protected string $view = 'infolists.components.persist-password-viwer';
 }
