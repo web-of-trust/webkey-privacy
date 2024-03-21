@@ -29,7 +29,7 @@ use Filament\Tables\Filters\{
     SelectFilter,
 };
 use Filament\Tables\Table;
-use Illuminate\Support\Storage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
