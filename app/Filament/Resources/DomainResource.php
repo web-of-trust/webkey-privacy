@@ -48,8 +48,7 @@ class DomainResource extends Resource
         string $domain, string $email, array $keySettings = []
     ): string
     {
-        $settings = app(AppSettings::class);
-        $settings->fill($keySettings);
+        $settings = app(AppSettings::class)->fill($keySettings);
         $password = $settings->randomPassword();
 
         Storage::disk($settings->passwordStore())->put(
