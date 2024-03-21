@@ -63,6 +63,8 @@ class ListX509Certificates extends ListRecords
                 ->action(function ($record) {
                     return self::getResource()::exportCertificate($record);
                 }),
-        ])->defaultSort('created_at', 'desc');
+        ])->emptyStateHeading(
+            __('No x509 certificate yet')
+        )->defaultSort('created_at', 'desc');
     }
 }

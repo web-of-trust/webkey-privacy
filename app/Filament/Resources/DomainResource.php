@@ -12,10 +12,7 @@ use App\Filament\Resources\DomainResource\Pages;
 use App\Models\Domain;
 use App\Settings\AppSettings;
 use Filament\Resources\Resource;
-use Illuminate\Support\{
-    Facades\Storage,
-    Str,
-};
+use Illuminate\Support\Facades\Storage;
 use OpenPGP\OpenPGP;
 
 /**
@@ -53,7 +50,7 @@ class DomainResource extends Resource
     {
         $settings = app(AppSettings::class);
         $settings->fill($keySettings);
-        $password = Str::password($settings->passwordLength());
+        $password = $settings->randomPassword();
 
         Storage::disk($settings->passwordStore())->put(
             implode([
