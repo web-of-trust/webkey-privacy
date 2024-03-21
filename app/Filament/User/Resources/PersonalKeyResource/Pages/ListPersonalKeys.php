@@ -8,6 +8,7 @@
 
 namespace App\Filament\User\Resources\PersonalKeyResource\Pages;
 
+use App\Filament\Resources\DomainResource;
 use App\Filament\User\Resources\{
     CertificateResource,
     PersonalKeyResource,
@@ -62,19 +63,19 @@ class ListPersonalKeys extends ListRecords
             TextColumn::make('certificate.primary_user')->wrap()->label(__('User ID')),
             TextColumn::make('certificate.key_id')
                 ->formatStateUsing(
-                    static fn (string $state): string => strtoupper($state)
+                    fn (string $state) => strtoupper($state)
                 )->label(__('Key ID')),
             TextColumn::make('certificate.key_algorithm')
                 ->formatStateUsing(
-                    static fn (int $state): string => CertificateResource::keyAlgorithm($state)
+                    fn (int $state) => CertificateResource::keyAlgorithm($state)
                 )->label(__('Key Algorithm ')),
             TextColumn::make('certificate.key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
             IconColumn::make('is_revoked')
-                ->icon(fn (bool $state): string => match ($state) {
+                ->icon(fn (bool $state) => match ($state) {
                     false => 'heroicon-o-x-circle',
                     true => 'heroicon-o-check-circle',
-                })->color(fn (bool $state): string => match ($state) {
+                })->color(fn (bool $state) => match ($state) {
                     false => 'success',
                     true => 'danger',
                 })->label(__('Is Revoked')),
@@ -170,9 +171,13 @@ class ListPersonalKeys extends ListRecords
                 $key = OpenPGP::decryptPrivateKey(
                     $domain->key_data,
                     decrypt(
-                        Storage::disk($settings->passwordStore())->get(
+                        Storage::disk(
+                            $settings->passwordStore()
+                        )->get(implode([
+                            DomainResource::PASSWORD_STORAGE,
+                            DIRECTORY_SEPARATOR,
                             hash('sha256', $domain->name),
-                        )
+                        ]))
                     )
                 )->certifyKey($key);
             }
@@ -198,6 +203,6 @@ class ListPersonalKeys extends ListRecords
             '-',
             $fingerprint,
         ]);
-        $livewire->js("localStorage.setItem('$item', '$password')");
+        $livewire->js("localStorage.setItem('$item', '$password');");
     }
 }

@@ -45,13 +45,13 @@ class PersonalKeyResource extends Resource
                     TextEntry::make('certificate.domain.name')->label(__('Domain')),
                     TextEntry::make('certificate.primary_user')->label(__('User ID')),
                     TextEntry::make('certificate.fingerprint')->formatStateUsing(
-                        static fn (string $state): string => strtoupper($state)
+                        fn (string $state) => strtoupper($state)
                     )->label(__('Fingerprint')),
                     TextEntry::make('certificate.key_id')->formatStateUsing(
-                        static fn (string $state): string => strtoupper($state)
+                        fn (string $state) => strtoupper($state)
                     )->label(__('Key ID')),
                     TextEntry::make('certificate.key_algorithm')->formatStateUsing(
-                        static fn (int $state): string => CertificateResource::keyAlgorithm($state)
+                        fn (int $state) => CertificateResource::keyAlgorithm($state)
                     )->label(__('Key Algorithm')),
                     TextEntry::make('certificate.key_strength')
                         ->suffix(' bits')->label(__('Key Strength')),
@@ -60,10 +60,10 @@ class PersonalKeyResource extends Resource
                 ]),
                 Fieldset::make(__('Revocation'))->schema([
                     TextEntry::make('certificate.revocation.tag')->formatStateUsing(
-                        static fn (int $state): string => CertificateResource::revocationReason($state)
+                        fn (int $state) => CertificateResource::revocationReason($state)
                     )->label(__('Reason')),
                     TextEntry::make('certificate.revocation.reason')->label(__('Description')),
-                ])->hidden(static fn ($record): bool => !$record->is_revoked),
+                ])->hidden(fn ($record) => !$record->is_revoked),
             ]);
     }
 
