@@ -47,6 +47,13 @@ class CreateX509SigningRequest extends CreateRecord
 {
     protected static string $resource = X509SigningRequestResource::class;
     protected static bool $canCreateAnother = false;
+    private static array $rsaKeySizes = [
+        2048 => '2048 bits',
+        2560 => '2560 bits',
+        3072 => '3072 bits',
+        3584 => '3584 bits',
+        4096 => '4096 bits',
+    ];
 
     public function getTitle(): string
     {
@@ -105,13 +112,9 @@ class CreateX509SigningRequest extends CreateRecord
                 )->default(
                     KeyAlgorithmsEnum::Rsa->value
                 )->selectablePlaceholder(false)->label(__('Key Algorithm')),
-                Select::make('rsa_key_size')->default(2048)->options([
-                    2048 => '2048 bits',
-                    2560 => '2560 bits',
-                    3072 => '3072 bits',
-                    3584 => '3584 bits',
-                    4096 => '4096 bits',
-                ])->selectablePlaceholder(false)->label(__('Rsa Key Size')),
+                Select::make('rsa_key_size')->default(2048)->options(
+                    self::$rsaKeySizes
+                )->selectablePlaceholder(false)->label(__('Rsa Key Size')),
                 Toggle::make('with_password')->default(false)->inline(false)
                     ->live()->label(__('With Password')),
                 TextInput::make('password')->readonly()
@@ -132,9 +135,11 @@ class CreateX509SigningRequest extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $password = $data['password'] ?? null;
-        $keyAlgo = KeyAlgorithmsEnum::from((int) $data['key_algorithm']);
+        $keyAlgo = KeyAlgorithmsEnum::tryFrom(
+            (int) $data['key_algorithm']
+        ) ?? KeyAlgorithmsEnum::Rsa;
         $privateKey = self::createKey(
-            $keyAlgo, $password, $data['rsa_key_size']
+            $keyAlgo, $password, (int) $data['rsa_key_size']
         );
         $data['key_strength'] = $privateKey->getLength();
         $data['key_data'] = $privateKey->toString('PKCS8');
@@ -180,6 +185,9 @@ class CreateX509SigningRequest extends CreateRecord
         int $rsaKeySize = 2048
     ): PrivateKey
     {
+        if (!in_array($rsaKeySize, array_keys(self::$rsaKeySizes))) {
+            $rsaKeySize = 2048;
+        }
         return match ($keyAlgo) {
             KeyAlgorithmsEnum::Rsa => RSA::createKey($rsaKeySize)
                 ->withPassword($password),
