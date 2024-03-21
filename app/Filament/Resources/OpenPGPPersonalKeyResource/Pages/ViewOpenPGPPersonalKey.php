@@ -115,6 +115,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                         ->default(RevocationReasonTag::NoReason->value)->label(__('Reason')),
                     TextInput::make('reason')->required()->label(__('Description')),
                 ])
+                ->modalHeading(__('Revoke Personal Key'))
                 ->visible(!$this->record->is_revoked)
                 ->action(function (array $data) {
                     $email = $this->record->user->email;
