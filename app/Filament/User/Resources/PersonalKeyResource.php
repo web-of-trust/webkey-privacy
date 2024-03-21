@@ -26,7 +26,7 @@ use Filament\Infolists\Infolist;
  */
 class PersonalKeyResource extends Resource
 {
-    const PASSWORD_STORAGE_ITEM = 'wkp-password';
+    const PERSIST_PASSWORD_ITEM = 'persist-password';
 
     protected static ?string $model = OpenPGPPersonalKey::class;
     protected static ?string $navigationIcon = 'heroicon-o-key';

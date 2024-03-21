@@ -13,6 +13,7 @@ use App\Filament\User\Resources\{
     CertificateResource,
     PersonalKeyResource,
 };
+use App\Infolists\Components\PersistPasswordViwer;
 use App\Models\Domain;
 use App\Settings\AppSettings;
 use Filament\Forms\{
@@ -121,7 +122,19 @@ class ListPersonalKeys extends ListRecords
                     redirect(static::getResource()::getUrl('index'));
                 }),
         ])->actions([
-            ViewAction::make(),
+            Action::make('view_password')
+                ->infolist([
+                    PersistPasswordViwer::make('key_password')
+                        ->state(fn ($record) => implode([
+                            static::getResource()::PERSIST_PASSWORD_ITEM,
+                            '-',
+                            $record->certificate->fingerprint,
+                        ]))
+                        ->label(__('Key Password')),
+                ])
+                ->modalSubmitAction(false)
+                ->label(__('View Password'))
+                ->icon('heroicon-m-eye'),
             Action::make('export')->label(__('Export'))
                 ->icon('heroicon-m-arrow-down-tray')
                 ->action(function ($record) {
@@ -197,7 +210,7 @@ class ListPersonalKeys extends ListRecords
     )
     {
         $item = implode([
-            static::getResource()::PASSWORD_STORAGE_ITEM,
+            static::getResource()::PERSIST_PASSWORD_ITEM,
             '-',
             $fingerprint,
         ]);
