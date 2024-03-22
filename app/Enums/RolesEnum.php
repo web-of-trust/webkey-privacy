@@ -18,12 +18,16 @@ namespace App\Enums;
 enum RolesEnum: string
 {
     case AuthenticatedUser = 'authenticated-user';
+    case OpenPGPManager    = 'openpgp-manager';
+    case X509Manager       = 'x509-manager';
     case Administrator     = 'administrator';
 
     public function label(): string
     {
         return match ($this) {
             self::AuthenticatedUser => __('Authenticated User'),
+            self::OpenPGPManager    => __('OpenPGP Manager'),
+            self::X509Manager       => __('X509 Manager'),
             self::Administrator     => __('Administrator'),
         };
     }
