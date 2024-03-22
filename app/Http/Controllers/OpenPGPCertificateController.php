@@ -13,7 +13,7 @@ use App\Models\OpenPGPCertificate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * OpenPGP Certificate controller
+ * OpenPGP certificate controller
  *
  * @package  App
  * @category Http
