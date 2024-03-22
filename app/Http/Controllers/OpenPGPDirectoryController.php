@@ -28,65 +28,71 @@ class OpenPGPDirectoryController extends Controller
     const EMAIL_PATTERN = '/([A-Z0-9._%+-])+@[A-Z0-9.-]+\.[A-Z]{2,}/i';
 
     /**
-     * List all certificates.
+     * List webkey directory.
      *
      * @return JsonResource
      */
     public function __invoke(): JsonResource
     {
         JsonResource::withoutWrapping();
-        $directory = [
-            'fingerprint' => [],
-            'keyid' => [],
-            'email' => [],
-            'wkd' => [],
-        ];
-        $byDomains = $byEmails = [];
 
-        $certificates = OpenPGPCertificate::with('domain')->orderBy('creation_time', 'desc')->get();
-        foreach ($certificates as $cert) {
-            $directory['fingerprint'][$cert->fingerprint] = $cert->key_data;
-            $directory['keyid'][$cert->key_id] = $cert->key_data;
-            foreach ($cert->subKeys as $subKey) {
-                $directory['fingerprint'][$subKey->fingerprint] = $cert->key_data;
-                $directory['keyid'][$subKey->key_id] = $cert->key_data;
-            }
+        $cacheKey = __CLASS__ . '::directory';
+        $directory = cache($cacheKey);
+        if (empty($directory)) {
+            $directory = [
+                'fingerprint' => [],
+                'keyid' => [],
+                'email' => [],
+                'wkd' => [],
+            ];
+            $byDomains = $byEmails = [];
 
-            $publicKey = OpenPGP::readPublicKey($cert->key_data);
-            if ($email = self::extractEmail($cert->primary_user)) {
-                if (empty($byEmails[$email])) {
-                    $byEmails[$email] = $publicKey->getPacketList()->encode();
+            $certificates = OpenPGPCertificate::with('domain')->orderBy('creation_time', 'desc')->get();
+            foreach ($certificates as $cert) {
+                $directory['fingerprint'][$cert->fingerprint] = $cert->key_data;
+                $directory['keyid'][$cert->key_id] = $cert->key_data;
+                foreach ($cert->subKeys as $subKey) {
+                    $directory['fingerprint'][$subKey->fingerprint] = $cert->key_data;
+                    $directory['keyid'][$subKey->key_id] = $cert->key_data;
+                }
+
+                $publicKey = OpenPGP::readPublicKey($cert->key_data);
+                if ($email = self::extractEmail($cert->primary_user)) {
+                    if (empty($byEmails[$email])) {
+                        $byEmails[$email] = $publicKey->getPacketList()->encode();
+                    }
+                    else {
+                        $byEmails[$email] .= $publicKey->getPacketList()->encode();
+                    }
+                }
+
+                $domain = $cert->domain->name;
+                if (empty($byDomains[$domain][$cert->wkd_hash])) {
+                    $byDomains[$domain][$cert->wkd_hash] = $publicKey->getPacketList()->encode();
                 }
                 else {
-                    $byEmails[$email] .= $publicKey->getPacketList()->encode();
+                    $byDomains[$domain][$cert->wkd_hash] .= $publicKey->getPacketList()->encode();
                 }
             }
 
-            $domain = $cert->domain->name;
-            if (empty($byDomains[$domain][$cert->wkd_hash])) {
-                $byDomains[$domain][$cert->wkd_hash] = $publicKey->getPacketList()->encode();
-            }
-            else {
-                $byDomains[$domain][$cert->wkd_hash] .= $publicKey->getPacketList()->encode();
-            }
-        }
-
-        foreach ($byEmails as $email => $keyData) {
-            $byEmails[$email] = Armor::encode(
-                ArmorType::PublicKey, $keyData
-            );
-        }
-        $directory['email'] = $byEmails;
-
-        foreach ($byDomains as $domain => $byHashs) {
-            foreach ($byHashs as $hash => $keyData) {
-                $byDomains[$domain][$hash] = Armor::encode(
+            foreach ($byEmails as $email => $keyData) {
+                $byEmails[$email] = Armor::encode(
                     ArmorType::PublicKey, $keyData
                 );
             }
-        }
-        $directory['wkd'] = $byDomains;
+            $directory['email'] = $byEmails;
 
+            foreach ($byDomains as $domain => $byHashs) {
+                foreach ($byHashs as $hash => $keyData) {
+                    $byDomains[$domain][$hash] = Armor::encode(
+                        ArmorType::PublicKey, $keyData
+                    );
+                }
+            }
+            $directory['wkd'] = $byDomains;
+
+            cache([$cacheKey => $directory], now()->addMinutes(60));
+        }
         return JsonResource::collection($directory);
     }
 
