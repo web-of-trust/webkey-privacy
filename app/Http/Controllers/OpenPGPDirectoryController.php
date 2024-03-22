@@ -43,7 +43,7 @@ class OpenPGPDirectoryController extends Controller
                 'fingerprint' => [],
                 'keyid' => [],
                 'email' => [],
-                'wkd' => [],
+                'domain' => [],
             ];
             $byDomains = $byEmails = [];
 
@@ -89,7 +89,7 @@ class OpenPGPDirectoryController extends Controller
                     );
                 }
             }
-            $directory['wkd'] = $byDomains;
+            $directory['domain'] = $byDomains;
 
             cache([$cacheKey => $directory], now()->addMinutes(60));
         }
