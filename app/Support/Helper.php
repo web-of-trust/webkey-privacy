@@ -79,19 +79,6 @@ final class Helper
         )->deleteFileAfterSend(true);
     }
 
-    public static function exportOpenPGPCert(OpenPGPCertificate $model)
-    {
-        $filePath = tempnam(
-            sys_get_temp_dir(), $model->key_id
-        );
-        file_put_contents($filePath, $model->key_data);
-        return response()->download(
-            $filePath, $model->key_id . '.asc', [
-                'Content-Type' => 'application/pgp-keys',
-            ]
-        )->deleteFileAfterSend(true);
-    }
-
     public static function keyAlgorithm(int $algo): string
     {
         return KeyAlgorithm::tryFrom($algo)?->name ?? '';

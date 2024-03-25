@@ -10,6 +10,7 @@ namespace App\Filament\Resources\OpenPGPCertificateResource\Pages;
 
 use App\Filament\Resources\OpenPGPCertificateResource;
 use App\Models\Domain;
+use App\Support\Helper;
 use Filament\Forms\Components\{
     TextInput,
     Toggle,
@@ -53,7 +54,7 @@ class ListOpenPGPCertificates extends ListRecords
                 )->label(__('Key ID')),
             TextColumn::make('key_algorithm')
                 ->formatStateUsing(
-                    fn (int $state) => self::getResource()::keyAlgorithm($state)
+                    fn (int $state) => Helper::keyAlgorithm($state)
                 )->label(__('Key Algorithm ')),
             TextColumn::make('key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
@@ -91,9 +92,9 @@ class ListOpenPGPCertificates extends ListRecords
         ])->actions([
             Action::make('export')->label(__('Export Key'))
                 ->icon('heroicon-m-arrow-down-tray')
-                ->action(
-                    fn ($record) => self::getResource()::exportKey($record)
-                ),
+                ->action(fn ($record) => Helper::exportOpenPGPKey(
+                    $record->key_id, $record->key_data
+                )),
         ])->emptyStateHeading(
             __('No certificate yet')
         )->defaultSort('creation_time', 'desc');

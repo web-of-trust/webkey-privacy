@@ -8,10 +8,8 @@
 
 namespace App\Filament\Resources\OpenPGPPersonalKeyResource\Pages;
 
-use App\Filament\Resources\{
-    OpenPGPCertificateResource,
-    OpenPGPPersonalKeyResource,
-};
+use App\Filament\Resources\OpenPGPPersonalKeyResource;
+use App\Support\Helper;
 use Filament\Actions;
 use Filament\Forms\Components\{
     TextInput,
@@ -56,7 +54,7 @@ class ListOpenPGPPersonalKeys extends ListRecords
                 )->label(__('Key ID')),
             TextColumn::make('certificate.key_algorithm')
                 ->formatStateUsing(
-                    fn (int $state) => OpenPGPCertificateResource::keyAlgorithm($state)
+                    fn (int $state) => Helper::keyAlgorithm($state)
                 )->label(__('Key Algorithm ')),
             TextColumn::make('certificate.key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),

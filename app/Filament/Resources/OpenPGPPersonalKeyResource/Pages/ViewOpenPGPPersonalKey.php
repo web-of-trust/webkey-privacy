@@ -10,7 +10,6 @@ namespace App\Filament\Resources\OpenPGPPersonalKeyResource\Pages;
 
 use App\Filament\Resources\{
     DomainResource,
-    OpenPGPCertificateResource,
     OpenPGPPersonalKeyResource,
 };
 use App\Models\{
@@ -72,7 +71,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                     fn (string $state) => strtoupper($state)
                 )->label(__('Key ID')),
                 TextEntry::make('certificate.key_algorithm')->formatStateUsing(
-                    fn (int $state) => OpenPGPCertificateResource::keyAlgorithm($state)
+                    fn (int $state) => Helper::keyAlgorithm($state)
                 )->label(__('Key Algorithm')),
                 TextEntry::make('certificate.key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),
@@ -94,7 +93,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
             Fieldset::make(__('Revocation'))->schema([
                 TextEntry::make('certificate.revocation.tag')->formatStateUsing(
-                    fn (int $state) => OpenPGPCertificateResource::revocationReason($state)
+                    fn (int $state) => Helper::revocationReason($state)
                 )->label(__('Reason')),
                 TextEntry::make('certificate.revocation.reason')->label(__('Description')),
             ])->hidden(!$this->record->is_revoked),
@@ -107,13 +106,12 @@ class ViewOpenPGPPersonalKey extends ViewRecord
             Action::make('revoke')
                 ->form([
                     Select::make('tag')->selectablePlaceholder(false)
-                        ->options([
-                            RevocationReasonTag::NoReason->value => __('No reason'),
-                            RevocationReasonTag::KeySuperseded->value => __('Key is superseded'),
-                            RevocationReasonTag::KeyCompromised->value => __('Key has been compromised'),
-                            RevocationReasonTag::KeyRetired->value => __('Key is retired'),
-                            RevocationReasonTag::UserIDInvalid->value => __('User ID is invalid'),
-                        ])
+                        ->options(collect(RevocationReasonTag::cases())->map(
+                            fn ($tag) => [
+                                'label' => Helper::revocationReason($tag->value),
+                                'value' => $tag->value,
+                            ]
+                        )->pluck('label', 'value'))
                         ->default(RevocationReasonTag::NoReason->value)->label(__('Reason')),
                     TextInput::make('reason')->required()->label(__('Description')),
                 ])

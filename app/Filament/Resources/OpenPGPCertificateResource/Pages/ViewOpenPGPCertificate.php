@@ -8,8 +8,8 @@
 
 namespace App\Filament\Resources\OpenPGPCertificateResource\Pages;
 
-use App\Support\Helper;
 use App\Filament\Resources\OpenPGPCertificateResource;
+use App\Support\Helper;
 use Filament\Actions\Action;
 use Filament\Infolists\{
     Components\Fieldset,
@@ -49,7 +49,7 @@ class ViewOpenPGPCertificate extends ViewRecord
                     fn (string $state) => strtoupper($state)
                 )->label(__('Key ID')),
                 TextEntry::make('key_algorithm')->formatStateUsing(
-                    fn (int $state) => self::getResource()::keyAlgorithm($state)
+                    fn (int $state) => Helper::keyAlgorithm($state)
                 )->label(__('Key Algorithm')),
                 TextEntry::make('key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),
@@ -82,9 +82,9 @@ class ViewOpenPGPCertificate extends ViewRecord
     {
         return [
             Action::make('export')
-                ->action(
-                    fn ($record) => self::getResource()::exportKey($record)
-                )
+                ->action(fn ($record) => Helper::exportOpenPGPKey(
+                    $record->key_id, $record->key_data
+                ))
                 ->icon('heroicon-m-arrow-down-tray')
                 ->label(__('Export Key')),
             Action::make('back')->url(
