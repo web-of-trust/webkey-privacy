@@ -8,7 +8,9 @@
 
 namespace App\Filament\User\Resources;
 
-use App\Filament\Resources\OpenPGPCertificateResource as BaseResource;
+use App\Filament\User\Resources\CertificateResource\Pages;
+use App\Models\OpenPGPCertificate;
+use Filament\Resources\Resource;
 
 /**
  * Certificate resource
@@ -17,16 +19,32 @@ use App\Filament\Resources\OpenPGPCertificateResource as BaseResource;
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class CertificateResource extends BaseResource
+class CertificateResource extends Resource
 {
-    protected static ?string $navigationGroup = null;
+    protected static ?string $model = OpenPGPCertificate::class;
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
+    protected static ?string $slug = 'certificate';
+
+    public static function getModelLabel(): string
+    {
+        return __('Certificate');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Certificates');
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListCertificates::route('/'),
+            'view' => Pages\ViewCertificate::route('/{record}'),
+        ];
+    }
 
     public static function canAccess(): bool
     {
-        $user = auth()->user();
-        if ($user->isAdministrator()) {
-            return true;
-        }
-        return $user->canAccessUserPanel();
+        return true;
     }
 }

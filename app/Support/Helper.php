@@ -8,7 +8,10 @@
 
 namespace App\Support;
 
+use App\Models\OpenPGPCertificate;
 use OpenPGP\{
+    Enum\KeyAlgorithm,
+    Enum\RevocationReasonTag,
     Type\SubkeyInterface,
     OpenPGP,
 };
@@ -61,5 +64,48 @@ final class Helper
             };
         }
         return $subKeys;
+    }
+
+    public static function exportOpenPGPKey(string $name, string $keyData)
+    {
+        $filePath = tempnam(
+            sys_get_temp_dir(), $name
+        );
+        file_put_contents($filePath, $keyData);
+        return response()->download(
+            $filePath, $name . '.asc', [
+                'Content-Type' => 'application/pgp-keys',
+            ]
+        )->deleteFileAfterSend(true);
+    }
+
+    public static function exportOpenPGPCert(OpenPGPCertificate $model)
+    {
+        $filePath = tempnam(
+            sys_get_temp_dir(), $model->key_id
+        );
+        file_put_contents($filePath, $model->key_data);
+        return response()->download(
+            $filePath, $model->key_id . '.asc', [
+                'Content-Type' => 'application/pgp-keys',
+            ]
+        )->deleteFileAfterSend(true);
+    }
+
+    public static function keyAlgorithm(int $algo): string
+    {
+        return KeyAlgorithm::tryFrom($algo)?->name ?? '';
+    }
+
+    public static function revocationReason(int $tag): string
+    {
+        return match (RevocationReasonTag::tryFrom($tag)) {
+            RevocationReasonTag::NoReason => __('No reason'),
+            RevocationReasonTag::KeySuperseded => __('Key is superseded'),
+            RevocationReasonTag::KeyCompromised => __('Key has been compromised'),
+            RevocationReasonTag::KeyRetired => __('Key is retired'),
+            RevocationReasonTag::UserIDInvalid => __('User ID is invalid'),
+            default => '',
+        };
     }
 }

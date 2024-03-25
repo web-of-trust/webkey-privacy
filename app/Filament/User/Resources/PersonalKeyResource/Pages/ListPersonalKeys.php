@@ -9,13 +9,11 @@
 namespace App\Filament\User\Resources\PersonalKeyResource\Pages;
 
 use App\Filament\Resources\DomainResource;
-use App\Filament\User\Resources\{
-    CertificateResource,
-    PersonalKeyResource,
-};
-use App\Infolists\Components\PersistPasswordViwer;
+use App\Filament\User\Resources\PersonalKeyResource;
+use App\Infolists\Components\PersistPasswordViewer;
 use App\Models\Domain;
 use App\Settings\AppSettings;
+use App\Support\Helper;
 use Filament\Forms\{
     Form,
     Set,
@@ -69,7 +67,7 @@ class ListPersonalKeys extends ListRecords
                 )->label(__('Key ID')),
             TextColumn::make('certificate.key_algorithm')
                 ->formatStateUsing(
-                    fn (int $state) => CertificateResource::keyAlgorithm($state)
+                    fn (int $state) => Helper::keyAlgorithm($state)
                 )->label(__('Key Algorithm ')),
             TextColumn::make('certificate.key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),
@@ -129,7 +127,7 @@ class ListPersonalKeys extends ListRecords
                     ->modalSubmitAction(false)->icon('heroicon-m-eye')
                     ->modalHeading(__('View Remembered Key Password'))
                     ->infolist([
-                        PersistPasswordViwer::make('password')
+                        PersistPasswordViewer::make('password')
                             ->state(fn ($record) => implode([
                                 static::getResource()::PERSIST_PASSWORD_ITEM,
                                 '-',
@@ -139,17 +137,9 @@ class ListPersonalKeys extends ListRecords
                     ]),
                 Action::make('export')->label(__('Export'))
                     ->icon('heroicon-m-arrow-down-tray')
-                    ->action(function ($record) {
-                        $filePath = tempnam(
-                            sys_get_temp_dir(), $record->certificate->fingerprint
-                        );
-                        file_put_contents($filePath, $record->key_data);
-                        return response()->download(
-                            $filePath, $record->user->email . '.asc', [
-                                'Content-Type' => 'application/pgp-keys',
-                            ]
-                        )->deleteFileAfterSend(true);
-                    }),
+                    ->action(fn ($record) => Helper::exportOpenPGPKey(
+                            $record->user->email, $record->key_data
+                        )),
             ]),
         ])->modifyQueryUsing(
             fn (Builder $query) => $query->where('user_id', auth()->user()->id)

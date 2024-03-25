@@ -11,13 +11,13 @@ namespace App\Infolists\Components;
 use Filament\Infolists\Components\Entry;
 
 /**
- * Infolists persist password viwer Entry
+ * Infolists persist password viewer entry
  *
  * @package  App
  * @category Infolists
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class PersistPasswordViwer extends Entry
+class PersistPasswordViewer extends Entry
 {
-    protected string $view = 'infolists.components.persist-password-viwer';
+    protected string $view = 'infolists.components.persist-password-viewer';
 }

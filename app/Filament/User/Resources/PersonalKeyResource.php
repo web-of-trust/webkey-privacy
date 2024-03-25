@@ -10,6 +10,7 @@ namespace App\Filament\User\Resources;
 
 use App\Filament\User\Resources\PersonalKeyResource\Pages;
 use App\Models\OpenPGPPersonalKey;
+use App\Support\Helper;
 use Filament\Resources\Resource;
 use Filament\Infolists\Components\{
     Fieldset,
@@ -56,7 +57,7 @@ class PersonalKeyResource extends Resource
                         fn (string $state) => strtoupper($state)
                     )->label(__('Key ID')),
                     TextEntry::make('certificate.key_algorithm')->formatStateUsing(
-                        fn (int $state) => CertificateResource::keyAlgorithm($state)
+                        fn (int $state) => Helper::keyAlgorithm($state)
                     )->label(__('Key Algorithm')),
                     TextEntry::make('certificate.key_strength')
                         ->suffix(' bits')->label(__('Key Strength')),
@@ -65,7 +66,7 @@ class PersonalKeyResource extends Resource
                 ]),
                 Fieldset::make(__('Revocation'))->schema([
                     TextEntry::make('certificate.revocation.tag')->formatStateUsing(
-                        fn (int $state) => CertificateResource::revocationReason($state)
+                        fn (int $state) => Helper::revocationReason($state)
                     )->label(__('Reason')),
                     TextEntry::make('certificate.revocation.reason')->label(__('Description')),
                 ])->hidden(fn ($record) => !$record->is_revoked),
