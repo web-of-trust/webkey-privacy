@@ -42,9 +42,4 @@ class CertificateResource extends Resource
             'view' => Pages\ViewCertificate::route('/{record}'),
         ];
     }
-
-    public static function canAccess(): bool
-    {
-        return true;
-    }
 }
