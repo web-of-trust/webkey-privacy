@@ -9,13 +9,13 @@
 namespace App\Enums;
 
 /**
- * Roles enum
+ * Role enum
  *
  * @package  App
  * @category Enum
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-enum RolesEnum: string
+enum Role: string
 {
     case AuthenticatedUser = 'authenticated-user';
     case OpenPGPManager    = 'openpgp-manager';

@@ -9,13 +9,13 @@
 namespace App\Enums;
 
 /**
- * Panels enum
+ * Panel enum
  *
  * @package  App
  * @category Enum
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-enum PanelsEnum: string
+enum Panel: string
 {
     case Admin   = 'admin';
     case OpenPGP = 'openpgp';

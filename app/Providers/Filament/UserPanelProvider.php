@@ -8,7 +8,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Enums\PanelsEnum;
+use App\Enums\Panel as PanelEnum;
 use App\Filament\User\Pages\EditUserProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -40,8 +40,8 @@ class UserPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id(PanelsEnum::User->value)
-            ->path(env('USER_PANEL_PATH', PanelsEnum::User->path()))
+            ->id(PanelEnum::User->value)
+            ->path(env('USER_PANEL_PATH', PanelEnum::User->path()))
             ->login()
             ->profile(EditUserProfile::class, isSimple: false)
             ->colors([

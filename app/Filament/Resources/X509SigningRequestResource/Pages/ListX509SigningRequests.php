@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
 use App\Filament\Resources\X509SigningRequestResource;
-use App\Enums\KeyAlgorithmsEnum;
+use App\Enums\X509KeyAlgorithm;
 use App\Models\{
     Domain,
     X509SigningRequest,
@@ -55,7 +55,7 @@ class ListX509SigningRequests extends ListRecords
             TextColumn::make('cn')->label(__('Common Name')),
             TextColumn::make('key_algorithm')
                 ->formatStateUsing(
-                    fn (int $state) => KeyAlgorithmsEnum::tryFrom($state)?->label()
+                    fn (int $state) => X509KeyAlgorithm::tryFrom($state)?->label()
                 )->label(__('Key Algorithm ')),
             TextColumn::make('key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),

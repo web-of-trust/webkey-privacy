@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
 use App\Filament\Resources\X509SigningRequestResource;
-use App\Enums\KeyAlgorithmsEnum;
+use App\Enums\X509KeyAlgorithm;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\{
     Fieldset,
@@ -55,7 +55,7 @@ class ViewX509SigningRequest extends ViewRecord
             ]),
             Fieldset::make(__('Key Information'))->schema([
                 TextEntry::make('key_algorithm')->formatStateUsing(
-                    fn (int $state) => KeyAlgorithmsEnum::tryFrom($state)?->label()
+                    fn (int $state) => X509KeyAlgorithm::tryFrom($state)?->label()
                 )->label(__('Key Algorithm')),
                 TextEntry::make('key_strength')
                     ->suffix(' bits')->label(__('Key Strength')),

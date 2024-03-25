@@ -9,14 +9,14 @@
 namespace App\Models;
 
 use App\Enums\{
-    PanelsEnum,
-    RolesEnum,
+    Panel,
+    Role,
 };
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
+use Filament\Panel as FilamentPanel;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -64,16 +64,16 @@ class User extends Authenticatable implements FilamentUser
     /**
      * User can access panel in production.
      *
-     * @param Panel $panel
+     * @param FilamentPanel $panel
      * @return bool
      */
-    public function canAccessPanel(Panel $panel): bool
+    public function canAccessPanel(FilamentPanel $panel): bool
     {
         if ($this->isAdministrator()) {
             return true;
         }
-        if ($panel->getId() === PanelsEnum::User->value) {
-            return $this->hasRole(RolesEnum::AuthenticatedUser);
+        if ($panel->getId() === Panel::User->value) {
+            return $this->hasRole(Role::AuthenticatedUser);
         }
         return false;
     }
@@ -85,7 +85,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function isAdministrator(): bool
     {
-        return $this->isSupperAdmin() || $this->hasRole(RolesEnum::Administrator);
+        return $this->isSupperAdmin() || $this->hasRole(Role::Administrator);
     }
 
     /**

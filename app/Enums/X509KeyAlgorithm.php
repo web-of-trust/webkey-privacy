@@ -9,13 +9,13 @@
 namespace App\Enums;
 
 /**
- * Key algorithms enum
+ * X509 key algorithm enum
  *
  * @package  App
  * @category Enum
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-enum KeyAlgorithmsEnum: int
+enum X509KeyAlgorithm: int
 {
     case Rsa = 1;
     case NistP256 = 2;

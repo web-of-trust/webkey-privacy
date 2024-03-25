@@ -8,7 +8,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\RolesEnum;
+use App\Enums\Role;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\{
     Domain,
@@ -37,7 +37,7 @@ class UserResource extends Resource
     public static function roles(): array
     {
         return collect(
-            RolesEnum::cases()
+            Role::cases()
         )->pluck('name', 'value')->toArray();
     }
 

@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
 use App\Filament\Resources\X509SigningRequestResource;
-use App\Enums\KeyAlgorithmsEnum;
+use App\Enums\X509KeyAlgorithm;
 use App\Models\Domain;
 use App\Settings\AppSettings;
 use Filament\Forms\{
@@ -103,14 +103,14 @@ class CreateX509SigningRequest extends CreateRecord
             ]),
             Fieldset::make(__('Key Settings'))->schema([
                 Select::make('key_algorithm')->options(
-                    collect(KeyAlgorithmsEnum::cases())->map(
+                    collect(X509KeyAlgorithm::cases())->map(
                         fn ($algo) => [
                             'label' => $algo->label(),
                             'value' => $algo->value,
                         ]
                     )->pluck('label', 'value')
                 )->default(
-                    KeyAlgorithmsEnum::Rsa->value
+                    X509KeyAlgorithm::Rsa->value
                 )->selectablePlaceholder(false)->label(__('Key Algorithm')),
                 Select::make('rsa_key_size')->default(2048)->options(
                     self::$rsaKeySizes
@@ -135,9 +135,9 @@ class CreateX509SigningRequest extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $password = $data['password'] ?? null;
-        $keyAlgo = KeyAlgorithmsEnum::tryFrom(
+        $keyAlgo = X509KeyAlgorithm::tryFrom(
             (int) $data['key_algorithm']
-        ) ?? KeyAlgorithmsEnum::Rsa;
+        ) ?? X509KeyAlgorithm::Rsa;
         $privateKey = self::createKey(
             $keyAlgo, $password, (int) $data['rsa_key_size']
         );
@@ -180,7 +180,7 @@ class CreateX509SigningRequest extends CreateRecord
     }
 
     private static function createKey(
-        KeyAlgorithmsEnum $keyAlgo,
+        X509KeyAlgorithm $keyAlgo,
         ?string $password = null,
         int $rsaKeySize = 2048
     ): PrivateKey
@@ -189,7 +189,7 @@ class CreateX509SigningRequest extends CreateRecord
             $rsaKeySize = 2048;
         }
         return match ($keyAlgo) {
-            KeyAlgorithmsEnum::Rsa => RSA::createKey($rsaKeySize)
+            X509KeyAlgorithm::Rsa => RSA::createKey($rsaKeySize)
                 ->withPassword($password),
             default => EC::createKey(strtolower($keyAlgo->name))
                 ->withPassword($password),
