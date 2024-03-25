@@ -20,5 +20,13 @@ use App\Filament\Resources\OpenPGPCertificateResource as BaseResource;
 class CertificateResource extends BaseResource
 {
     protected static ?string $navigationGroup = null;
-    protected static bool $shouldSkipAuthorization = true;
+
+    public static function canAccess(): bool
+    {
+        $user = auth()->user();
+        if ($user->isAdministrator()) {
+            return true;
+        }
+        return $user->canAccessUserPanel();
+    }
 }

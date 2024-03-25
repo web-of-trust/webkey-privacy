@@ -77,11 +77,16 @@ class User extends Authenticatable implements FilamentUser
                 || $this->hasRole(Role::X509Manager);
         }
         if ($panel->getId() === Panel::User->value) {
-            return $this->hasRole(Role::AuthenticatedUser)
-                || $this->hasRole(Role::OpenPGPManager)
-                || $this->hasRole(Role::X509Manager);
+            return $this->canAccessUserPanel();
         }
         return false;
+    }
+
+    public function canAccessUserPanel(): bool
+    {
+        return $this->hasRole(Role::AuthenticatedUser)
+            || $this->hasRole(Role::OpenPGPManager)
+            || $this->hasRole(Role::X509Manager);
     }
 
     /**
