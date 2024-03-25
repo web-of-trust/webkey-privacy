@@ -10,6 +10,7 @@ namespace App\Filament\Resources\X509SigningRequestResource\RelationManagers;
 
 use App\Filament\Resources\X509CertificateResource;
 use App\Models\X509Certificate;
+use App\Support\Helper;
 use Filament\Forms\{
     Components\FileUpload,
     Components\Hidden,
@@ -124,7 +125,7 @@ class CertificatesRelationManager extends RelationManager
             Action::make('export_cert')->label(__('Export'))
                 ->icon('heroicon-m-arrow-down-tray')
                 ->action(
-                    fn ($record) => X509CertificateResource::exportCertificate($record)
+                    fn ($record) => Helper::exportX509Certificate($record)
                 ),
         ])->recordTitleAttribute('Certificates');
     }

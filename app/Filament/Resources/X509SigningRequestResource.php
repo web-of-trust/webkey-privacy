@@ -59,30 +59,4 @@ class X509SigningRequestResource extends AdminResource
     {
         return static::canAccessX509();
     }
-
-    public static function exportKey(X509SigningRequest $record)
-    {
-        $filePath = tempnam(
-            sys_get_temp_dir(), $record->cn
-        );
-        file_put_contents($filePath, $record->key_data);
-        return response()->download(
-            $filePath, $record->cn . '.key', [
-                'Content-Type' => 'application/pkcs8',
-            ]
-        )->deleteFileAfterSend(true);
-    }
-
-    public static function exportCsr(X509SigningRequest $record)
-    {
-        $filePath = tempnam(
-            sys_get_temp_dir(), $record->cn
-        );
-        file_put_contents($filePath, $record->csr_data);
-        return response()->download(
-            $filePath, $record->cn . '.csr', [
-                'Content-Type' => 'application/pkcs',
-            ]
-        )->deleteFileAfterSend(true);
-    }
 }

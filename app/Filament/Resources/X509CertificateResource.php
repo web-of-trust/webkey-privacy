@@ -46,17 +46,4 @@ class X509CertificateResource extends AdminResource
     {
         return static::canAccessX509();
     }
-
-    public static function exportCertificate(X509Certificate $record)
-    {
-        $filePath = tempnam(
-            sys_get_temp_dir(), $record->serial_number
-        );
-        file_put_contents($filePath, $record->certificate_data);
-        return response()->download(
-            $filePath, $record->csr->cn . '.cert', [
-                'Content-Type' => 'application/pkcs',
-            ]
-        )->deleteFileAfterSend(true);
-    }
 }

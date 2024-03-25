@@ -8,8 +8,9 @@
 
 namespace App\Filament\Resources\X509SigningRequestResource\Pages;
 
-use App\Filament\Resources\X509SigningRequestResource;
 use App\Enums\X509KeyAlgorithm;
+use App\Filament\Resources\X509SigningRequestResource;
+use App\Support\Helper;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\{
     Fieldset,
@@ -69,12 +70,12 @@ class ViewX509SigningRequest extends ViewRecord
             Action::make('export_key')->label(__('Export Key'))
                 ->icon('heroicon-m-arrow-down-tray')
                 ->action(
-                    fn ($record) => self::getResource()::exportKey($record)
+                    fn ($record) => Helper::exportX509Key($record)
                 ),
             Action::make('export_csr')->label(__('Export Csr'))
                 ->icon('heroicon-m-arrow-down-tray')
                 ->action(
-                    fn ($record) => self::getResource()::exportCsr($record)
+                    fn ($record) => Helper::exportX509Csr($record)
                 ),
             Action::make('back')->url(
                 $this->previousUrl ?? self::getResource()::getUrl('index')

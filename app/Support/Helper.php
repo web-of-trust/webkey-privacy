@@ -8,7 +8,10 @@
 
 namespace App\Support;
 
-use App\Models\OpenPGPCertificate;
+use App\Models\{
+    X509Certificate,
+    X509SigningRequest,
+};
 use OpenPGP\{
     Enum\KeyAlgorithm,
     Enum\RevocationReasonTag,
@@ -64,6 +67,45 @@ final class Helper
             };
         }
         return $subKeys;
+    }
+
+    public static function exportX509Key(X509SigningRequest $record)
+    {
+        $filePath = tempnam(
+            sys_get_temp_dir(), $record->cn
+        );
+        file_put_contents($filePath, $record->key_data);
+        return response()->download(
+            $filePath, $record->cn . '.key', [
+                'Content-Type' => 'application/pkcs8',
+            ]
+        )->deleteFileAfterSend(true);
+    }
+
+    public static function exportX509Csr(X509SigningRequest $record)
+    {
+        $filePath = tempnam(
+            sys_get_temp_dir(), $record->cn
+        );
+        file_put_contents($filePath, $record->csr_data);
+        return response()->download(
+            $filePath, $record->cn . '.csr', [
+                'Content-Type' => 'application/pkcs',
+            ]
+        )->deleteFileAfterSend(true);
+    }
+
+    public static function exportX509Certificate(X509Certificate $record)
+    {
+        $filePath = tempnam(
+            sys_get_temp_dir(), $record->serial_number
+        );
+        file_put_contents($filePath, $record->certificate_data);
+        return response()->download(
+            $filePath, $record->csr->cn . '.cert', [
+                'Content-Type' => 'application/pkcs',
+            ]
+        )->deleteFileAfterSend(true);
     }
 
     public static function exportOpenPGPKey(string $name, string $keyData)

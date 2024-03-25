@@ -10,6 +10,7 @@ namespace App\Filament\Resources\X509CertificateResource\Pages;
 
 use App\Filament\Resources\X509CertificateResource;
 use App\Models\Domain;
+use App\Support\Helper;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
@@ -60,9 +61,9 @@ class ListX509Certificates extends ListRecords
         ])->actions([
             Action::make('export_cert')->label(__('Export'))
                 ->icon('heroicon-m-arrow-down-tray')
-                ->action(function ($record) {
-                    return self::getResource()::exportCertificate($record);
-                }),
+                ->action(
+                    fn ($record) => Helper::exportX509Certificate($record)
+                ),
         ])->emptyStateHeading(
             __('No x509 certificate yet')
         )->defaultSort('created_at', 'desc');

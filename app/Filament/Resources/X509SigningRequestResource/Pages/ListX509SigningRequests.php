@@ -15,6 +15,7 @@ use App\Models\{
     X509SigningRequest,
 };
 use App\Settings\AppSettings;
+use App\Support\Helper;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
@@ -92,12 +93,12 @@ class ListX509SigningRequests extends ListRecords
                 Action::make('export_key')->label(__('Export Key'))
                     ->icon('heroicon-m-arrow-down-tray')
                     ->action(
-                        fn ($record) => self::getResource()::exportKey($record)
+                        fn ($record) => Helper::exportX509Key($record)
                     ),
                 Action::make('export_csr')->label(__('Export Csr'))
                     ->icon('heroicon-m-arrow-down-tray')
                     ->action(
-                        fn ($record) => self::getResource()::exportCsr($record)
+                        fn ($record) => Helper::exportX509Csr($record)
                     ),
             ])->tooltip('Actions'),
         ])->defaultSort('created_at', 'desc');
