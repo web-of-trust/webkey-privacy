@@ -9,6 +9,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Models\Domain;
 use Filament\Forms\Form;
 use Filament\Forms\Components\{
     Select,
@@ -37,7 +38,7 @@ class CreateUser extends CreateRecord
             TextInput::make('name')->required()->label(__('Name')),
             TextInput::make('email')->email()->required()->unique()
                 ->endsWith(
-                    static::getResource()::domainNames()
+                    Domain::all()->pluck('name', 'id')
                 )->validationMessages([
                     'unique' => __('The email address has already been taken.'),
                     'ends_with' => __('The email address does not belong to any domains.'),

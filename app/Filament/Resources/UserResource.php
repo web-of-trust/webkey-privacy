@@ -10,10 +10,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\Role;
 use App\Filament\Resources\UserResource\Pages;
-use App\Models\{
-    Domain,
-    User,
-};
+use App\Models\User;
 
 /**
  * User resource
@@ -35,14 +32,12 @@ class UserResource extends AdminResource
 
     public static function roles(): array
     {
-        return collect(
-            Role::cases()
-        )->pluck('name', 'value')->toArray();
-    }
-
-    public static function domainNames(): array
-    {
-         return Domain::all()->pluck('name', 'id')->toArray();
+        return collect(Role::cases())->map(
+            fn ($role) => [
+                'label' => $role->label(),
+                'value' => $role->value,
+            ]
+        )->pluck('label', 'value')->toArray();
     }
 
     public static function getPages(): array
