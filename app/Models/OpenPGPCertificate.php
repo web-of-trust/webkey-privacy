@@ -8,15 +8,12 @@
 
 namespace App\Models;
 
+use App\Support\Helper;
 use Illuminate\Database\Eloquent\{
     Factories\HasFactory,
     Relations\BelongsTo,
     Relations\HasOne,
     Model,
-};
-use OpenPGP\{
-    Type\SubkeyInterface,
-    OpenPGP,
 };
 use ParagonIE\ConstantTime\Base32;
 
@@ -30,8 +27,6 @@ use ParagonIE\ConstantTime\Base32;
 class OpenPGPCertificate extends Model
 {
     use HasFactory;
-
-    const EMAIL_PATTERN = '/([A-Z0-9._%+-])+@[A-Z0-9.-]+\.[A-Z]{2,}/i';
 
     protected $table = 'openpgp_certificates';
 
@@ -75,27 +70,9 @@ class OpenPGPCertificate extends Model
     {
         parent::boot();
 
-        static::retrieved(static function (self $model) {
-            if (!empty($model->key_data)) {
-                $publicKey = OpenPGP::readPublicKey($model->key_data);
-                foreach ($publicKey->getSubkeys() as $subKey) {
-                    $model->subKeys[] = new class ($subKey) {
-                        function __construct(SubkeyInterface $subKey) {
-                            $this->fingerprint = $subKey->getFingerprint(true);
-                            $this->key_id = $subKey->getKeyID(true);
-                            $this->key_algorithm = $subKey->getKeyAlgorithm()->name;
-                            $this->key_strength = $subKey->getKeyStrength();
-                            $this->creation_time = $subKey->getCreationTime();
-                            $this->expiration_time = $subKey->getExpirationTime();
-                        }
-                    };
-                }
-            }
-        });
-
         static::creating(static function (self $model) {
             $parts = explode(
-                '@', self::extractEmail($model->primary_user)
+                '@', Helper::extractEmail($model->primary_user)
             );
             if (empty($model->wkd_hash) && !empty($parts[0])) {
                 $model->wkd_hash = Base32::encode(
@@ -117,13 +94,5 @@ class OpenPGPCertificate extends Model
     public function revocation(): HasOne
     {
         return $this->hasOne(OpenPGPRevocation::class, 'certificate_id', 'id');
-    }
-
-    private static function extractEmail(string $userId): string
-    {
-        if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
-            return $matches[0];
-        };
-        return '';
     }
 }

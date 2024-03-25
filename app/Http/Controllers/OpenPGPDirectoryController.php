@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OpenPGPCertificate;
+use App\Support\Helper;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenPGP\{
     Enum\ArmorType,
@@ -25,8 +26,6 @@ use OpenPGP\{
  */
 class OpenPGPDirectoryController extends Controller
 {
-    const EMAIL_PATTERN = '/([A-Z0-9._%+-])+@[A-Z0-9.-]+\.[A-Z]{2,}/i';
-
     /**
      * List webkey directory.
      *
@@ -49,15 +48,16 @@ class OpenPGPDirectoryController extends Controller
 
             $certificates = OpenPGPCertificate::with('domain')->orderBy('creation_time', 'desc')->get();
             foreach ($certificates as $cert) {
+                $publicKey = OpenPGP::readPublicKey($cert->key_data);
+
                 $directory['fingerprint'][$cert->fingerprint] = $cert->key_data;
                 $directory['keyid'][$cert->key_id] = $cert->key_data;
-                foreach ($cert->subKeys as $subKey) {
-                    $directory['fingerprint'][$subKey->fingerprint] = $cert->key_data;
-                    $directory['keyid'][$subKey->key_id] = $cert->key_data;
+                foreach ($publicKey->getSubkeys() as $subKey) {
+                    $directory['fingerprint'][$subKey->getFingerprint(true)] = $cert->key_data;
+                    $directory['keyid'][$subKey->getKeyID(true)] = $cert->key_data;
                 }
 
-                $publicKey = OpenPGP::readPublicKey($cert->key_data);
-                if ($email = self::extractEmail($cert->primary_user)) {
+                if ($email = Helper::extractEmail($cert->primary_user)) {
                     if (empty($byEmails[$email])) {
                         $byEmails[$email] = $publicKey->getPacketList()->encode();
                     }
@@ -94,13 +94,5 @@ class OpenPGPDirectoryController extends Controller
             cache([$cacheKey => $directory], now()->addMinutes(60));
         }
         return JsonResource::collection($directory);
-    }
-
-    private static function extractEmail(string $userId): string
-    {
-        if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
-            return $matches[0];
-        };
-        return '';
     }
 }

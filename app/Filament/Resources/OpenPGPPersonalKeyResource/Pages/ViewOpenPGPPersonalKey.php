@@ -18,6 +18,7 @@ use App\Models\{
     OpenPGPRevocation,
 };
 use App\Settings\AppSettings;
+use App\Support\Helper;
 use Filament\Actions\Action;
 use Filament\Forms\Components\{
     Select,
@@ -59,6 +60,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
 
     public function infolist(Infolist $infolist): Infolist
     {
+        $this->record->certificate->subKeys = Helper::getSubkeys($this->record->certificate->key_data);
         return $infolist->schema([
             Fieldset::make(__('Certificate Information'))->schema([
                 TextEntry::make('certificate.domain.name')->label(__('Domain')),

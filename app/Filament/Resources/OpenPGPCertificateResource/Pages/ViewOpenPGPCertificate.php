@@ -8,6 +8,7 @@
 
 namespace App\Filament\Resources\OpenPGPCertificateResource\Pages;
 
+use App\Support\Helper;
 use App\Filament\Resources\OpenPGPCertificateResource;
 use Filament\Actions\Action;
 use Filament\Infolists\{
@@ -36,6 +37,7 @@ class ViewOpenPGPCertificate extends ViewRecord
 
     public function infolist(Infolist $infolist): Infolist
     {
+        $this->record->subKeys = Helper::getSubkeys($this->record->key_data);
         return $infolist->schema([
             Fieldset::make(__('Certificate Information'))->schema([
                 TextEntry::make('domain.name')->label(__('Domain')),
