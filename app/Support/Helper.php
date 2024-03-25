@@ -47,7 +47,7 @@ final class Helper
     public static function getSubkeys(string $armoredPublicKey): array
     {
         $subKeys = [];
-        $publicKey = OpenPGP::readPublicKey($armored);
+        $publicKey = OpenPGP::readPublicKey($armoredPublicKey);
         foreach ($publicKey->getSubkeys() as $subKey) {
             $subKeys[] = new class ($subKey) {
                 function __construct(SubkeyInterface $subKey) {
