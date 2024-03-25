@@ -24,18 +24,30 @@ final class Helper
 {
     const EMAIL_PATTERN = '/([A-Z0-9._%+-])+@[A-Z0-9.-]+\.[A-Z]{2,}/i';
 
-    public static function extractEmail(string $userId): string
+    /**
+     * Extract email address from string.
+     *
+     * @param string $subject
+     * @return string
+     */
+    public static function extractEmail(string $subject): string
     {
-        if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
+        if (preg_match(self::EMAIL_PATTERN, $subject, $matches)) {
             return $matches[0];
         };
         return '';
     }
 
-    public static function getSubkeys(string $keyData): array
+    /**
+     * Get sub keys from armored OpenPGP public key.
+     *
+     * @param string $armoredPublicKey
+     * @return array
+     */
+    public static function getSubkeys(string $armoredPublicKey): array
     {
         $subKeys = [];
-        $publicKey = OpenPGP::readPublicKey($keyData);
+        $publicKey = OpenPGP::readPublicKey($armored);
         foreach ($publicKey->getSubkeys() as $subKey) {
             $subKeys[] = new class ($subKey) {
                 function __construct(SubkeyInterface $subKey) {
