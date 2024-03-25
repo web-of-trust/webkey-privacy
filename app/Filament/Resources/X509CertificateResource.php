@@ -10,7 +10,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\X509CertificateResource\Pages;
 use App\Models\X509Certificate;
-use Filament\Resources\Resource;
 
 /**
  * X509 certificate resource
@@ -19,7 +18,7 @@ use Filament\Resources\Resource;
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class X509CertificateResource extends Resource
+class X509CertificateResource extends AdminResource
 {
     protected static ?string $model = X509Certificate::class;
     protected static ?string $navigationGroup = 'X509';
@@ -41,6 +40,11 @@ class X509CertificateResource extends Resource
         return [
             'index' => Pages\ListX509Certificates::route('/'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return static::canAccessX509();
     }
 
     public static function exportCertificate(X509Certificate $record)

@@ -14,7 +14,6 @@ use App\Models\{
     Domain,
     User,
 };
-use Filament\Resources\Resource;
 
 /**
  * User resource
@@ -23,7 +22,7 @@ use Filament\Resources\Resource;
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class UserResource extends Resource
+class UserResource extends AdminResource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-user';

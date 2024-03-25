@@ -10,7 +10,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OpenPGPCertificateResource\Pages;
 use App\Models\OpenPGPCertificate;
-use Filament\Resources\Resource;
 use OpenPGP\Enum\{
     KeyAlgorithm,
     RevocationReasonTag,
@@ -23,7 +22,7 @@ use OpenPGP\Enum\{
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class OpenPGPCertificateResource extends Resource
+class OpenPGPCertificateResource extends AdminResource
 {
     protected static ?string $model = OpenPGPCertificate::class;
     protected static ?string $navigationGroup = 'OpenPGP';
@@ -46,6 +45,11 @@ class OpenPGPCertificateResource extends Resource
             'index' => Pages\ListOpenPGPCertificates::route('/'),
             'view' => Pages\ViewOpenPGPCertificate::route('/{record}'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return static::canAccessOpenPGP();
     }
 
     public static function exportKey(OpenPGPCertificate $model)

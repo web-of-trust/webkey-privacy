@@ -72,6 +72,10 @@ class User extends Authenticatable implements FilamentUser
         if ($this->isAdministrator()) {
             return true;
         }
+        if ($panel->getId() === Panel::Admin->value) {
+            return $this->hasRole(Role::OpenPGPManager)
+                || $this->hasRole(Role::X509Manager);
+        }
         if ($panel->getId() === Panel::User->value) {
             return $this->hasRole(Role::AuthenticatedUser);
         }

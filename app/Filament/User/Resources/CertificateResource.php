@@ -20,4 +20,5 @@ use App\Filament\Resources\OpenPGPCertificateResource as BaseResource;
 class CertificateResource extends BaseResource
 {
     protected static ?string $navigationGroup = null;
+    protected static bool $shouldSkipAuthorization = true;
 }

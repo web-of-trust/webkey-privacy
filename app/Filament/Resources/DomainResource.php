@@ -11,7 +11,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DomainResource\Pages;
 use App\Models\Domain;
 use App\Settings\AppSettings;
-use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Storage;
 use OpenPGP\OpenPGP;
 
@@ -22,7 +21,7 @@ use OpenPGP\OpenPGP;
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class DomainResource extends Resource
+class DomainResource extends AdminResource
 {
     const PASSWORD_STORAGE = 'domain-openpgp-password';
 

@@ -8,10 +8,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Role;
 use App\Filament\Resources\X509SigningRequestResource\Pages;
 use App\Filament\Resources\X509SigningRequestResource\RelationManagers;
 use App\Models\X509SigningRequest;
-use Filament\Resources\Resource;
 
 /**
  * X509 signing request resource
@@ -20,7 +20,7 @@ use Filament\Resources\Resource;
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class X509SigningRequestResource extends Resource
+class X509SigningRequestResource extends AdminResource
 {
     const PASSWORD_STORAGE = 'domain-x509-password';
 
@@ -53,6 +53,11 @@ class X509SigningRequestResource extends Resource
         return [
             RelationManagers\CertificatesRelationManager::class,
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return static::canAccessX509();
     }
 
     public static function exportKey(X509SigningRequest $record)

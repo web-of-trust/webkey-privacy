@@ -10,7 +10,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OpenPGPPersonalKeyResource\Pages;
 use App\Models\OpenPGPPersonalKey;
-use Filament\Resources\Resource;
 
 /**
  * OpenPGP personal key resource
@@ -19,7 +18,7 @@ use Filament\Resources\Resource;
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class OpenPGPPersonalKeyResource extends Resource
+class OpenPGPPersonalKeyResource extends AdminResource
 {
     protected static ?string $model = OpenPGPPersonalKey::class;
     protected static ?string $navigationGroup = 'OpenPGP';
@@ -42,5 +41,10 @@ class OpenPGPPersonalKeyResource extends Resource
             'index' => Pages\ListOpenPGPPersonalKeys::route('/'),
             'view' => Pages\ViewOpenPGPPersonalKey::route('/{record}'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return static::canAccessOpenPGP();
     }
 }
