@@ -18,16 +18,12 @@ namespace App\Enums;
 enum Panel: string
 {
     case Admin   = 'admin';
-    case OpenPGP = 'openpgp';
-    case X509    = 'x509';
     case User    = 'user';
 
     public function path(): string
     {
         return match ($this) {
             self::Admin   => 'admin',
-            self::OpenPGP => 'openpgp',
-            self::X509    => 'x509',
             self::User    => 'user',
         };
     }
