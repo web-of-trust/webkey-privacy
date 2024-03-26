@@ -8,6 +8,7 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use App\Enums\Role;
 use App\Filament\Resources\UserResource;
 use App\Models\Domain;
 use Filament\Forms\Form;
@@ -48,7 +49,7 @@ class CreateUser extends CreateRecord
                 ->dehydrated(fn ($state) => filled($state))
                 ->required()->label(__('Password')),
             Select::make('role')->options(
-                static::getResource()::roles()
+                Role::class
             )->required()->label(__('Role')),
         ]);
     }

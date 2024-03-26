@@ -8,7 +8,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Role;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 
@@ -28,16 +27,6 @@ class UserResource extends AdminResource
     public static function getNavigationLabel(): string
     {
         return __('User Manager');
-    }
-
-    public static function roles(): array
-    {
-        return collect(Role::cases())->map(
-            fn ($role) => [
-                'label' => $role->label(),
-                'value' => $role->value,
-            ]
-        )->pluck('label', 'value')->toArray();
     }
 
     public static function getPages(): array

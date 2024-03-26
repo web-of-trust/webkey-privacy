@@ -8,6 +8,7 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use App\Enums\Role;
 use App\Filament\Resources\UserResource;
 use Filament\Forms\Form;
 use Filament\Forms\Components\{
@@ -39,7 +40,7 @@ class EditUser extends EditRecord
                 ->dehydrated(fn ($state) => filled($state))
                 ->required(false)->label(__('Password')),
             Select::make('role')->options(
-                static::getResource()::roles()
+                Role::class
             )->hidden(
                 $this->record->isSupperAdmin()
             )->required()->label(__('Role')),

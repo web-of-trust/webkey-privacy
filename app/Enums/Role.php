@@ -7,6 +7,7 @@
  */
 
 namespace App\Enums;
+use Filament\Support\Contracts\HasLabel;
 
 /**
  * Role enum
@@ -15,14 +16,14 @@ namespace App\Enums;
  * @category Enum
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-enum Role: string
+enum Role: string implements HasLabel
 {
     case AuthenticatedUser = 'authenticated-user';
     case OpenPGPManager    = 'openpgp-manager';
     case X509Manager       = 'x509-manager';
     case Administrator     = 'administrator';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::AuthenticatedUser => __('Authenticated User'),
