@@ -109,7 +109,7 @@ class ListPersonalKeys extends ListRecords
                     $pgpKey = self::generateKey(
                         $user->name, $user->email, $password, $data
                     );
-                    static::$resource::getModel()::create([
+                    static::getResource()::getModel()::create([
                         'user_id' => $user->id,
                         'key_data' => $pgpKey->armor(),
                     ]);
@@ -118,7 +118,7 @@ class ListPersonalKeys extends ListRecords
                             $livewire, $password, $pgpKey->getFingerprint(true)
                         );
                     }
-                    redirect(static::getResource()::getUrl('index'));
+                    redirect(static::getResource()::getUrl());
                 }),
         ])->actions([
             ActionGroup::make([
