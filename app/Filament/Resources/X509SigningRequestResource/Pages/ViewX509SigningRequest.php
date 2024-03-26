@@ -78,7 +78,7 @@ class ViewX509SigningRequest extends ViewRecord
                     fn ($record) => Helper::exportX509Csr($record)
                 ),
             Action::make('back')->url(
-                $this->previousUrl ?? self::getResource()::getUrl('index')
+                $this->previousUrl ?? self::getResource()::getUrl()
             )->color('gray')->label(__('Back')),
         ];
     }
