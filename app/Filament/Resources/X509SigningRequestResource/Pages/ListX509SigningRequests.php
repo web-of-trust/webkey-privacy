@@ -56,7 +56,7 @@ class ListX509SigningRequests extends ListRecords
             TextColumn::make('cn')->label(__('Common Name')),
             TextColumn::make('key_algorithm')
                 ->formatStateUsing(
-                    fn (int $state) => X509KeyAlgorithm::tryFrom($state)?->label()
+                    fn (int $state) => X509KeyAlgorithm::tryFrom($state)
                 )->label(__('Key Algorithm ')),
             TextColumn::make('key_strength')
                 ->suffix(' bits')->label(__('Key Strength')),

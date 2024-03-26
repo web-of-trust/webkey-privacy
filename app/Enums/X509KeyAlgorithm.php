@@ -7,6 +7,7 @@
  */
 
 namespace App\Enums;
+use Filament\Support\Contracts\HasLabel;
 
 /**
  * X509 key algorithm enum
@@ -15,7 +16,7 @@ namespace App\Enums;
  * @category Enum
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-enum X509KeyAlgorithm: int
+enum X509KeyAlgorithm: int implements HasLabel
 {
     case Rsa = 1;
     case NistP256 = 2;
@@ -23,7 +24,7 @@ enum X509KeyAlgorithm: int
     case NistP521 = 4;
     case Ed25519 = 5;
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::Rsa => 'RSA',
