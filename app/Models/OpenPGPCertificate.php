@@ -59,7 +59,7 @@ class OpenPGPCertificate extends Model
         'is_revoked' => 'boolean',
     ];
 
-    public array $subKeys = [];
+    public array $subkeys = [];
 
     /**
      * The "boot" method of the model.
@@ -82,7 +82,7 @@ class OpenPGPCertificate extends Model
         });
 
         static::updating(static function (self $model) {
-            unset($model->subKeys);
+            unset($model->subkeys);
         });
     }
 

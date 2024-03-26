@@ -33,7 +33,7 @@ trait ViewOpenPGPCertificate
 
     public function infolist(Infolist $infolist): Infolist
     {
-        $this->record->subKeys = Helper::getSubkeys($this->record->key_data);
+        $this->record->subkeys = Helper::getSubkeys($this->record->key_data);
         return $infolist->schema([
             Fieldset::make(__('Certificate Information'))->schema([
                 TextEntry::make('domain.name')->label(__('Domain')),
@@ -52,7 +52,7 @@ trait ViewOpenPGPCertificate
                 TextEntry::make('creation_time')->label(__('Creation Time')),
                 TextEntry::make('expiration_time')->label(__('Expiration Time')),
             ]),
-            RepeatableEntry::make('subKeys')
+            RepeatableEntry::make('subkeys')
                 ->schema([
                     TextEntry::make('fingerprint')->formatStateUsing(
                         fn (string $state) => strtoupper($state)
