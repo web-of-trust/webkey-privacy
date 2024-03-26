@@ -203,6 +203,6 @@ class ListPersonalKeys extends ListRecords
             $fingerprint,
         ]);
         $livewire->js("localStorage.setItem('$item', '$password');");
-        usleep(1);
+        sleep(1);
     }
 }
