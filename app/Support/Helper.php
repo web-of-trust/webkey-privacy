@@ -12,12 +12,14 @@ use App\Models\{
     X509Certificate,
     X509SigningRequest,
 };
+use App\Settings\AppSettings;
 use OpenPGP\{
     Enum\KeyAlgorithm,
     Enum\RevocationReasonTag,
     Type\SubkeyInterface,
     OpenPGP,
 };
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Helper class
@@ -45,6 +47,16 @@ final class Helper
     }
 
     /**
+     * Generate random password from app settings.
+     *
+     * @return string
+     */
+    public static function randomPassword(): string
+    {
+        return app(AppSettings::class)->randomPassword();
+    }
+
+    /**
      * Get sub keys from armored OpenPGP public key.
      *
      * @param string $armoredPublicKey
@@ -69,7 +81,15 @@ final class Helper
         return $subKeys;
     }
 
-    public static function exportX509Key(X509SigningRequest $record)
+    /**
+     * Export X509 key.
+     *
+     * @param X509SigningRequest $record
+     * @return Response
+     */
+    public static function exportX509Key(
+        X509SigningRequest $record
+    ): Response
     {
         $filePath = tempnam(
             sys_get_temp_dir(), $record->cn
@@ -82,7 +102,15 @@ final class Helper
         )->deleteFileAfterSend(true);
     }
 
-    public static function exportX509Csr(X509SigningRequest $record)
+    /**
+     * Export X509 Certificate Signing Request.
+     *
+     * @param X509SigningRequest $record
+     * @return Response
+     */
+    public static function exportX509Csr(
+        X509SigningRequest $record
+    ): Response
     {
         $filePath = tempnam(
             sys_get_temp_dir(), $record->cn
@@ -95,7 +123,15 @@ final class Helper
         )->deleteFileAfterSend(true);
     }
 
-    public static function exportX509Certificate(X509Certificate $record)
+    /**
+     * Export X509 Certificate.
+     *
+     * @param X509SigningRequest $record
+     * @return Response
+     */
+    public static function exportX509Certificate(
+        X509Certificate $record
+    ): Response
     {
         $filePath = tempnam(
             sys_get_temp_dir(), $record->serial_number
@@ -108,7 +144,16 @@ final class Helper
         )->deleteFileAfterSend(true);
     }
 
-    public static function exportOpenPGPKey(string $name, string $keyData)
+    /**
+     * Export OpenPGP Key.
+     *
+     * @param string $name
+     * @param string $keyData
+     * @return Response
+     */
+    public static function exportOpenPGPKey(
+        string $name, string $keyData
+    ): Response
     {
         $filePath = tempnam(
             sys_get_temp_dir(), $name

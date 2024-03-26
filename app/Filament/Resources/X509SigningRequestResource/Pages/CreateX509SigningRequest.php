@@ -12,6 +12,7 @@ use App\Filament\Resources\X509SigningRequestResource;
 use App\Enums\X509KeyAlgorithm;
 use App\Models\Domain;
 use App\Settings\AppSettings;
+use App\Support\Helper;
 use Filament\Forms\{
     Form,
     Get,
@@ -118,14 +119,14 @@ class CreateX509SigningRequest extends CreateRecord
                 Toggle::make('with_password')->default(false)->inline(false)
                     ->live()->label(__('With Password')),
                 TextInput::make('password')->readonly()
-                    ->default(self::randomPassword())
+                    ->default(Helper::randomPassword())
                     ->helperText('You must remember and/or save the password.')
                     ->hidden(fn (Get $get) => !$get('with_password'))
                     ->hintActions([
                         Action::make('change')
                             ->label(__('Change'))
                             ->action(fn (Set $set) => $set(
-                                'password', self::randomPassword()
+                                'password', Helper::randomPassword()
                             )),
                     ])->label(__('Password')),
             ]),
@@ -204,10 +205,5 @@ class CreateX509SigningRequest extends CreateRecord
         $x509->setPrivateKey($privateKey);
         $x509->setDN($dn);
         return $x509->saveCSR($x509->signCSR());
-    }
-
-    private static function randomPassword(): string
-    {
-        return app(AppSettings::class)->randomPassword();
     }
 }

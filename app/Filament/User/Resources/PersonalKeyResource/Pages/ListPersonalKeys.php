@@ -91,13 +91,13 @@ class ListPersonalKeys extends ListRecords
                         TextInput::make('password')
                             ->readonly()->password()
                             ->revealable(filament()->arePasswordsRevealable())
-                            ->default(self::randomPassword())
+                            ->default(Helper::randomPassword())
                             ->helperText(__('You must remember and/or save the password.'))
                             ->hintActions([
                                 FormAction::make('change')
                                     ->label(__('Change'))
                                     ->action(fn (Set $set) => $set(
-                                        'password', self::randomPassword()
+                                        'password', Helper::randomPassword()
                                     )),
                             ])->label(__('Password')),
                         Toggle::make('remember')->default(true)->inline(false)
@@ -191,11 +191,6 @@ class ListPersonalKeys extends ListRecords
         }
 
         return $key;
-    }
-
-    private static function randomPassword(): string
-    {
-        return app(AppSettings::class)->randomPassword();
     }
 
     private static function rememberPassword(
