@@ -67,7 +67,7 @@ trait ViewOpenPGPCertificate
                 ])->columns(2)->columnSpan(2)->label(__('Sub Keys')),
             Fieldset::make(__('Revocation'))->schema([
                 TextEntry::make('revocation.tag')->formatStateUsing(
-                    fn (int $state) => self::getResource()::revocationReason($state)
+                    fn (int $state) => Helper::revocationReason($state)
                 )->label(__('Reason')),
                 TextEntry::make('revocation.reason')->label(__('Description')),
             ])->hidden(!$this->record->is_revoked),
