@@ -118,7 +118,7 @@ class ListPersonalKeys extends ListRecords
                             $livewire, $password, $pgpKey->getFingerprint(true)
                         );
                     }
-                    redirect(static::getResource()::getUrl());
+                    $livewire->redirect(static::getResource()::getUrl());
                 }),
         ])->actions([
             ActionGroup::make([
@@ -203,6 +203,5 @@ class ListPersonalKeys extends ListRecords
             $fingerprint,
         ]);
         $livewire->js("localStorage.setItem('$item', '$password');");
-        sleep(1);
     }
 }
