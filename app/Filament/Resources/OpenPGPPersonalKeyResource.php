@@ -42,9 +42,4 @@ class OpenPGPPersonalKeyResource extends AdminResource
             'view' => Pages\ViewOpenPGPPersonalKey::route('/{record}'),
         ];
     }
-
-    public static function canAccess(): bool
-    {
-        return static::canAccessOpenPGP();
-    }
 }

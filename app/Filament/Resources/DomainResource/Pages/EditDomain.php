@@ -10,7 +10,6 @@ namespace App\Filament\Resources\DomainResource\Pages;
 
 use App\Filament\Resources\DomainResource;
 use App\Settings\AppSettings;
-use Filament\Actions\DeleteAction;
 use Filament\Forms\{
     Components\Fieldset,
     Components\Textarea,
@@ -78,6 +77,6 @@ class EditDomain extends EditRecord
 
     protected function getRedirectUrl(): string
     {
-        return static::getResource()::getUrl('index');
+        return static::getResource()::getUrl();
     }
 }

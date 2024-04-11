@@ -64,7 +64,7 @@ class CreateDomain extends CreateRecord
             ]),
             Fieldset::make(__('Key Settings'))->schema(
                 AppSettings::keySettings()
-            )->hidden(fn (Get $get) => ! $get('generate_key')),
+            )->hidden(fn (Get $get) => !$get('generate_key')),
         ]);
     }
 
@@ -85,6 +85,6 @@ class CreateDomain extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return static::getResource()::getUrl('index');
+        return static::getResource()::getUrl();
     }
 }

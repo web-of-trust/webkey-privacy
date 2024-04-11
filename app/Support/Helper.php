@@ -8,10 +8,6 @@
 
 namespace App\Support;
 
-use App\Models\{
-    X509Certificate,
-    X509SigningRequest,
-};
 use App\Settings\AppSettings;
 use OpenPGP\{
     Enum\KeyAlgorithm,
@@ -79,69 +75,6 @@ final class Helper
             };
         }
         return $subKeys;
-    }
-
-    /**
-     * Export X509 key.
-     *
-     * @param X509SigningRequest $record
-     * @return Response
-     */
-    public static function exportX509Key(
-        X509SigningRequest $record
-    ): Response
-    {
-        $filePath = tempnam(
-            sys_get_temp_dir(), $record->cn
-        );
-        file_put_contents($filePath, $record->key_data);
-        return response()->download(
-            $filePath, $record->cn . '.key', [
-                'Content-Type' => 'application/pkcs8',
-            ]
-        )->deleteFileAfterSend(true);
-    }
-
-    /**
-     * Export X509 Certificate Signing Request.
-     *
-     * @param X509SigningRequest $record
-     * @return Response
-     */
-    public static function exportX509Csr(
-        X509SigningRequest $record
-    ): Response
-    {
-        $filePath = tempnam(
-            sys_get_temp_dir(), $record->cn
-        );
-        file_put_contents($filePath, $record->csr_data);
-        return response()->download(
-            $filePath, $record->cn . '.csr', [
-                'Content-Type' => 'application/pkcs',
-            ]
-        )->deleteFileAfterSend(true);
-    }
-
-    /**
-     * Export X509 Certificate.
-     *
-     * @param X509SigningRequest $record
-     * @return Response
-     */
-    public static function exportX509Certificate(
-        X509Certificate $record
-    ): Response
-    {
-        $filePath = tempnam(
-            sys_get_temp_dir(), $record->serial_number
-        );
-        file_put_contents($filePath, $record->certificate_data);
-        return response()->download(
-            $filePath, $record->csr->cn . '.cert', [
-                'Content-Type' => 'application/pkcs',
-            ]
-        )->deleteFileAfterSend(true);
     }
 
     /**

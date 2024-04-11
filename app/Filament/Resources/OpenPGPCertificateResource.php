@@ -42,9 +42,4 @@ class OpenPGPCertificateResource extends AdminResource
             'view' => Pages\ViewOpenPGPCertificate::route('/{record}'),
         ];
     }
-
-    public static function canAccess(): bool
-    {
-        return static::canAccessOpenPGP();
-    }
 }

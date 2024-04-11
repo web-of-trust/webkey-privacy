@@ -8,7 +8,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Role;
 use Filament\Resources\Resource;
 
 /**
@@ -23,23 +22,5 @@ abstract class AdminResource extends Resource
     public static function canAccess(): bool
     {
         return auth()->user()->isAdministrator();
-    }
-
-    protected static function canAccessOpenPGP(): bool
-    {
-        $user = auth()->user();
-        if ($user->isAdministrator()) {
-            return true;
-        }
-        return $user->hasRole(Role::OpenPGPManager);
-    }
-
-    protected static function canAccessX509(): bool
-    {
-        $user = auth()->user();
-        if ($user->isAdministrator()) {
-            return true;
-        }
-        return $user->hasRole(Role::X509Manager);
     }
 }
