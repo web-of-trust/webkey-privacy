@@ -10,10 +10,6 @@ namespace App\Filament\Concerns;
 
 use App\Models\Domain;
 use App\Support\Helper;
-use Filament\Forms\Components\{
-    TextInput,
-    Toggle,
-};
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\{
@@ -21,8 +17,8 @@ use Filament\Tables\Columns\{
     TextColumn,
 };
 use Filament\Tables\Filters\{
-    Filter,
     SelectFilter,
+    TernaryFilter,
 };
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,7 +40,7 @@ trait ListOpenPGPCertificates
     public function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('primary_user')->wrap()->label(__('User ID')),
+            TextColumn::make('primary_user')->searchable()->wrap()->label(__('User ID')),
             TextColumn::make('key_id')
                 ->formatStateUsing(
                     fn (string $state) => strtoupper($state)
@@ -66,26 +62,11 @@ trait ListOpenPGPCertificates
             TextColumn::make('creation_time')
                 ->sortable()->label(__('Creation Time')),
         ])->filters([
-            Filter::make('filter')->form([
-                TextInput::make('user')->label(__('User ID')),
-                Toggle::make('revoked')->label(__('Is Revoked')),
-            ])->query(
-                fn (Builder $query, array $data) => $query->when(
-                    $data['user'],
-                    fn (Builder $query, string $user) => $query->where(
-                        'primary_user', 'like', '%' . trim($user) . '%'
-                    )
-                )->when(
-                    $data['revoked'],
-                    fn (Builder $query, int $revoked) => $query->where(
-                        'is_revoked', $revoked
-                    )
-                )
-            ),
             SelectFilter::make('domain_id')
                 ->options(
                     Domain::all()->pluck('name', 'id')
                 )->label(__('Domain')),
+            TernaryFilter::make('is_revoked')->label(__('Is Revoked')),
         ])->actions([
             Action::make('export')->label(__('Export Key'))
                 ->icon('heroicon-m-arrow-down-tray')

@@ -11,10 +11,7 @@ namespace App\Filament\Resources\OpenPGPPersonalKeyResource\Pages;
 use App\Filament\Resources\OpenPGPPersonalKeyResource;
 use App\Support\Helper;
 use Filament\Actions;
-use Filament\Forms\Components\{
-    TextInput,
-    Toggle,
-};
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\{
     Action,
@@ -47,7 +44,8 @@ class ListOpenPGPPersonalKeys extends ListRecords
     public function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('certificate.primary_user')->label(__('User ID')),
+            TextColumn::make('certificate.primary_user')
+                ->searchable()->label(__('User ID')),
             TextColumn::make('certificate.key_id')
                 ->formatStateUsing(
                     fn (string $state) => strtoupper($state)
@@ -70,7 +68,6 @@ class ListOpenPGPPersonalKeys extends ListRecords
                 ->sortable()->label(__('Creation Time')),
         ])->filters([
             Filter::make('filter')->form([
-                TextInput::make('user')->label(__('User ID')),
                 Toggle::make('revoked')->label(__('Is Revoked')),
             ])->baseQuery(
                 fn (Builder $query) => $query->select('openpgp_personal_keys.*')->leftJoin(
@@ -78,11 +75,6 @@ class ListOpenPGPPersonalKeys extends ListRecords
                 )
             )->query(
                 fn (Builder $query, array $data) => $query->when(
-                    $data['user'],
-                    fn (Builder $query, string $user) => $query->where(
-                        'openpgp_certificates.primary_user', 'like', '%' . trim($user) . '%'
-                    )
-                )->when(
                     $data['revoked'],
                     fn (Builder $query, int $revoked) => $query->where(
                         'openpgp_personal_keys.is_revoked', $revoked
