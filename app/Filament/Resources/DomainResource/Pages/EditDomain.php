@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\DomainResource\Pages;
 
 use App\Filament\Resources\DomainResource;
-use App\Settings\AppSettings;
+use App\Settings\OpenPgpSettings;
 use Filament\Forms\{
     Components\Fieldset,
     Components\Textarea,
@@ -45,14 +45,14 @@ class EditDomain extends EditRecord
                     ->columnSpan(2)->label(__('Description')),
             ]),
             Fieldset::make(__('Key Settings'))->schema(
-                AppSettings::keySettings()
+                OpenPgpSettings::keySettings()
             )->hidden(fn (Get $get) => ! $get('generate_key')),
         ]);
     }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $settings = app(AppSettings::class);
+        $settings = app(OpenPgpSettings::class);
         $data['key_type'] = $settings->key_type;
         $data['elliptic_curve'] = $settings->elliptic_curve;
         $data['rsa_key_size'] = $settings->rsa_key_size;

@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\DomainResource\Pages;
 
 use App\Filament\Resources\DomainResource;
-use App\Settings\AppSettings;
+use App\Settings\OpenPgpSettings;
 use Filament\Forms\{
     Components\Fieldset,
     Components\Textarea,
@@ -63,7 +63,7 @@ class CreateDomain extends CreateRecord
                     ->columnSpan(2)->label(__('Description')),
             ]),
             Fieldset::make(__('Key Settings'))->schema(
-                AppSettings::keySettings()
+                OpenPgpSettings::keySettings()
             )->hidden(fn (Get $get) => !$get('generate_key')),
         ]);
     }

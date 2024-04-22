@@ -10,7 +10,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DomainResource\Pages;
 use App\Models\Domain;
-use App\Settings\AppSettings;
+use App\Settings\OpenPgpSettings;
 use Illuminate\Support\Facades\Storage;
 use OpenPGP\OpenPGP;
 
@@ -47,7 +47,7 @@ class DomainResource extends AdminResource
         string $domain, string $email, array $keySettings = []
     ): string
     {
-        $settings = app(AppSettings::class)->fill($keySettings);
+        $settings = app(OpenPgpSettings::class)->fill($keySettings);
         $password = $settings->randomPassword();
 
         Storage::disk($settings->passwordStore())->put(

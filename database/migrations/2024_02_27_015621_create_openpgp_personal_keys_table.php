@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('openpgp_personal_keys', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->foreignId('user_id')->index();
             $table->unsignedInteger('certificate_id');
             $table->boolean('is_revoked')->default(false);
             $table->text('key_data')->nullable();

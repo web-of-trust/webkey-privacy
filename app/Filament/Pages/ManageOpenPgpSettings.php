@@ -8,35 +8,40 @@
 
 namespace App\Filament\Pages;
 
-use App\Settings\AppSettings;
+use App\Settings\OpenPgpSettings;
 use Filament\Forms\Components\{
     Select,
     TextInput,
 };
 use Filament\Forms\Form;
 use Filament\Pages\SettingsPage;
+use OpenPGP\Enum\{
+    HashAlgorithm,
+    SymmetricAlgorithm,
+};
 
 /**
- * App settings manager page
+ * OpenPgp settings manager page
  *
  * @package  App
  * @category Filament
  * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
  */
-class ManageAppSettings extends SettingsPage
+class ManageOpenPgpSettings extends SettingsPage
 {
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static ?string $slug = 'app-settings';
-    protected static string $settings = AppSettings::class;
+    protected static ?string $slug = 'openpgp-settings';
+
+    protected static string $settings = OpenPgpSettings::class;
 
     public static function getNavigationLabel(): string
     {
-        return __('App Settings');
+        return __('OpenPgp Settings');
     }
 
     public function getTitle(): string
     {
-        return __('App Settings');
+        return __('OpenPgp Settings');
     }
 
     public function form(Form $form): Form
@@ -49,7 +54,13 @@ class ManageAppSettings extends SettingsPage
             TextInput::make('password_length')->default(32)
                 ->numeric()->minValue(32)->maxValue(64)
                 ->required()->label(__('Password Length')),
-            ...static::$settings::keySettings(),
+            Select::make('preferred_hash')->required()->options(
+                collect(HashAlgorithm::cases())->pluck('name', 'name')
+            )->label(__('Preferred Hash')),
+            Select::make('preferred_symmetric')->required()->options(
+                collect(SymmetricAlgorithm::cases())->pluck('name', 'name')
+            )->label(__('Preferred Symmetric')),
+            ...OpenPgpSettings::keySettings(),
         ]);
     }
 }

@@ -52,14 +52,17 @@ class User extends Authenticatable implements FilamentUser
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 
     /**
      * User can access panel in production.
@@ -96,18 +99,5 @@ class User extends Authenticatable implements FilamentUser
     public function isSupperAdmin(): bool
     {
         return $this->id === 1;
-    }
-
-    /**
-     * User has active personal key.
-     *
-     * @return bool
-     */
-    public function hasActivePersonalKey(): bool
-    {
-        return OpenPGPPersonalKey::where([
-            'user_id' => $this->id,
-            'is_revoked' => false,
-        ])->count() > 0;
     }
 }

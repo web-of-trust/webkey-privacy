@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('openpgp_certificates', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('domain_id')->index();
+            $table->foreignId('domain_id')->index();
             $table->string('fingerprint', 64)->unique();
             $table->string('key_id', 16)->index();
             $table->string('wkd_hash', 32)->index();

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 /**
- * This file is part of the User Privacy project.
+ * This file is part of the Webkey Privacy project.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -39,7 +39,6 @@ class UserPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
             ->id(PanelEnum::User->value)
             ->path(env('USER_PANEL_PATH', PanelEnum::User->path()))
             ->login()
@@ -52,6 +51,7 @@ class UserPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
+            ->discoverWidgets(in: app_path('Filament/User/Widgets'), for: 'App\\Filament\\User\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
             ])

@@ -12,7 +12,7 @@ use App\Filament\Resources\DomainResource;
 use App\Filament\User\Resources\PersonalKeyResource;
 use App\Infolists\Components\PersistPasswordViewer;
 use App\Models\Domain;
-use App\Settings\AppSettings;
+use App\Settings\OpenPgpSettings;
 use App\Support\Helper;
 use Filament\Forms\{
     Form,
@@ -84,10 +84,10 @@ class ListPersonalKeys extends ListRecords
         ])->headerActions([
             Action::make('generate_key')
                 ->label(__('Generate Personal Key'))
-                ->hidden(auth()->user()->hasActivePersonalKey())
+                ->hidden(self::hasActivePersonalKey())
                 ->form([
                     Fieldset::make(__('Key Settings'))->schema([
-                        ...AppSettings::keySettings(),
+                        ...OpenPgpSettings::keySettings(),
                         TextInput::make('password')
                             ->readonly()->password()
                             ->revealable(filament()->arePasswordsRevealable())
@@ -150,6 +150,15 @@ class ListPersonalKeys extends ListRecords
         )->defaultSort('certificate.creation_time', 'desc');
     }
 
+    private static function hasActivePersonalKey(): bool
+    {
+        $user = auth()->user();
+        return static::getResource()::getModel()::where([
+            'user_id' => $user->id,
+            'is_revoked' => false,
+        ])->count() > 0;
+    }
+
     private static function generateKey(
         string $name,
         string $email,
@@ -157,7 +166,7 @@ class ListPersonalKeys extends ListRecords
         array $keySettings = []
     ): PrivateKeyInterface
     {
-        $settings = app(AppSettings::class)->fill($keySettings);
+        $settings = app(OpenPgpSettings::class)->fill($keySettings);
 
         $key = OpenPGP::generateKey(
             [$name . " <$email>"],

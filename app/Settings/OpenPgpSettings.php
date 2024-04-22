@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-/**
- * This file is part of the Webkey Privacy project.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
 
 namespace App\Settings;
 
@@ -17,24 +11,21 @@ use OpenPGP\Enum\{
     CurveOid,
     DHKeySize,
     KeyType,
+    HashAlgorithm,
     RSAKeySize,
+    SymmetricAlgorithm,
 };
 use Spatie\LaravelSettings\Settings;
 
-/**
- * App settings
- *
- * @package  App
- * @category Settings
- * @author   Nguyen Van Nguyen - nguyennv1981@gmail.com
- */
-final class AppSettings extends Settings
+class OpenPgpSettings extends Settings
 {
     const PASSWORD_STORE  = 'password_vault';
     const PASSWORD_LENGTH = 32;
 
     public string $password_store;
     public int $password_length;
+    public string $preferred_hash;
+    public string $preferred_symmetric;
     public string $key_type;
     public string $elliptic_curve;
     public string $rsa_key_size;
@@ -45,6 +36,7 @@ final class AppSettings extends Settings
         KeyType::Dsa->name => 'DSA ElGamal',
         KeyType::Ecc->name => 'Elliptic Curve',
     ];
+
     private static array $eccOptions = [
         CurveOid::Secp256k1->name => 'SECP Curve 256k1',
         CurveOid::Prime256v1->name => 'NIST Curve P-256',
@@ -55,6 +47,7 @@ final class AppSettings extends Settings
         CurveOid::BrainpoolP512r1->name => 'Brainpool Curve P-512r1 ',
         CurveOid::Ed25519->name => 'Edwards Curve 25519',
     ];
+
     private static array $rsaSizeOptions = [
         RSAKeySize::S2048->name => '2048 bits',
         RSAKeySize::S2560->name => '2560 bits',
@@ -62,17 +55,13 @@ final class AppSettings extends Settings
         RSAKeySize::S3584->name => '3584 bits',
         RSAKeySize::S4096->name => '4096 bits',
     ];
+
     private static array $dhSizeOptions = [
         DHKeySize::L1024_N160->name => '1024 bits',
         DHKeySize::L2048_N224->name => '2048 bits (224)',
         DHKeySize::L2048_N256->name => '2048 bits (256)',
         DHKeySize::L3072_N256->name => '3072 bits',
     ];
-
-    public static function group(): string
-    {
-        return 'app_settings';
-    }
 
     public static function keySettings(): array
     {
@@ -99,6 +88,11 @@ final class AppSettings extends Settings
         ];
     }
 
+    public static function group(): string
+    {
+        return 'openpgp';
+    }
+
     public function randomPassword(): string
     {
         return Str::password(
@@ -116,6 +110,26 @@ final class AppSettings extends Settings
     {
         return $this->password_length < self::PASSWORD_LENGTH ?
                self::PASSWORD_LENGTH : $this->password_length;
+    }
+
+    public function preferredHash(): HashAlgorithm
+    {
+        foreach (HashAlgorithm::cases() as $algo) {
+            if ($algo->name === $this->preferred_hash) {
+                return $algo;
+            }
+        }
+        return HashAlgorithm::Sha256;
+    }
+
+    public function preferredSymmetric(): SymmetricAlgorithm
+    {
+        foreach (SymmetricAlgorithm::cases() as $algo) {
+            if ($algo->name === $this->preferred_symmetric) {
+                return $algo;
+            }
+        }
+        return SymmetricAlgorithm::Aes256;
     }
 
     public function keyType(): KeyType

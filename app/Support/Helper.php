@@ -8,7 +8,7 @@
 
 namespace App\Support;
 
-use App\Settings\AppSettings;
+use App\Settings\OpenPgpSettings;
 use OpenPGP\{
     Enum\KeyAlgorithm,
     Enum\RevocationReasonTag,
@@ -49,7 +49,7 @@ final class Helper
      */
     public static function randomPassword(): string
     {
-        return app(AppSettings::class)->randomPassword();
+        return app(OpenPgpSettings::class)->randomPassword();
     }
 
     /**

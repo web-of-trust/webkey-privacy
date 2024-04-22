@@ -16,7 +16,7 @@ use App\Models\{
     Domain,
     OpenPGPRevocation,
 };
-use App\Settings\AppSettings;
+use App\Settings\OpenPgpSettings;
 use App\Support\Helper;
 use Filament\Actions\Action;
 use Filament\Forms\Components\{
@@ -123,7 +123,7 @@ class ViewOpenPGPPersonalKey extends ViewRecord
                     $domain = Domain::firstWhere('name', $parts[1] ?? '');
                     if (!empty($domain->key_data)) {
                         try {
-                            $settings = app(AppSettings::class);
+                            $settings = app(OpenPgpSettings::class);
                             $domainKey = OpenPGP::decryptPrivateKey(
                                 $domain->key_data,
                                 decrypt(
