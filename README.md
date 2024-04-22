@@ -9,8 +9,8 @@ The Webkey Privacy is an application for managing OpenPGP keys within organizati
 
 ### System Requirements
 * Web server with URL rewriting
-* PHP 8.1.x or later with extensions: Ctype, cURL, DOM, Fileinfo, Filter, Hash,
-Mbstring, MySQL native driver, OpenSSL, PCRE, PDO, PDO-MySQL, Session, Tokenizer, XML
+* PHP 8.2.x or later with extensions: Ctype, cURL, DOM, Fileinfo, Filter, Hash, Intl,
+Mbstring, MySQL native driver, OpenSSL, PCRE, PDO, Session, Tokenizer, XML
 * Database server: MariaDB 10.10+ or MySQL 5.7+ or PostgreSQL 11.0+ or SQL Server 2017+
 
 ## Deployment
