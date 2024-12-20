@@ -28,31 +28,30 @@ class OpenPgpSettings extends Settings
     public string $key_type;
     public string $elliptic_curve;
     public string $rsa_key_size;
-    public string $dh_key_size;
 
     private static array $keyTypeOptions = [
         KeyType::Rsa->name => 'RSA',
         KeyType::Ecc->name => 'Elliptic Curve',
         KeyType::Curve25519->name => 'Curve 25519',
-        KeyType::Curve448->name => 'Curve448',
+        KeyType::Curve448->name => 'Curve 448',
     ];
 
     private static array $eccOptions = [
         Ecc::Secp256r1->name => 'NIST P-256',
         Ecc::Secp384r1->name => 'NIST P-384',
         Ecc::Secp521r1->name => 'NIST rve P-521',
-        Ecc::BrainpoolP256r1->name => 'Brainpool P-256r1 ',
-        Ecc::BrainpoolP384r1->name => 'Brainpool P-384r1 ',
-        Ecc::BrainpoolP512r1->name => 'Brainpool P-512r1 ',
+        Ecc::BrainpoolP256r1->name => 'Brainpool P-256r1',
+        Ecc::BrainpoolP384r1->name => 'Brainpool P-384r1',
+        Ecc::BrainpoolP512r1->name => 'Brainpool P-512r1',
         Ecc::Ed25519->name => 'Edwards Curve 25519',
     ];
 
     private static array $rsaSizeOptions = [
-        RSAKeySize::Normal->name => '2048 bits',
-        RSAKeySize::Medium->name => '2560 bits',
-        RSAKeySize::High->name => '3072 bits',
-        RSAKeySize::VeryHigh->name => '3584 bits',
-        RSAKeySize::UltraHigh->name => '4096 bits',
+        RSAKeySize::Normal->name => RSAKeySize::Normal->value,
+        RSAKeySize::Medium->name => RSAKeySize::Medium->value,
+        RSAKeySize::High->name => RSAKeySize::Medium->value,
+        RSAKeySize::VeryHigh->name => RSAKeySize::Medium->value,
+        RSAKeySize::UltraHigh->name => RSAKeySize::Medium->value,
     ];
 
     public static function keySettings(): array
@@ -146,6 +145,6 @@ class OpenPgpSettings extends Settings
                 return $keySize;
             }
         }
-        return RSAKeySize::S2048;
+        return RSAKeySize::Normal;
     }
 }
