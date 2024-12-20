@@ -8,8 +8,7 @@ use Filament\Forms\{
 };
 use Illuminate\Support\Str;
 use OpenPGP\Enum\{
-    CurveOid,
-    DHKeySize,
+    Ecc,
     KeyType,
     HashAlgorithm,
     RSAKeySize,
@@ -33,27 +32,27 @@ class OpenPgpSettings extends Settings
 
     private static array $keyTypeOptions = [
         KeyType::Rsa->name => 'RSA',
-        KeyType::Dsa->name => 'DSA ElGamal',
         KeyType::Ecc->name => 'Elliptic Curve',
+        KeyType::Curve25519->name => 'Curve 25519',
+        KeyType::Curve448->name => 'Curve448',
     ];
 
     private static array $eccOptions = [
-        CurveOid::Secp256k1->name => 'SECP Curve 256k1',
-        CurveOid::Prime256v1->name => 'NIST Curve P-256',
-        CurveOid::Secp384r1->name => 'NIST Curve P-384',
-        CurveOid::Secp521r1->name => 'NIST Curve P-521',
-        CurveOid::BrainpoolP256r1->name => 'Brainpool Curve P-256r1 ',
-        CurveOid::BrainpoolP384r1->name => 'Brainpool Curve P-384r1 ',
-        CurveOid::BrainpoolP512r1->name => 'Brainpool Curve P-512r1 ',
-        CurveOid::Ed25519->name => 'Edwards Curve 25519',
+        Ecc::Prime256v1->name => 'NIST Curve P-256',
+        Ecc::Secp384r1->name => 'NIST Curve P-384',
+        Ecc::Secp521r1->name => 'NIST Curve P-521',
+        Ecc::BrainpoolP256r1->name => 'Brainpool Curve P-256r1 ',
+        Ecc::BrainpoolP384r1->name => 'Brainpool Curve P-384r1 ',
+        Ecc::BrainpoolP512r1->name => 'Brainpool Curve P-512r1 ',
+        Ecc::Ed25519->name => 'Edwards Curve 25519',
     ];
 
     private static array $rsaSizeOptions = [
-        RSAKeySize::S2048->name => '2048 bits',
-        RSAKeySize::S2560->name => '2560 bits',
-        RSAKeySize::S3072->name => '3072 bits',
-        RSAKeySize::S3584->name => '3584 bits',
-        RSAKeySize::S4096->name => '4096 bits',
+        RSAKeySize::Normal->name => '2048 bits',
+        RSAKeySize::Medium->name => '2560 bits',
+        RSAKeySize::High->name => '3072 bits',
+        RSAKeySize::VeryHigh->name => '3584 bits',
+        RSAKeySize::UltraHigh->name => '4096 bits',
     ];
 
     private static array $dhSizeOptions = [
@@ -80,11 +79,6 @@ class OpenPgpSettings extends Settings
             )->hidden(
                 fn (Get $get) => $get('key_type') !== KeyType::Rsa->name
             )->required()->label(__('RSA Key Size')),
-            Select::make('dh_key_size')->options(self::$dhSizeOptions)->default(
-                $settings->dh_key_size
-            )->hidden(
-                fn (Get $get) => $get('key_type') !== KeyType::Dsa->name
-            )->required()->label(__('DSA-ElGamal Key Size')),
         ];
     }
 
@@ -142,14 +136,14 @@ class OpenPgpSettings extends Settings
         return KeyType::Ecc;
     }
 
-    public function ellipticCurve(): CurveOid
+    public function ellipticCurve(): Ecc
     {
-        foreach (CurveOid::cases() as $curve) {
+        foreach (Ecc::cases() as $curve) {
             if ($curve->name === $this->elliptic_curve) {
                 return $curve;
             }
         }
-        return CurveOid::Secp521r1;
+        return Ecc::Secp521r1;
     }
 
     public function rsaKeySize(): RSAKeySize
@@ -160,15 +154,5 @@ class OpenPgpSettings extends Settings
             }
         }
         return RSAKeySize::S2048;
-    }
-
-    public function dhKeySize(): DHKeySize
-    {
-        foreach (DHKeySize::cases() as $keySize) {
-            if ($keySize->name === $this->dh_key_size) {
-                return $keySize;
-            }
-        }
-        return DHKeySize::L2048_N224;
     }
 }
