@@ -38,12 +38,12 @@ class OpenPgpSettings extends Settings
     ];
 
     private static array $eccOptions = [
-        Ecc::Prime256v1->name => 'NIST Curve P-256',
-        Ecc::Secp384r1->name => 'NIST Curve P-384',
-        Ecc::Secp521r1->name => 'NIST Curve P-521',
-        Ecc::BrainpoolP256r1->name => 'Brainpool Curve P-256r1 ',
-        Ecc::BrainpoolP384r1->name => 'Brainpool Curve P-384r1 ',
-        Ecc::BrainpoolP512r1->name => 'Brainpool Curve P-512r1 ',
+        Ecc::Secp256r1->name => 'NIST P-256',
+        Ecc::Secp384r1->name => 'NIST P-384',
+        Ecc::Secp521r1->name => 'NIST rve P-521',
+        Ecc::BrainpoolP256r1->name => 'Brainpool P-256r1 ',
+        Ecc::BrainpoolP384r1->name => 'Brainpool P-384r1 ',
+        Ecc::BrainpoolP512r1->name => 'Brainpool P-512r1 ',
         Ecc::Ed25519->name => 'Edwards Curve 25519',
     ];
 
@@ -53,13 +53,6 @@ class OpenPgpSettings extends Settings
         RSAKeySize::High->name => '3072 bits',
         RSAKeySize::VeryHigh->name => '3584 bits',
         RSAKeySize::UltraHigh->name => '4096 bits',
-    ];
-
-    private static array $dhSizeOptions = [
-        DHKeySize::L1024_N160->name => '1024 bits',
-        DHKeySize::L2048_N224->name => '2048 bits (224)',
-        DHKeySize::L2048_N256->name => '2048 bits (256)',
-        DHKeySize::L3072_N256->name => '3072 bits',
     ];
 
     public static function keySettings(): array

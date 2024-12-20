@@ -13,6 +13,5 @@ return new class extends SettingsMigration
         $this->migrator->add('openpgp.key_type', '');
         $this->migrator->add('openpgp.elliptic_curve', '');
         $this->migrator->add('openpgp.rsa_key_size', '');
-        $this->migrator->add('openpgp.dh_key_size', '');
     }
 };
