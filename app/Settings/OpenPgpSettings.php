@@ -39,7 +39,7 @@ class OpenPgpSettings extends Settings
     private static array $eccOptions = [
         Ecc::Secp256r1->name => 'NIST P-256',
         Ecc::Secp384r1->name => 'NIST P-384',
-        Ecc::Secp521r1->name => 'NIST rve P-521',
+        Ecc::Secp521r1->name => 'NIST P-521',
         Ecc::BrainpoolP256r1->name => 'Brainpool P-256r1',
         Ecc::BrainpoolP384r1->name => 'Brainpool P-384r1',
         Ecc::BrainpoolP512r1->name => 'Brainpool P-512r1',
